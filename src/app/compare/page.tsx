@@ -165,8 +165,8 @@ export default function ComparePage() {
                 >
                   <option value="">Select a product...</option>
                   {availableProducts.map((product, productIndex) => (
-                    <option key={`${product.manufacturer}-${product.model}-${product.price_usd || product.ea_estimated_price_usd}-${productIndex}`} value={product.model}>
-                      {product.manufacturer} {product.model} - ${(product.price_usd || product.ea_estimated_price_usd || 0).toLocaleString()}
+                    <option key={`${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}-${productIndex}`} value={product.model}>
+                      {product.manufacturer} {product.model} - ${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}
                     </option>
                   ))}
                 </select>
