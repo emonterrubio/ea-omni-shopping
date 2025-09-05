@@ -17,7 +17,7 @@ import { RequestHardwareBanner } from '@/components/product/RequestHardwareBanne
 import { ProductComparisonList } from '@/components/product/ProductComparisonList';
 import { SupportBanner } from '@/components/product/SupportBanner';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { ChevronDownIcon } from '@heroicons/react/16/solid'
+import { Dropdown } from '@/components/ui/Dropdown';
 
 function getCategoryPlural(category: string): string {
   // Convert category to plural form
@@ -65,18 +65,35 @@ function getProductSpecs(product: any) {
   // Add category-specific specs
   switch (product.category.toLowerCase()) {
     case "laptop":
+      // Operating System
       if ((product as any).os) specs.push({ label: "Operating System", value: (product as any).os });
-      if ((product as any).cpu) specs.push({ label: "CPU", value: (product as any).cpu });
-      if ((product as any).gpu) specs.push({ label: "GPU", value: (product as any).gpu });
-      if ((product as any).memory) specs.push({ label: "Memory", value: (product as any).memory });
-      if ((product as any).storage) specs.push({ label: "Storage", value: (product as any).storage });
+      
+      // Screen Size
       if ((product as any).screen_size) specs.push({ label: "Screen Size", value: (product as any).screen_size });
+      
+      // Portability Rating (using battery_life_description as proxy)
+      if ((product as any).battery_life_description) specs.push({ label: "Portability Rating", value: (product as any).battery_life_description });
+      
+      // Typical Battery Life
+      if ((product as any).battery_life_hrs) specs.push({ label: "Typical Battery Life", value: `${(product as any).battery_life_hrs} hours` });
+      
+      // Performance Rating
+      if ((product as any).performance_rating) specs.push({ label: "Performance Rating", value: (product as any).performance_rating });
+      
+      // Weight
       if ((product as any).weight_lbs) specs.push({ label: "Weight", value: `${(product as any).weight_lbs} lbs` });
-      if ((product as any).battery_life_hrs) specs.push({ label: "Battery Life", value: `${(product as any).battery_life_hrs} hours` });
-      if ((product as any).battery_life_description) specs.push({ label: "Battery Rating", value: (product as any).battery_life_description });
-      if ((product as any).performance_rating) specs.push({ label: "Performance Tier", value: (product as any).performance_rating });
-      if ((product as any).power_watt) specs.push({ label: "Power Adapter", value: `${(product as any).power_watt}W` });
-      if ((product as any).dock) specs.push({ label: "Compatible Dock", value: (product as any).dock });
+      
+      // CPU
+      if ((product as any).cpu) specs.push({ label: "CPU", value: (product as any).cpu });
+      
+      // GPU
+      if ((product as any).gpu) specs.push({ label: "GPU", value: (product as any).gpu });
+      
+      // Memory
+      if ((product as any).memory) specs.push({ label: "Memory", value: (product as any).memory });
+      
+      // Storage
+      if ((product as any).storage) specs.push({ label: "Storage", value: (product as any).storage });
       
       // Display specifications
       if ((product as any).display) {
@@ -84,15 +101,24 @@ function getProductSpecs(product: any) {
         if (display.panel) specs.push({ label: "Display Panel", value: display.panel });
         if (display.resolution) specs.push({ label: "Display Resolution", value: display.resolution });
         if (display.refresh_rate) specs.push({ label: "Display Refresh Rate", value: display.refresh_rate });
-        if (display.brightness_nits) specs.push({ label: "Brightness", value: `${display.brightness_nits} nits` });
-        if (display.hdr) specs.push({ label: "HDR Support", value: display.hdr });
-        if (display.touch) specs.push({ label: "Touch Support", value: display.touch });
+        if (display.brightness_nits) specs.push({ label: "Display Peak Brightness", value: `${display.brightness_nits} nits` });
+        if (display.hdr) specs.push({ label: "Display HDR", value: display.hdr });
+        if (display.touch) specs.push({ label: "Display Touch", value: display.touch });
       }
       
       // Ports
       if ((product as any).ports && Array.isArray((product as any).ports)) {
         specs.push({ label: "Ports", value: (product as any).ports.join(", ") });
       }
+      
+      // Power
+      if ((product as any).power_watt) specs.push({ label: "Power", value: `${(product as any).power_watt}W` });
+      
+      // Warranty (placeholder - not in current data)
+      specs.push({ label: "Warranty", value: "1 Year Limited" });
+      
+      // Compatible Docking Station
+      if ((product as any).dock) specs.push({ label: "Compatible Docking Station", value: (product as any).dock });
       
       break;
       
@@ -177,7 +203,7 @@ export default function ProductDetailPage() {
   const product = findProductByModel(model);
   const specs = product ? getProductSpecs(product) : [];
 
-  // --- Comparison logic with dropdown functionality ---
+  // --- Comparison logic with price-based selection ---
   const [selectedComparisonProducts, setSelectedComparisonProducts] = useState<any[]>([]);
   
   // Use only the hardware data for comparison
@@ -186,14 +212,43 @@ export default function ProductDetailPage() {
   // Available products for dropdown (same category as current product)
   const availableProducts = others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase());
   
-  // Default comparison products (same logic as before)
+  // Price-based comparison products: current item in middle, closest lower price on left, closest higher price on right
   const defaultComparisonProducts = (() => {
-    // 1. Find all same-brand, same-category products (excluding current)
-    let sameBrand = others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase() && p.manufacturer === product?.manufacturer);
-    // 2. Find all same-category, other-brand products
-    let otherBrand = others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase() && p.manufacturer !== product?.manufacturer);
-    // Compose final comparisonProducts
-    return [...sameBrand, ...otherBrand].slice(0, 3);
+    if (!product) return [];
+    
+    const currentPrice = (product as any).price_usd || (product as any).ea_estimated_price_usd || 0;
+    const sameCategoryProducts = others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase());
+    
+    // Sort products by price
+    const sortedByPrice = sameCategoryProducts.sort((a, b) => {
+      const priceA = (a as any).price_usd || (a as any).ea_estimated_price_usd || 0;
+      const priceB = (b as any).price_usd || (b as any).ea_estimated_price_usd || 0;
+      return priceA - priceB;
+    });
+    
+    // Find closest lower price product
+    const lowerPriceProduct = sortedByPrice
+      .filter(p => {
+        const price = (p as any).price_usd || (p as any).ea_estimated_price_usd || 0;
+        return price < currentPrice;
+      })
+      .pop(); // Get the highest price that's still lower than current
+    
+    // Find closest higher price product
+    const higherPriceProduct = sortedByPrice
+      .filter(p => {
+        const price = (p as any).price_usd || (p as any).ea_estimated_price_usd || 0;
+        return price > currentPrice;
+      })
+      .shift(); // Get the lowest price that's still higher than current
+    
+    // Return in order: [lower price, current, higher price]
+    const comparisonProducts = [];
+    if (lowerPriceProduct) comparisonProducts.push(lowerPriceProduct);
+    comparisonProducts.push(product); // Current product in middle
+    if (higherPriceProduct) comparisonProducts.push(higherPriceProduct);
+    
+    return comparisonProducts;
   })();
 
   // Initialize selected products with default ones
@@ -205,14 +260,23 @@ export default function ProductDetailPage() {
 
   const handleComparisonProductChange = (index: number, modelValue: string) => {
     if (modelValue === "") {
-      // Remove the product at this index
-      const newSelected = selectedComparisonProducts.filter((_, i) => i !== index);
-      setSelectedComparisonProducts(newSelected);
+      // Reset to default comparison products
+      setSelectedComparisonProducts(defaultComparisonProducts);
     } else {
-      const product = availableProducts.find(p => p.model === modelValue);
-      if (product) {
+      const selectedProduct = availableProducts.find(p => p.model === modelValue);
+      if (selectedProduct) {
         const newSelected = [...selectedComparisonProducts];
-        newSelected[index] = product;
+        
+        // Keep current product in middle (index 1), only allow changing left (index 0) and right (index 2)
+        if (index === 0) {
+          // Left position: replace with selected product
+          newSelected[0] = selectedProduct;
+        } else if (index === 2) {
+          // Right position: replace with selected product
+          newSelected[2] = selectedProduct;
+        }
+        // Index 1 (middle) should not be changeable as it's the current product
+        
         setSelectedComparisonProducts(newSelected);
       }
     }
@@ -220,6 +284,13 @@ export default function ProductDetailPage() {
 
   // Use selected products for comparison, fallback to default
   const comparisonProducts = selectedComparisonProducts.length > 0 ? selectedComparisonProducts : defaultComparisonProducts;
+
+  // Transform available products for dropdown
+  const dropdownOptions = availableProducts.map((product) => ({
+    value: product.model,
+    label: `${product.manufacturer} ${product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
+    key: `${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}`
+  }));
 
   const handleBackClick = () => {
     // Use browser back navigation if there's history, otherwise fallback to home
@@ -285,12 +356,13 @@ export default function ProductDetailPage() {
               price={(product as any).price_usd || (product as any).ea_estimated_price_usd}
               price_cad={(product as any).price_cad}
               available={isEligible}
-              deliveryTime={"Within 5 days"}
+              deliveryTime={"within 5 days"}
               description={product.description || `${product.manufacturer} ${product.model}`}
               quantity={quantity}
               category={product.category}
               intendedFor={(product as any).intended_for}
               notSuitableFor={(product as any).not_suitable_for}
+              suitableFor={(product as any).suitable_for}
               onQuantityChange={setQuantity}
               onAddToCart={() => {
                 addToCart({
@@ -325,26 +397,35 @@ export default function ProductDetailPage() {
             {availableProducts.length > 0 && (
               <div className="mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {[0, 1, 2].map((index) => (
-                    <div key={index} className="relative">
-                      <select
-                        value={selectedComparisonProducts[index]?.model || ""}
-                        onChange={(e) => handleComparisonProductChange(index, e.target.value)}
-                        className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-                      >
-                        <option value="">Select a product...</option>
-                        {availableProducts.map((product) => (
-                          <option key={product.model} value={product.model}>
-                            {product.manufacturer} {product.model}
-                          </option>
-                        ))}
-                      </select>
-                      <ChevronDownIcon
-                        aria-hidden="true"
-                        className="pointer-events-none absolute right-2 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500"
-                      />
+                  {/* Left dropdown - Lower price competitor */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Lower Price Competitor</label>
+                    <Dropdown
+                      value={selectedComparisonProducts[0]?.model || ""}
+                      onChange={(value) => handleComparisonProductChange(0, value)}
+                      options={dropdownOptions}
+                      placeholder="Select a product..."
+                    />
+                  </div>
+                  
+                  {/* Middle - Current product (disabled) */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Current Product</label>
+                    <div className="w-full appearance-none rounded-md bg-gray-100 py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 sm:text-sm/6 cursor-not-allowed">
+                      {product?.manufacturer} {product?.model}
                     </div>
-                  ))}
+                  </div>
+                  
+                  {/* Right dropdown - Higher price competitor */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Higher Price Competitor</label>
+                    <Dropdown
+                      value={selectedComparisonProducts[2]?.model || ""}
+                      onChange={(value) => handleComparisonProductChange(2, value)}
+                      options={dropdownOptions}
+                      placeholder="Select a product..."
+                    />
+                  </div>
                 </div>
               </div>
             )}

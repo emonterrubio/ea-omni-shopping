@@ -130,7 +130,7 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
                 id="filter"
                 value={filterOption}
                 onChange={e => setFilterOption(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               >
                 <option value="all">All</option>
                 {availableCategories.map(category => {
@@ -152,7 +152,7 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
                 id="sort"
                 value={sortOption}
                 onChange={e => setSortOption(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
               >
                 <option value="all">All</option>
                 <option value="price-low">Price: Low to High</option>

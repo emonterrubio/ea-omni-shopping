@@ -36,7 +36,7 @@ export function PlatformInfoBanner({ className = '', onDismiss }: PlatformInfoBa
             About ordering hardware
           </h3>
           <p className="text-sm text-gray-800 leading-normal">
-          To expedite order fulfillment and manage high demand, employees are limited to one laptop, a maximum of two monitors, and one peripheral per category.
+          To expedite order fulfillment and manage high demand, employees are limited to one workstation and up to four monitors.
           </p>
         </div>
       </div>

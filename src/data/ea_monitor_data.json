@@ -28,8 +28,8 @@
       "4x USB Type-A",
       "1x 1GbE Ethernet"
     ],
-    "suitable_for": "Standard productivity, web browsing, office applications",
-    "intended_for": "General business professionals in corporate roles"
+    "suitable_for": "Standard productivity, web browsing, office applications.",
+    "intended_for": "General business professionals in corporate roles."
   },
   {
     "manufacturer": "Dell",
@@ -62,8 +62,8 @@
       "3x USB Type-C",
       "1x 2.5GbE Ethernet"
     ],
-    "suitable_for": "Color-critical image and video work, high-resolution content creation, design review",
-    "intended_for": "Creative professionals (Art, Audio, Graphic Design, Video Editing)"
+    "suitable_for": "Color-critical image and video work, high-resolution content creation, design review.",
+    "intended_for": "Creative professionals (Art, Audio, Graphic Design, Video Editing)."
   },
   {
     "manufacturer": "Dell",
@@ -95,7 +95,7 @@
       "3x USB Type-C",
       "1x 2.5GbE Ethernet"
     ],
-    "suitable_for": "Managing large spreadsheets, multiple data streams, coding, timeline-based applications",
-    "intended_for": "Data science, Software development and those preferring a single monitor setup or with limited desk space"
+    "suitable_for": "Managing large spreadsheets, multiple data streams, coding, timeline-based applications.",
+    "intended_for": "Data science, Software development and those preferring a single monitor setup or with limited desk space."
   }
 ]

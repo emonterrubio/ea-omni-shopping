@@ -169,9 +169,9 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
           const firstItem = order.items[0];
           return (
             <div key={order.id} className="p-4">
-              <div className="flex items-center justify-between">
+              <div className="flex items-start lg:items-center justify-between">
                 {/* Left side: Product Image and Info */}
-                <div className="flex items-center space-x-3">
+                <div className="flex items-start lg:items-center space-x-3">
                   {/* Product Image */}
                   <div className="flex-shrink-0">
                     <Image
@@ -195,13 +195,18 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                       Order #{order.orderNumber}
                     </Link>
                     <div className="flex flex-col sm:flex-row text-left sm:gap-2">
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm text-gray-800">
                         {order.items.length} items total
                       </p>
                       {/* vertical divider */}
                       <div className="w-px h-4 bg-gray-300 hidden sm:block"></div>
                       <p className="text-sm text-gray-800">
                         Ordered on {formatDateWithAbbreviatedMonth(order.orderDate)}
+                      </p>
+                      {/* vertical divider */}
+                      <div className="w-px h-4 bg-gray-300 hidden sm:block"></div>
+                      <p className="text-sm text-gray-800">
+                        Ordered for {order.orderedFor}
                       </p>
                     </div>
                   </div>

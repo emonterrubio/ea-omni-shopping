@@ -32,9 +32,9 @@ export function ProductSpecsTable({ specs = [] }: ProductSpecsTableProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
           {specs.length > 0 ? (
             specs.filter(s => s.value).map((spec, idx) => (
-              <div className="border-b border-gray-200 pb-3" key={idx}>
+              <div className="border-b border-gray-200 pb-3 last:border-b-0" key={idx}>
                 <div className="text-base font-bold tracking-wide">{spec.label}</div>
-                <div className="text-sm text-gray-800">{spec.value}</div>
+                <div className="text-base text-gray-800">{spec.value}</div>
               </div>
             ))
           ) : (

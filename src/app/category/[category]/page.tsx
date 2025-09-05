@@ -9,6 +9,7 @@ import { MainNavigation } from "@/components/layout/MainNavigation";
 import { ArrowLeft } from "lucide-react";
 import { Pagination } from "@/components/ui/Pagination";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { Dropdown } from "@/components/ui/Dropdown";
 
 function getCategoryPlural(category: string): string {
   // Convert category to plural form
@@ -62,6 +63,23 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
   // Unique brands for filter dropdown
   const brands = Array.from(new Set(products.map(p => p.manufacturer)));
 
+  // Dropdown options
+  const brandOptions = [
+    { value: "all", label: "All Brands" },
+    ...brands.sort().map(brand => ({
+      value: brand,
+      label: brand
+    }))
+  ];
+
+  const sortOptions = [
+    { value: "all", label: "All" },
+    { value: "price-low", label: "Price: Low to High" },
+    { value: "price-high", label: "Price: High to Low" },
+    { value: "az", label: "A-Z" },
+    { value: "za", label: "Z-A" }
+  ];
+
   // --- Filtering ---
   let filteredProducts = brandFilter === "all" ? products : products.filter(p => p.manufacturer === brandFilter);
 
@@ -113,35 +131,26 @@ export default function CategoryPage({ params }: { params: Promise<{ category: s
           <div className="text-sm font-regular text-gray-900 min-w-max">
             Showing {startIndex + 1}-{Math.min(endIndex, sortedProducts.length)} of {sortedProducts.length} item{sortedProducts.length === 1 ? "" : "s"}
           </div>
-          <div className="flex items-center gap-4 ml-auto">
-            <div>
-              <label htmlFor="brand-filter" className="mr-2 text-sm font-regular text-gray-700">Filter by:</label>
-              <select
-                id="brand-filter"
+          <div className="flex items-center gap-6 ml-auto">
+            <div className="flex items-center gap-2">
+              <label htmlFor="brand-filter" className="text-sm font-regular text-gray-700 whitespace-nowrap">Filter by:</label>
+              <Dropdown
                 value={brandFilter}
-                onChange={e => setBrandFilter(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">All</option>
-                {brands.map(brand => (
-                  <option key={brand} value={brand}>{brand}</option>
-                ))}
-              </select>
+                onChange={setBrandFilter}
+                options={brandOptions}
+                placeholder="Select a brand..."
+                className="min-w-[160px]"
+              />
             </div>
-            <div>
-              <label htmlFor="sort" className="mr-2 text-sm font-regular text-gray-700">Sort by:</label>
-              <select
-                id="sort"
+            <div className="flex items-center gap-2">
+              <label htmlFor="sort" className="text-sm font-regular text-gray-700 whitespace-nowrap">Sort by:</label>
+              <Dropdown
                 value={sortOption}
-                onChange={e => setSortOption(e.target.value)}
-                className="border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="all">All</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="az">A-Z</option>
-                <option value="za">Z-A</option>
-              </select>
+                onChange={setSortOption}
+                options={sortOptions}
+                placeholder="Select sort option..."
+                className="min-w-[140px]"
+              />
             </div>
           </div>
         </div>

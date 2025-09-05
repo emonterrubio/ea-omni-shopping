@@ -14,6 +14,7 @@ interface ProductInfoPanelProps {
   category?: string;
   intendedFor?: string;
   notSuitableFor?: string;
+  suitableFor?: string;
   onQuantityChange?: (qty: number) => void;
   onAddToCart?: () => void;
   onCompare?: () => void;
@@ -32,6 +33,7 @@ export function ProductInfoPanel({
   category,
   intendedFor,
   notSuitableFor,
+  suitableFor,
   onQuantityChange,
   onAddToCart,
   onCompare,
@@ -54,11 +56,22 @@ export function ProductInfoPanel({
         )}
       </div>
       {/* Description */}
-      <div className="text-base text-gray-800 leading-snug">{description}</div>
+      <div className="text-base text-gray-800 leading-snug">
+        {description}
+        {suitableFor && (
+          <span> <strong>Suitable for</strong> {suitableFor.toLowerCase()}</span>
+        )}
+        {intendedFor && (
+          <span> <strong>Intended for</strong> {intendedFor.toLowerCase()}</span>
+        )}
+        {notSuitableFor && (
+          <span> <strong>Not suitable for</strong> {notSuitableFor.toLowerCase()}</span>
+        )}
+      </div>
       <div>
         {/* Availability */}
-        <div className={available ? "font-base text-green-600 font-medium " : "text-red-600 font-medium"}>
-          {available ? 'Available Now' : 'Out of Stock'}
+        <div className="font-base text-green-600 font-medium">
+          {Math.floor(Math.random() * 10) + 1} units in stock
         </div>
         {/* Delivery time */}
         <div className="text-gray-600 text-base">Delivery time: <span className="font-semibold">{deliveryTime}</span></div>
@@ -80,7 +93,7 @@ export function ProductInfoPanel({
         </select>
       </div>
       {(category === "Laptops" || category === "Laptop" || category === "Desktops" || category === "Desktop") && (
-        <span className="text-sm text-gray-500 italic ml-0">Limited to 1 per order*</span>
+        <span className="text-sm text-gray-500 italic ml-0">Limited to 1 workstation per order*</span>
       )}
       </div>
       {/* add to cart and compare buttons */}
@@ -89,8 +102,8 @@ export function ProductInfoPanel({
         <button className="flex-1 bg-blue-50 text-blue-600 rounded-md py-2 font-medium hover:bg-blue-100 transition text-center" onClick={onCompare}>Compare</button>
       </div>
       {/* disclaimer */}
-      <div className="text-gray-600 text-xs mt-2">
-        <p>*Laptops and Desktops are limited to 1 per order. Specifications, pricing, and availability are subject to change without notice. Product images are for illustrative purposes only and may differ from the actual item. All warranties, if offered, are provided solely by the manufacturer; please refer to the manufacturer’s documentation for full warranty terms. We make no guarantees regarding compatibility with third-party hardware or software. Taxes, shipping, handling, and other fees (if applicable) are calculated at checkout and are not included in the displayed price. By completing your purchase, you acknowledge that you have read and agree to these terms.</p>
+      <div className="text-gray-600 text-sm leading-tight italic mt-2">
+        <p>When ordering for multiple team members, please submit a separate order for each workstation. Please note that stock levels may change without notice, and product images are for illustration purposes only—actual items may vary in appearance. Warranty coverage varies by product, so be sure to review the specific warranty terms listed below. The price shown does not include shipping or applicable fees, which will be calculated during checkout.</p>
       </div>
     </div>
   );

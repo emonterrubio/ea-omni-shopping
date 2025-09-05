@@ -30,9 +30,9 @@
     ],
     "power_watt": "65W",
     "dock": "Dell SD25TB4",
-    "description": "Standard business laptop ideal for office applications",
-    "not_suitable_for": "Running EA game titles, data or video intensive tasks",
-    "intended_for": "General business professionals in corporate roles, frequent travelers, frequent meeting attendees",
+    "description": "Standard business laptop ideal for office applications.",
+    "not_suitable_for": "Running EA game titles, data or video intensive tasks.",
+    "intended_for": "General business professionals in corporate roles, frequent travelers, frequent meeting attendees.",
     "image": "/images/dell_pro_14_plus.png"
   },
   {
@@ -66,9 +66,9 @@
     ],
     "power_watt": "65W",
     "dock": "Dell SD25TB4",
-    "description": "Premium business laptop featuring a refined material quality and OLED touch display for vibrant visuals and enhanced interaction",
-    "not_suitable_for": "3D rendering, game development tasks, or complex data simulations",
-    "intended_for": "Managing roles, general business professionals, frequent travelers or meeting attendees who value a high-quality display for presentations and media",
+    "description": "Premium business laptop featuring a refined material quality and OLED touch display for vibrant visuals and enhanced interaction.",
+    "not_suitable_for": "3D rendering, game development tasks, or complex data simulations.",
+    "intended_for": "Managing roles, general business professionals, frequent travelers or meeting attendees who value a high-quality display for presentations and media.",
     "image": "/images/dell_pro_14_premium.png"
   },
   {
@@ -102,9 +102,9 @@
     ],
     "power_watt": "130W",
     "dock": "Dell SD25TB4",
-    "description": "Compact and powerful mobile workstation with a dedicated graphics card for creative and technical tasks, capable of running EA titles",
-    "not_suitable_for": "The most extreme, high-end 3D rendering or scientific computing that requires a top-tier workstation",
-    "intended_for": "Producers, Development or Technical Directors roles required to run EA's titles who are frequent travelers who need GPU power away from their desks",
+    "description": "Compact and powerful mobile workstation with a dedicated graphics card for creative and technical tasks, capable of running EA titles.",
+    "not_suitable_for": "The most extreme, high-end 3D rendering or scientific computing that requires a top-tier workstation.",
+    "intended_for": "Producers, Development or Technical Directors roles required to run EA's titles who are frequent travelers who need GPU power away from their desks.",
     "image": "/images/dell_pro_max_14_premium.png"
   },
   {
@@ -138,14 +138,14 @@
     ],
     "power_watt": "165W",
     "dock": "Dell WD19DCS",
-    "description": "High-performance mobile workstation for demanding engineering and design. Features a high-resolution OLED display and a professional GPU, suitable for EA titles",
-    "not_suitable_for": "Users who prioritize portability and light weight; office tasks that do not require a dedicated GPU, frequent travel",
-    "intended_for": "Desk-centric Producers, Development or Technical Directors roles as well as Engineers, Architects and Designers",
+    "description": "High-performance mobile workstation for demanding engineering and design. Features a high-resolution OLED display and a professional GPU, suitable for EA titles.",
+    "not_suitable_for": "Users who prioritize portability and light weight; office tasks that do not require a dedicated GPU, frequent travel.",
+    "intended_for": "Desk-centric Producers, Development or Technical Directors roles as well as Engineers, Architects and Designers.",
     "image": "/images/dell_pro_max_16_premium.png"
   },
   {
     "manufacturer": "Dell",
-    "model": "Pro Max 16 Premium Ultra",
+    "model": "Pro Max 16 Premium",
     "category": "Laptop",
     "os": "Windows",
     "screen_size": "16\"",
@@ -174,9 +174,9 @@
     ],
     "power_watt": "165W",
     "dock": "Dell WD19DCS",
-    "description": "The most powerful Windows laptop available, ideal for higher intensity development or artistic workloads. Capable of running and building our titles while remaining portable",
-    "not_suitable_for": "Users who prioritize portability and light weight; office tasks that do not require a dedicated GPU",
-    "intended_for": "Engineers, Developers, Game Designers, Creative Professionals and Technical Directors",
+    "description": "The most powerful Windows laptop available, ideal for higher intensity development or artistic workloads. Capable of running and building our titles while remaining portable.",
+    "not_suitable_for": "Users who prioritize portability and light weight; office tasks that do not require a dedicated GPU.",
+    "intended_for": "Engineers, Developers, Game Designers, Creative Professionals and Technical Directors.",
     "image": "/images/dell_pro_max_16_premium.png"
   },
   {
@@ -209,9 +209,9 @@
     ],
     "power_watt": "96W",
     "dock": "Belkin Pro ThunderBolt 4",
-    "description": "Powerful and portable laptop for users preferring MacOS. Exceptional performance for video editing and graphic design, with a world-class display and long battery life",
-    "not_suitable_for": "Running EA game titles or Users requiring Windows-specific software",
-    "intended_for": "Video editors, graphic designers, UI/UX designers, and marketing content creators working within the Apple ecosystem",
+    "description": "Powerful and portable laptop for users preferring MacOS. Exceptional performance for video editing and graphic design, with a world-class display and long battery life.",
+    "not_suitable_for": "Running EA game titles or Users requiring Windows-specific software.",
+    "intended_for": "Video editors, graphic designers, UI/UX designers, and marketing content creators working within the Apple ecosystem.",
     "image": "/images/apple_macbook_pro_14.png"
   },
   {
@@ -244,9 +244,9 @@
     ],
     "power_watt": "140W",
     "dock": "Belkin Pro ThunderBolt 4",
-    "description": "Large-screen creative workstation for users preferring MacOS, with a stunning display and performance for demanding video and design projects",
-    "not_suitable_for": "Running EA game titles or users requiring Windows-specific software",
-    "intended_for": "Video editors, motion graphics artists, music producers, and software developers working within the Apple ecosystem",
+    "description": "Large-screen creative workstation for users preferring MacOS, with a stunning display and performance for demanding video and design projects.",
+    "not_suitable_for": "Running EA game titles or users requiring Windows-specific software.",
+    "intended_for": "Video editors, motion graphics artists, music producers, and software developers working within the Apple ecosystem.",
     "image": "/images/apple_macbook_pro_16.png"
   }
 ]

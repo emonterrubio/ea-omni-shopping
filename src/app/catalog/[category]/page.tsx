@@ -9,6 +9,7 @@ import { CatalogSidebar } from "../../../components/catalog/CatalogSidebar";
 import { SortAsc, Filter, PackageSearch } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { Breadcrumb } from "../../../components/ui/Breadcrumb";
+import { Dropdown } from "../../../components/ui/Dropdown";
 import { useParams } from "next/navigation";
 
 export default function CategoryCatalogPage() {
@@ -54,6 +55,7 @@ export default function CategoryCatalogPage() {
     recommended: true,
     manufacturer: product.manufacturer,
     price_usd: (product as any).price_usd || (product as any).ea_estimated_price_usd,
+    price_cad: (product as any).price_cad,
   }));
 
   // Group products by brand
@@ -192,6 +194,41 @@ export default function CategoryCatalogPage() {
 
   const brandCounts = getBrandCountsForCategory();
 
+  // Dropdown options
+  const categoryOptions = [
+    { value: "all", label: "All Categories" },
+    ...Array.from(new Set(allProducts.map((p: any) => p.category))).sort().map(category => ({
+      value: category,
+      label: category === 'Laptop' ? 'Laptops' : 
+             category === 'Monitor' ? 'Monitors' : 
+             category === 'Docking Station' ? 'Docking Stations' : 
+             category === 'Headset' ? 'Headsets' : 
+             category === 'Mouse' ? 'Mice' :
+             category === 'Keyboard' ? 'Keyboards' :
+             category === 'Mouse & Keyboard' ? 'Mouse & Keyboard' :
+             category === 'TrackPad' ? 'Mice' :
+             category === 'Webcam' ? 'Webcams' :
+             category
+    }))
+  ];
+
+  const sortOptions = [
+    { value: "all", label: "All" },
+    { value: "price-low", label: "Price: Low to High" },
+    { value: "price-high", label: "Price: High to Low" },
+    { value: "az", label: "A-Z" },
+    { value: "za", label: "Z-A" }
+  ];
+
+  // Brand options with counts
+  const brandOptions = [
+    { value: "all", label: "All Brands" },
+    ...Object.keys(productsByBrand).sort().map((brand) => ({
+      value: brand,
+      label: `${brand} (${brandCounts[brand]})`
+    }))
+  ];
+
   // Get plural category name for display
   const getPluralCategoryName = (singular: string): string => {
     switch (singular.toLowerCase()) {
@@ -235,22 +272,12 @@ export default function CategoryCatalogPage() {
         <div className="lg:hidden my-0 sm:my-4 sm:px-4">
           <div>
             <label className="block text-2xl font-regular text-gray-700 mb-2">Categories</label>
-            <select
+            <Dropdown
               value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              <option value="all">All</option>
-              {Array.from(new Set(allProducts.map((p: any) => p.category))).sort().map(category => (
-                <option key={category} value={category}>
-                  {category === 'Laptop' ? 'Laptops' : 
-                   category === 'Monitor' ? 'Monitors' : 
-                   category === 'Docking Station' ? 'Docking Stations' : 
-                   category === 'Headset' ? 'Headsets' : 
-                   category}
-                </option>
-              ))}
-            </select>
+              onChange={setSelectedCategory}
+              options={categoryOptions}
+              placeholder="Select a category..."
+            />
           </div>
         </div>
         
@@ -272,37 +299,26 @@ export default function CategoryCatalogPage() {
               Showing {startIndex + 1}-{Math.min(endIndex, sortedProducts.length)} of {sortedProducts.length} item{sortedProducts.length === 1 ? "" : "s"}
             </div>
             {/* Desktop filter and sort dropdowns */}
-            <div className="hidden lg:flex items-center gap-4 ml-auto">
-              <div>
-                <label htmlFor="brand-filter" className="mr-2 text-base font-regular text-gray-700">Filter by:</label>
-                <select
-                  id="brand-filter"
+            <div className="hidden lg:flex items-center gap-6 ml-auto">
+              <div className="flex items-center gap-2">
+                <label htmlFor="brand-filter" className="text-base font-regular text-gray-700 whitespace-nowrap">Filter by:</label>
+                <Dropdown
                   value={selectedBrand}
-                  onChange={e => setSelectedBrand(e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">All Brands</option>
-                  {Object.keys(productsByBrand).sort().map((brand) => (
-                    <option key={brand} value={brand}>
-                      {brand} ({brandCounts[brand]})
-                    </option>
-                  ))}
-                </select>
+                  onChange={setSelectedBrand}
+                  options={brandOptions}
+                  placeholder="Select a brand..."
+                  className="min-w-[180px]"
+                />
               </div>
-              <div>
-                <label htmlFor="sort" className="mr-2 text-base font-regular text-gray-700">Sort by:</label>
-                <select
-                  id="sort"
+              <div className="flex items-center gap-2">
+                <label htmlFor="sort" className="text-base font-regular text-gray-700 whitespace-nowrap">Sort by:</label>
+                <Dropdown
                   value={sortOption}
-                  onChange={e => setSortOption(e.target.value)}
-                  className="border border-gray-300 rounded-md px-3 py-2 text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">All</option>
-                  <option value="price-low">Price: Low to High</option>
-                  <option value="price-high">Price: High to Low</option>
-                  <option value="az">A-Z</option>
-                  <option value="za">Z-A</option>
-                </select>
+                  onChange={setSortOption}
+                  options={sortOptions}
+                  placeholder="Select sort option..."
+                  className="min-w-[160px]"
+                />
               </div>
             </div>
             {/* Mobile filter and sort icons */}
