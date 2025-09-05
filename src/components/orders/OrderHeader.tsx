@@ -9,36 +9,42 @@ interface OrderHeaderProps {
 
 export function OrderHeader({ order }: OrderHeaderProps) {
   return (
-    <div className="bg-gray-100 px-6 lg:px-8 py-4 border-b border-gray-200">
+    <div className="bg-gray-100 px-5 lg:px-6 py-4 border-b border-gray-200">
       {/* Mobile: Card Layout */}
       <div className="lg:hidden">
         <div>
           {/* Order Details Section */}
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-y-2 lg:gap-y-4 mb-4">
             {/* Row 1 */}
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Number</span>
-              <span className="text-sm lg:text-base text-gray-900 font-bold">{order.orderNumber}</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderNumber}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Date</span>
-              <span className="text-sm lg:text-base text-gray-900 font-bold">{order.orderDate}</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderDate}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered for</span>
-              <span className="text-sm lg:text-base text-gray-900 font-bold">{order.orderedFor}</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderedFor}</span>
             </div>
             {/* Row 2 */}
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered by</span>
-              <span className="text-sm lg:text-base text-gray-900 font-bold">{order.orderedBy}</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderedBy}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Total</span>
-              <span className="text-sm lg:text-base text-gray-900 font-bold">${order.total.toLocaleString()}</span>
+              <span className="text-base text-gray-900 font-bold">${order.total.toLocaleString()}</span>
             </div>
             <div className="flex flex-col">
-              {/* Empty space for grid alignment */}
+              <span className="font-regular text-sm text-gray-700">Shipping to</span>
+              <span className="text-base text-gray-900 font-bold">
+                {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}
+              </span>
+              <span className="text-sm text-gray-600">
+                {order.shippingAddress?.address}
+              </span>
             </div>
           </div>
           
@@ -82,8 +88,17 @@ export function OrderHeader({ order }: OrderHeaderProps) {
               <span className="font-regular text-sm text-gray-700">Total</span>
               <span className="text-sm xl:text-base text-gray-900 font-bold">${order.total.toLocaleString()}</span>
             </div>
+            <div className="flex flex-col">
+              <span className="font-regular text-sm text-gray-700">Shipping to</span>
+              <span className="text-base text-gray-900 font-bold">
+                {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}
+              </span>
+              <span className="text-sm text-gray-600">
+                {order.shippingAddress?.address}
+              </span>
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 lg:gap-4 ml-4 lg:ml-12 xl:ml-28">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 lg:gap-4 ml-4 lg:ml-8">
             <Link href={`/orders/details?orderId=${order.id}`} className="text-sm xl:text-base font-regular text-blue-600 hover:text-blue-800">View Order Details</Link>
             <div className="mr-2 ml-2 hidden h-6 w-px bg-gray-400 sm:block"></div>
             <button className="text-left text-sm xl:text-base font-regular text-blue-600 hover:text-blue-800">Track Order</button>

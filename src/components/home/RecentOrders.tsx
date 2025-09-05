@@ -200,14 +200,14 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                       </p>
                       {/* vertical divider */}
                       <div className="w-px h-4 bg-gray-300 hidden sm:block"></div>
-                      <p className="text-sm text-gray-800">
-                        Ordered on {formatDateWithAbbreviatedMonth(order.orderDate)}
-                      </p>
-                      {/* vertical divider */}
-                      <div className="w-px h-4 bg-gray-300 hidden sm:block"></div>
-                      <p className="text-sm text-gray-800">
-                        Ordered for {order.orderedFor}
-                      </p>
+                      <div className="flex flex-col lg:flex-row lg:gap-1">
+                        <p className="text-sm text-gray-800">
+                          Ordered on <span className="font-bold">{formatDateWithAbbreviatedMonth(order.orderDate)}</span>
+                        </p>
+                        <p className="text-sm text-gray-800">
+                          for <span className="font-bold">{order.orderedFor}</span>
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

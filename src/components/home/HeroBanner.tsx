@@ -222,7 +222,7 @@ export function HeroBanner({ products }: HeroBannerProps) {
 
       {/* Product indicators */}
       {rotatingProducts.length > 1 && (
-        <div className="flex justify-center mt-4 lg:mt-0 space-x-2">
+        <div className="flex justify-center mt-6 lg:mt-4 lg:mt-0 space-x-2">
           {rotatingProducts.map((_, index) => (
             <button
               key={index}
