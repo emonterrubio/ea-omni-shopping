@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -54,7 +54,10 @@ export function HeroBanner({ products }: HeroBannerProps) {
     return shuffled;
   };
 
-  const rotatingProducts = shuffleArray(heroEligibleProducts).slice(0, 5);
+  // Memoize the rotating products to prevent re-shuffling on every render
+  const rotatingProducts = useMemo(() => {
+    return shuffleArray(heroEligibleProducts).slice(0, 5);
+  }, [heroEligibleProducts]);
   
   // Log for debugging - remove in production
   console.log(`Hero Banner: ${heroEligibleProducts.length} eligible products, showing ${rotatingProducts.length} randomized products`);
@@ -165,14 +168,17 @@ export function HeroBanner({ products }: HeroBannerProps) {
   useEffect(() => {
     if (rotatingProducts.length <= 1) return;
 
+    let timeoutId: NodeJS.Timeout;
+    let fadeTimeoutId: NodeJS.Timeout;
+
     const scheduleNextRotation = () => {
       // Random timing between 6-9 seconds for more dynamic experience
       const randomDelay = 6000 + Math.random() * 3000; // 6000-9000ms
       
-      const timeoutId = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setIsVisible(false);
         
-        setTimeout(() => {
+        fadeTimeoutId = setTimeout(() => {
           setCurrentIndex((prevIndex) => 
             (prevIndex + 1) % rotatingProducts.length
           );
@@ -182,14 +188,19 @@ export function HeroBanner({ products }: HeroBannerProps) {
           scheduleNextRotation();
         }, 500); // Half second for fade out
       }, randomDelay);
-      
-      return timeoutId;
     };
 
-    const timeoutId = scheduleNextRotation();
+    // Add a small delay before starting rotation to prevent immediate glitch
+    const initialDelay = setTimeout(() => {
+      scheduleNextRotation();
+    }, 2000); // Wait 2 seconds before starting rotation
     
-    return () => clearTimeout(timeoutId);
-  }, [rotatingProducts.length]);
+    return () => {
+      clearTimeout(initialDelay);
+      if (timeoutId) clearTimeout(timeoutId);
+      if (fadeTimeoutId) clearTimeout(fadeTimeoutId);
+    };
+  }, [rotatingProducts]);
 
   return (
     <div className="py-2 sm:mt-4 sm:mb-8">
