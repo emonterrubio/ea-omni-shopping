@@ -22,23 +22,42 @@ export function HeroBanner({ products }: HeroBannerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
-  // Filter for products that would make good hero banners
+  // Filter for products that would make good hero banners - include all categories
   const heroEligibleProducts = (products || []).filter(product => {
     const category = product.category?.toLowerCase() || '';
     const model = product.model?.toLowerCase() || '';
-    return category === 'laptops' || category === 'desktops' || 
-           category === 'monitors' || category === 'keyboards' || 
-           category === 'mice' || category === 'headphones' || 
-           category === 'webcams' || category === 'docking stations' ||
-           category === 'backpacks' || category === 'mouse & keyboard' ||
-           category === 'trackpad' || model.includes('laptop') || 
-           model.includes('desktop') || model.includes('monitor') ||
-           model.includes('keyboard') || model.includes('mouse') ||
-           model.includes('headphone') || model.includes('webcam');
+    
+    // Include all main categories for better variety
+    return category === 'laptop' || category === 'laptops' || 
+           category === 'desktop' || category === 'desktops' ||
+           category === 'monitor' || category === 'monitors' || 
+           category === 'keyboard' || category === 'keyboards' || 
+           category === 'mouse' || category === 'mice' || 
+           category === 'headset' || category === 'headsets' || 
+           category === 'webcam' || category === 'webcams' || 
+           category === 'docking station' || category === 'docking stations' ||
+           category === 'mouse & keyboard' || category === 'trackpad' ||
+           // Also include products with relevant keywords in model names
+           model.includes('laptop') || model.includes('desktop') || 
+           model.includes('monitor') || model.includes('keyboard') ||
+           model.includes('mouse') || model.includes('headset') || 
+           model.includes('webcam') || model.includes('dock');
   });
 
-  // Use first 5 products for rotation, or all eligible products if less than 5
-  const rotatingProducts = heroEligibleProducts.slice(0, 5);
+  // Shuffle and use up to 5 products for rotation, ensuring fresh content every time
+  const shuffleArray = (array: any[]) => {
+    const shuffled = [...array];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  };
+
+  const rotatingProducts = shuffleArray(heroEligibleProducts).slice(0, 5);
+  
+  // Log for debugging - remove in production
+  console.log(`Hero Banner: ${heroEligibleProducts.length} eligible products, showing ${rotatingProducts.length} randomized products`);
 
   // Generate hero content for a product
   const generateHeroContent = (product: any): HeroContent => {
@@ -142,22 +161,34 @@ export function HeroBanner({ products }: HeroBannerProps) {
         imageAlt: "Featured Products"
       };
 
-  // Auto-rotate every 7 seconds
+  // Auto-rotate with randomized timing (6-9 seconds) for more dynamic experience
   useEffect(() => {
     if (rotatingProducts.length <= 1) return;
 
-    const interval = setInterval(() => {
-      setIsVisible(false);
+    const scheduleNextRotation = () => {
+      // Random timing between 6-9 seconds for more dynamic experience
+      const randomDelay = 6000 + Math.random() * 3000; // 6000-9000ms
       
-      setTimeout(() => {
-        setCurrentIndex((prevIndex) => 
-          (prevIndex + 1) % rotatingProducts.length
-        );
-        setIsVisible(true);
-      }, 500); // Half second for fade out
-    }, 7500); // 7.5 seconds total: 7 seconds display + 0.5 seconds fade
+      const timeoutId = setTimeout(() => {
+        setIsVisible(false);
+        
+        setTimeout(() => {
+          setCurrentIndex((prevIndex) => 
+            (prevIndex + 1) % rotatingProducts.length
+          );
+          setIsVisible(true);
+          
+          // Schedule the next rotation
+          scheduleNextRotation();
+        }, 500); // Half second for fade out
+      }, randomDelay);
+      
+      return timeoutId;
+    };
 
-    return () => clearInterval(interval);
+    const timeoutId = scheduleNextRotation();
+    
+    return () => clearTimeout(timeoutId);
   }, [rotatingProducts.length]);
 
   return (

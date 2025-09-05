@@ -164,9 +164,9 @@ export default function ComparePage() {
                   className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 >
                   <option value="">Select a product...</option>
-                  {availableProducts.map((product) => (
-                    <option key={product.model} value={product.model}>
-                      {product.manufacturer} {product.model}
+                  {availableProducts.map((product, productIndex) => (
+                    <option key={`${product.manufacturer}-${product.model}-${product.price_usd || product.ea_estimated_price_usd}-${productIndex}`} value={product.model}>
+                      {product.manufacturer} {product.model} - ${(product.price_usd || product.ea_estimated_price_usd || 0).toLocaleString()}
                     </option>
                   ))}
                 </select>
