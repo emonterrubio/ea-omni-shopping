@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -22,7 +22,7 @@ export function HeroBanner({ products }: HeroBannerProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(true);
 
-  // Filter for products that would make good hero banners - include all categories
+  // Filter for products that would make good hero banners - include more categories for variety
   const heroEligibleProducts = (products || []).filter(product => {
     const category = product.category?.toLowerCase() || '';
     const model = product.model?.toLowerCase() || '';
@@ -44,27 +44,25 @@ export function HeroBanner({ products }: HeroBannerProps) {
            model.includes('webcam') || model.includes('dock');
   });
 
-  // Shuffle and use up to 5 products for rotation, ensuring fresh content every time
-  const shuffleArray = (array: any[]) => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  };
-
-  // Memoize the rotating products to prevent re-shuffling on every render
-  const rotatingProducts = useMemo(() => {
-    return shuffleArray(heroEligibleProducts).slice(0, 5);
-  }, [heroEligibleProducts]);
-  
-  // Log for debugging - remove in production
-  console.log(`Hero Banner: ${heroEligibleProducts.length} eligible products, showing ${rotatingProducts.length} randomized products`);
+  // Use first 5 products for rotation
+  const rotatingProducts = heroEligibleProducts.slice(0, 5);
 
   // Generate hero content for a product
   const generateHeroContent = (product: any): HeroContent => {
-    const brand = product.brand || 'Premium';
+    // Safety check for undefined product
+    if (!product) {
+      return {
+        title: "Featured Products",
+        subtitle: "Discover Our Collection",
+        description: "Explore our wide range of IT equipment and accessories.",
+        buttonText: "Browse Catalog",
+        buttonLink: "/catalog",
+        imageSrc: "/images/placeholder.png",
+        imageAlt: "Featured Products"
+      };
+    }
+    
+    const brand = product.brand || product.manufacturer || 'Premium';
     const model = product.model || 'Device';
     const category = product.category || 'Hardware';
     
@@ -152,7 +150,7 @@ export function HeroBanner({ products }: HeroBannerProps) {
   };
 
   // Get current hero content
-  const currentContent = rotatingProducts.length > 0 
+  const currentContent = rotatingProducts.length > 0 && rotatingProducts[currentIndex]
     ? generateHeroContent(rotatingProducts[currentIndex])
     : {
         title: "Featured Products",
@@ -164,43 +162,23 @@ export function HeroBanner({ products }: HeroBannerProps) {
         imageAlt: "Featured Products"
       };
 
-  // Auto-rotate with randomized timing (6-9 seconds) for more dynamic experience
+  // Auto-rotate every 5 seconds
   useEffect(() => {
     if (rotatingProducts.length <= 1) return;
 
-    let timeoutId: NodeJS.Timeout;
-    let fadeTimeoutId: NodeJS.Timeout;
-
-    const scheduleNextRotation = () => {
-      // Random timing between 6-9 seconds for more dynamic experience
-      const randomDelay = 6000 + Math.random() * 3000; // 6000-9000ms
+    const interval = setInterval(() => {
+      setIsVisible(false);
       
-      timeoutId = setTimeout(() => {
-        setIsVisible(false);
-        
-        fadeTimeoutId = setTimeout(() => {
-          setCurrentIndex((prevIndex) => 
-            (prevIndex + 1) % rotatingProducts.length
-          );
-          setIsVisible(true);
-          
-          // Schedule the next rotation
-          scheduleNextRotation();
-        }, 500); // Half second for fade out
-      }, randomDelay);
-    };
+      setTimeout(() => {
+        setCurrentIndex((prevIndex) => 
+          (prevIndex + 1) % rotatingProducts.length
+        );
+        setIsVisible(true);
+      }, 500); // Half second for fade out
+    }, 5000);
 
-    // Add a small delay before starting rotation to prevent immediate glitch
-    const initialDelay = setTimeout(() => {
-      scheduleNextRotation();
-    }, 2000); // Wait 2 seconds before starting rotation
-    
-    return () => {
-      clearTimeout(initialDelay);
-      if (timeoutId) clearTimeout(timeoutId);
-      if (fadeTimeoutId) clearTimeout(fadeTimeoutId);
-    };
-  }, [rotatingProducts]);
+    return () => clearInterval(interval);
+  }, [rotatingProducts.length]);
 
   return (
     <div className="py-2 sm:mt-4 sm:mb-8">
