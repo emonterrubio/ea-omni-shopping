@@ -54,7 +54,7 @@ export interface EAMonitor extends EAProduct {
   hdr: string;
   color_depth: string;
   ports: string[];
-  suitable_for: string;
+  best_for: string;
 }
 
 // Docking Station specific interface

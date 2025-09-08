@@ -2,17 +2,20 @@
   {
     "manufacturer": "Dell",
     "model": "Pro Thunderbolt 4 Smart Dock SD25TB4",
+    "display_name": "Pro Thunderbolt 4 Smart Dock",
     "category": "Docking Station",
     "price_usd": 185,
-    "price_cad": 252,
+    "price_cad": 287,
     "image": "/images/dell-sd25tb4.png",
-    "description": "Enhance productivity with seamless dual/triple display connectivity and powerful charging.",
-    "cdw_price_cad": 287.17,
-    "cdw_price_usd": null,
+    "description": "High-performance Thunderbolt 4 smart dock with 130W power delivery.",
+    "full_description": "High-performance Thunderbolt 4 smart dock with 130W power delivery. Intended for users whose selected monitor does not have a built-in dock. Ideal for powering demanding laptops or connecting up to four displays.",
+    "cdw_price_cad": 287,
+    "cdw_price_usd": 185,
     "cdw_mfg_number_canada": "DELL-SD25TB4",
-    "cdw_mfg_number_us": null,
+    "cdw_mfg_number_us": "DELL-SD25TB4",
     "compatibility": "Tier 1 Dell Laptops",
-    "intended_for": "Users not ordering a monitor with built-in dock from this catalog or connecting 3 or 4 external displays.",
+    "intended_for": "Users whose selected monitor does not have a built-in dock",
+    "ideal_for": "Powering demanding laptops or connecting up to four displays",
     "power_delivery_watt": 130,
     "max_monitors": "4 monitors x 4K (3840x2160) @ 60Hz",
     "ports": [
@@ -23,22 +26,27 @@
       "4x USB Type-A",
       "2x USB Type-C",
       "1x 2.5GbE Ethernet"
-    ]
+    ],
+    "warranty": "3 yrs.",
+    "quantity_in_stock": 9
   },
   {
     "manufacturer": "Dell",
     "model": "Performance Dock WD19DCS",
+    "display_name": "Performance Dock",
     "category": "Docking Station",
     "price_usd": 225,
-    "price_cad": 306,
+    "price_cad": 352,
     "image": "/images/dell-wd19dcs.png",
-    "description": "Boost your PC's power up to 210 W on this powerful modular Dual USB-C dock with a future-ready design.",
-    "cdw_price_cad": 352.35,
-    "cdw_price_usd": null,
+    "description": "Powerful and modular dual USB-C dock with up to 210W power delivery.",
+    "full_description": "Powerful and modular dual USB-C dock with up to 210W power delivery. Intended for users whose selected monitor does not have a built-in dock. Ideal for high-power workstations or connecting up to three displays.",
+    "cdw_price_cad": 352,
+    "cdw_price_usd": 225,
     "cdw_mfg_number_canada": "DELL-WD19DCS",
-    "cdw_mfg_number_us": null,
+    "cdw_mfg_number_us": "DELL-WD19DCS",
     "compatibility": "Tier 2/3 Dell Laptops",
-    "intended_for": "Users not ordering a monitor with built-in dock from this catalog or connecting 3 external displays.",
+    "intended_for": "Users whose selected monitor does not have a built-in dock",
+    "ideal_for": "High-power workstations or connecting up to three displays",
     "power_delivery_watt": 210,
     "max_monitors": "3 monitors x 4K (3840x2160) @ 60Hz",
     "ports": [
@@ -49,22 +57,27 @@
       "3x USB Type-A",
       "2x USB Type-C",
       "1x 1GbE Ethernet"
-    ]
+    ],
+    "warranty": "3 yrs.",
+    "quantity_in_stock": 7
   },
   {
     "manufacturer": "Belkin",
     "model": "Pro Thunderbolt 4 Dock",
+    "display_name": "Pro Thunderbolt 4 Dock",
     "category": "Docking Station",
     "price_usd": 300,
-    "price_cad": 408,
+    "price_cad": 487,
     "image": "/images/belkin-pro-thunderbolt-4-dock.png",
-    "description": "Multipurpose charging dock delivers up to 90W of charging power. With a USB-C PD 3.0 port you can fast charge any device at the same time.",
-    "cdw_price_cad": 486.59,
-    "cdw_price_usd": null,
+    "description": "Versatile Thunderbolt 4 dock for both macOS and Windows workstations.",
+    "full_description": "Versatile Thunderbolt 4 dock for both macOS and Windows workstations. Intended for users whose selected monitor does not have a built-in dock. Ideal for creating a powerful, single-cable setup.",
+    "cdw_price_cad": 487,
+    "cdw_price_usd": 300,
     "cdw_mfg_number_canada": "INC006TTSGY",
-    "cdw_mfg_number_us": null,
+    "cdw_mfg_number_us": "INC006TTSGY",
     "compatibility": "Apple Laptops",
-    "intended_for": "Users not ordering a monitor with built-in dock from this catalog.",
+    "intended_for": "Users whose selected monitor does not have a built-in dock",
+    "ideal_for": "Creating a powerful, single-cable setup",
     "power_delivery_watt": 90,
     "max_monitors": "2 monitors x 4K (3840x2160) @ 60Hz",
     "ports": [
@@ -74,6 +87,8 @@
       "4x USB Type-A",
       "1x USB Type-C",
       "1x 1GbE Ethernet"
-    ]
+    ],
+    "warranty": "3 yrs.",
+    "quantity_in_stock": 6
   }
 ]

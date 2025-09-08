@@ -1,13 +1,13 @@
 import React from "react";
 import { Mail, Phone, MessageCircle, HelpCircle, FileText, Users } from "lucide-react";
+import { PageLayout } from "@/components/layout/PageLayout";
 
 export default function SupportPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 md:px-16 py-8">
+    <PageLayout>
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Support & Help</h1>
-          <p className="text-gray-600">Get help with your IT hardware needs and technical support</p>
+          <h1 className="text-5xl font-medium text-gray-900 mt-6 mb-4">Support & Help</h1>
+          <p className="font-base font-regular text-gray-600 mb-8">Get help with your IT hardware needs and technical support</p>
         </div>
 
         {/* Contact Methods */}
@@ -54,40 +54,65 @@ export default function SupportPage() {
               <h3 className="text-lg font-semibold text-gray-900">FAQ</h3>
             </div>
             <p className="text-gray-600 mb-4">Find answers to commonly asked questions</p>
-            <button className="text-blue-600 hover:text-blue-800 font-medium">
-              Browse FAQ
-            </button>
-          </div>
-
-          <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
-            <div className="flex items-center mb-4">
-              <FileText className="h-8 w-8 text-blue-600 mr-3" />
-              <h3 className="text-lg font-semibold text-gray-900">Documentation</h3>
+            
+            {/* Top FAQ Questions */}
+            <div className="space-y-3 mb-4">
+              <div className="border-l-4 border-blue-200 pl-3">
+                <h4 className="font-medium text-gray-900 mb-1">How do I place an order for hardware?</h4>
+                <p className="text-sm text-gray-600">Browse our catalog, add items to cart, and complete checkout with your business information and approval details.</p>
+              </div>
+              
+              <div className="border-l-4 border-blue-200 pl-3">
+                <h4 className="font-medium text-gray-900 mb-1">What is the typical delivery time?</h4>
+                <p className="text-sm text-gray-600">Most hardware items are delivered within 5 business days. Express shipping options are available for urgent needs.</p>
+              </div>
+              
+              <div className="border-l-4 border-blue-200 pl-3">
+                <h4 className="font-medium text-gray-900 mb-1">Can I return or exchange hardware?</h4>
+                <p className="text-sm text-gray-600">Yes, we offer a 30-day return policy for unopened items. Contact support for return authorization and instructions.</p>
+              </div>
+              
+              <div className="border-l-4 border-blue-200 pl-3">
+                <h4 className="font-medium text-gray-900 mb-1">How do I get approval for expensive items?</h4>
+                <p className="text-sm text-gray-600">Items over $500 require Finance Partner and Budget Owner approval. The system will guide you through the approval process.</p>
+              </div>
             </div>
-            <p className="text-gray-600 mb-4">Access product manuals and technical guides</p>
+            
             <button className="text-blue-600 hover:text-blue-800 font-medium">
-              View Docs
+              Browse All FAQ
             </button>
           </div>
-        </div>
 
-        {/* Support Team */}
-        <div className="bg-white rounded-lg p-6 shadow-sm">
-          <div className="flex items-center mb-4">
-            <Users className="h-8 w-8 text-blue-600 mr-3" />
-            <h3 className="text-lg font-semibold text-gray-900">Our Support Team</h3>
-          </div>
-          <p className="text-gray-600 mb-4">
-            Our dedicated IT support team is available to help you with hardware selection, 
-            technical issues, and any questions about our products and services.
-          </p>
-          <div className="text-sm text-gray-500">
-            <p>• Business Hours: Monday - Friday, 9:00 AM - 6:00 PM PST</p>
-            <p>• Emergency Support: Available 24/7 for critical issues</p>
-            <p>• Response Time: We aim to respond to all inquiries within 2 business hours</p>
+          <div className="space-y-6">
+            <div className="bg-white rounded-lg p-6 shadow-sm hover:shadow-md transition-shadow">
+              <div className="flex items-center mb-4">
+                <FileText className="h-8 w-8 text-blue-600 mr-3" />
+                <h3 className="text-lg font-semibold text-gray-900">Documentation</h3>
+              </div>
+              <p className="text-gray-600 mb-4">Access product manuals and technical guides</p>
+              <button className="text-blue-600 hover:text-blue-800 font-medium">
+                View Docs
+              </button>
+            </div>
+
+            {/* Support Team */}
+            <div className="bg-white rounded-lg p-6 shadow-sm">
+              <div className="flex items-center mb-4">
+                <Users className="h-8 w-8 text-blue-600 mr-3" />
+                <h3 className="text-lg font-semibold text-gray-900">Our Support Team</h3>
+              </div>
+              <p className="text-gray-600 mb-4">
+                Our dedicated IT support team is available to help you with hardware selection, 
+                technical issues, and any questions about our products and services.
+              </p>
+              <div className="text-sm text-gray-500">
+                <p>• Business Hours: Monday - Friday, 9:00 AM - 6:00 PM PST</p>
+                <p>• Emergency Support: Available 24/7 for critical issues</p>
+                <p>• Response Time: We aim to respond to all inquiries within 2 business hours</p>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+    </PageLayout>
   );
 }

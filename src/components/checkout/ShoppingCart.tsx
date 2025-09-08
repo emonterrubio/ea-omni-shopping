@@ -8,6 +8,7 @@ import { SquarePen } from "lucide-react";
 import { CartContext } from '../CartContext';
 import { useRouter } from 'next/navigation';
 import { hardwareData } from '../../data/eaProductData';
+import dockingStationData from '../../data/ea_dockingStation_data.json';
 import { PlatformInfoBanner } from '../ui/PlatformInfoBanner';
 
 // This should be a shared type, but for now, we define it here.
@@ -49,18 +50,54 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
       recommended: true,
     }));
 
-    // Get brands and categories from cart items
-    const cartBrands = cart.map(item => item.brand);
-    const cartCategories = cart.map(item => (item as any).category || 'Laptops'); // Default to Laptops if no category
+    // Get compatible docking stations based on cart items
+    const compatibleDocks: any[] = [];
+    
+    // For each cart item, find its compatible docking station
+    for (const cartItem of cart) {
+      // Find the full product data to get the dock field
+      const fullProductData = hardwareData.find(p => p.model === cartItem.model);
+      if (fullProductData && (fullProductData as any).dock) {
+        const dockModel = (fullProductData as any).dock;
+        // Find compatible dock by matching model names (handle different naming conventions)
+        const compatibleDock = dockingStationData.find(dock => 
+          dock.model === dockModel || 
+          dock.model.includes(dockModel) || 
+          dockModel.includes(dock.model.split(' ').pop() || '') // Match by last part of model name
+        );
+        
+        if (compatibleDock && !compatibleDocks.some(d => d.model === compatibleDock.model)) {
+          compatibleDocks.push({
+            brand: compatibleDock.manufacturer,
+            model: compatibleDock.model,
+            category: compatibleDock.category,
+            description: compatibleDock.description || `${compatibleDock.manufacturer} ${compatibleDock.model}`,
+            card_description: compatibleDock.description || `${compatibleDock.manufacturer} ${compatibleDock.model}`,
+            features: compatibleDock.description || `${compatibleDock.manufacturer} ${compatibleDock.model}`,
+            image: compatibleDock.image || `/images/${compatibleDock.manufacturer.toLowerCase()}_${compatibleDock.model.toLowerCase().replace(/\s+/g, "_")}.png`,
+            price: compatibleDock.price_usd as number,
+            recommended: true,
+          });
+        }
+      }
+    }
 
-    // Find related items (same brand or same category, excluding items already in cart)
+    // If we have compatible docks, return them (up to 3)
+    if (compatibleDocks.length > 0) {
+      return compatibleDocks.slice(0, 3);
+    }
+
+    // Fallback to original logic if no compatible docks found
+    const cartBrands = cart.map(item => item.brand);
+    const cartCategories = cart.map(item => (item as any).category || 'Laptops');
+
     const relatedItems = allProducts
       .filter(product => 
-        !cart.some(cartItem => cartItem.model === product.model) && // Not already in cart
+        !cart.some(cartItem => cartItem.model === product.model) &&
         (cartBrands.includes(product.brand) || cartCategories.includes(product.category))
       )
-      .sort(() => 0.5 - Math.random()) // Randomize order
-      .slice(0, 3); // Take first 3
+      .sort(() => 0.5 - Math.random())
+      .slice(0, 3);
 
     return relatedItems;
   };

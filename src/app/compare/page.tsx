@@ -7,6 +7,7 @@ import { ProductComparisonList } from "@/components/product/ProductComparisonLis
 import { hardwareData } from "@/data/eaProductData";
 import { EAProductType } from "@/types";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
+import { Laptop } from 'lucide-react';
 
 export default function ComparePage() {
   const [selectedProducts, setSelectedProducts] = useState<EAProductType[]>([]);
@@ -22,11 +23,18 @@ export default function ComparePage() {
   }, [availableProducts, selectedProducts.length]);
 
   const handleProductChange = (index: number, productModel: string) => {
-    const product = availableProducts.find(p => p.model === productModel);
-    if (product) {
+    if (productModel === "none") {
+      // Remove the product at this index
       const newSelectedProducts = [...selectedProducts];
-      newSelectedProducts[index] = product as EAProductType;
+      newSelectedProducts[index] = null as any;
       setSelectedProducts(newSelectedProducts);
+    } else {
+      const product = availableProducts.find(p => p.model === productModel);
+      if (product) {
+        const newSelectedProducts = [...selectedProducts];
+        newSelectedProducts[index] = product as EAProductType;
+        setSelectedProducts(newSelectedProducts);
+      }
     }
   };
 
@@ -88,7 +96,7 @@ export default function ComparePage() {
         }
         
         // Use cases
-        if ((product as any).suitable_for) specs.push({ label: "Suitable For", value: (product as any).suitable_for });
+        if ((product as any).best_for) specs.push({ label: "Best For", value: (product as any).best_for });
         if ((product as any).intended_for) specs.push({ label: "Intended For", value: (product as any).intended_for });
         break;
         
@@ -159,14 +167,15 @@ export default function ComparePage() {
             {[0, 1, 2].map((index) => (
               <div key={index} className="relative">
                 <select
-                  value={selectedProducts[index]?.model || ""}
+                  value={selectedProducts[index] ? selectedProducts[index].model : (selectedProducts[index] === null ? "none" : "")}
                   onChange={(e) => handleProductChange(index, e.target.value)}
                   className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
                 >
                   <option value="">Select a product...</option>
+                  <option value="none">None</option>
                   {availableProducts.map((product, productIndex) => (
                     <option key={`${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}-${productIndex}`} value={product.model}>
-                      {product.manufacturer} {product.model} - ${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}
+                      {product.manufacturer} {(product as any).display_name ? `${(product as any).display_name} (${product.model})` : product.model} - ${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}
                     </option>
                   ))}
                 </select>
@@ -180,14 +189,15 @@ export default function ComparePage() {
         </div>
 
         {/* Comparison Results */}
-        {selectedProducts.length > 0 && (
+        {selectedProducts.filter(p => p).length > 0 && (
           <div>
             <ProductComparisonList
-              products={selectedProducts.map(p => ({
+              products={selectedProducts.filter(p => p).map(p => ({
                 ...p,
                 brand: p.manufacturer,
                 model: p.model,
                 category: p.category,
+                cpu: (p as any).cpu,
                 description: (p as any).description || `${p.manufacturer} ${p.model}`,
                 card_description: (p as any).intended_for ? 
                   `${(p as any).description || `${p.manufacturer} ${p.model}`} Intended for ${(p as any).intended_for}.` : 
@@ -204,12 +214,10 @@ export default function ComparePage() {
         )}
 
         {/* Empty State */}
-        {selectedProducts.length === 0 && (
+        {selectedProducts.filter(p => p).length === 0 && (
           <div className="bg-white rounded-lg shadow p-12 text-center">
             <div className="text-gray-400 mb-6">
-              <svg className="h-24 w-24 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
+            <Laptop className="w-24 h-24 mx-auto" />
             </div>
             <h2 className="text-2xl font-semibold text-gray-900 mb-4">No products selected for comparison</h2>
             <p className="text-gray-600 mb-8">

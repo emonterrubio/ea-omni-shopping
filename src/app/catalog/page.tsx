@@ -16,6 +16,7 @@ export default function CatalogPage() {
   const allProducts = hardwareData.map((product) => ({
     brand: product.manufacturer,
     model: product.model,
+    display_name: (product as any).display_name,
     category: product.category,
     description: (product as any).description || `${product.manufacturer} ${product.model}`,
     card_description: (product as any).description || `${product.manufacturer} ${product.model}`,

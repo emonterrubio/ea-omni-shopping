@@ -6,13 +6,14 @@
     "os": "Windows",
     "screen_size": "14\"",
     "price_usd": 1345,
-    "price_cad": 1829,
+    "price_cad": 2018,
     "weight_lbs": 2.52,
     "battery_life_hrs": 13.5,
     "battery_life_description": "Good (Full-Workday Battery)",
     "performance_rating": "Tier 3",
+    "portability_rating": "Ultraportable",
     "cpu": "Intel Core Ultra 7 268V vPro",
-    "gpu": "Integrated Intel Arc graphics",
+    "gpu": "Integrated Intel® Arc™ graphics",
     "memory": "32GB LPDDR5x",
     "storage": "1TB",
     "display": {
@@ -24,16 +25,18 @@
       "touch": "Non-Touch"
     },
     "ports": [
-      "2 x Thunderbolt 4 (Type-C)",
+      "2 x Thunderbolt™ 4 (Type-C)",
       "2 x USB 3.2 (Type-A)",
       "1 x HDMI 2.1"
     ],
-    "power_watt": "65W",
+    "power_watt": 65,
+    "warranty": "3 yrs.",
     "dock": "Dell SD25TB4",
     "description": "Standard business laptop ideal for office applications.",
-    "not_suitable_for": "Running EA game titles, data or video intensive tasks.",
-    "intended_for": "General business professionals in corporate roles, frequent travelers, frequent meeting attendees.",
-    "image": "/images/dell_pro_14_plus.png"
+    "not_suitable_for": "Running EA game titles, data/video intensive tasks.",
+    "intended_for": "General business, corporate roles, travel.",
+    "image": "/images/dell_pro_14_plus.png",
+    "quantity_in_stock": 5
   },
   {
     "manufacturer": "Dell",
@@ -42,13 +45,14 @@
     "os": "Windows",
     "screen_size": "14\"",
     "price_usd": 1615,
-    "price_cad": 2196,
+    "price_cad": 2557,
     "weight_lbs": 3.43,
     "battery_life_hrs": 18,
     "battery_life_description": "Good (Full-Workday Battery)",
     "performance_rating": "Tier 3",
+    "portability_rating": "Portable",
     "cpu": "Intel Core Ultra 7 268V vPro",
-    "gpu": "Integrated Intel Arc graphics",
+    "gpu": "Integrated Intel® Arc™ graphics",
     "memory": "32GB LPDDR5x",
     "storage": "1TB",
     "display": {
@@ -60,16 +64,18 @@
       "touch": "Touch"
     },
     "ports": [
-      "2 x Thunderbolt 4 (Type-C)",
+      "2 x Thunderbolt™ 4 (Type-C)",
       "1 x USB 3.2 (Type-A)",
       "1 x HDMI 2.1"
     ],
-    "power_watt": "65W",
+    "power_watt": 65,
+    "warranty": "3 yrs.",
     "dock": "Dell SD25TB4",
     "description": "Premium business laptop featuring a refined material quality and OLED touch display for vibrant visuals and enhanced interaction.",
-    "not_suitable_for": "3D rendering, game development tasks, or complex data simulations.",
-    "intended_for": "Managing roles, general business professionals, frequent travelers or meeting attendees who value a high-quality display for presentations and media.",
-    "image": "/images/dell_pro_14_premium.png"
+    "not_suitable_for": "3D rendering or game development tasks.",
+    "intended_for": "Managers, business roles, and high-quality presentations.",
+    "image": "/images/dell_pro_14_premium.png",
+    "quantity_in_stock": 37
   },
   {
     "manufacturer": "Dell",
@@ -78,12 +84,13 @@
     "os": "Windows",
     "screen_size": "14\"",
     "price_usd": 2944,
-    "price_cad": 4004,
+    "price_cad": 4093,
     "weight_lbs": 3.55,
     "battery_life_hrs": 9,
     "battery_life_description": "Moderate (Partial-Workday Battery)",
     "performance_rating": "Tier 2",
-    "cpu": "Intel Core Ultra 7 265H",
+    "portability_rating": "Portable",
+    "cpu": "Intel® Core™ Ultra 7 265H",
     "gpu": "NVidia RTX Pro 2000 (8GB)",
     "memory": "32GB LPDDR5x",
     "storage": "1TB",
@@ -96,16 +103,18 @@
       "touch": "Touch"
     },
     "ports": [
-      "2 x Thunderbolt 5 (Type-C)",
-      "2 x Thunderbolt 4 (Type-C)",
+      "2 x Thunderbolt™ 5 (Type-C)",
+      "2 x Thunderbolt™ 4 (Type-C)",
       "1 x HDMI 2.1"
     ],
-    "power_watt": "130W",
+    "power_watt": 130,
+    "warranty": "3 yrs.",
     "dock": "Dell SD25TB4",
     "description": "Compact and powerful mobile workstation with a dedicated graphics card for creative and technical tasks, capable of running EA titles.",
-    "not_suitable_for": "The most extreme, high-end 3D rendering or scientific computing that requires a top-tier workstation.",
-    "intended_for": "Producers, Development or Technical Directors roles required to run EA's titles who are frequent travelers who need GPU power away from their desks.",
-    "image": "/images/dell_pro_max_14_premium.png"
+    "not_suitable_for": "Extreme high-end rendering or scientific computing.",
+    "intended_for": "Producers/Directors needing portable GPU power, runs EA titles.",
+    "image": "/images/dell_pro_max_14_premium.png",
+    "quantity_in_stock": 6
   },
   {
     "manufacturer": "Dell",
@@ -114,12 +123,13 @@
     "os": "Windows",
     "screen_size": "16\"",
     "price_usd": 3105,
-    "price_cad": 4206,
+    "price_cad": 4241,
     "weight_lbs": 4.82,
     "battery_life_hrs": 8,
     "battery_life_description": "Performance-Focused (Plug-in Recommended)",
     "performance_rating": "Tier 2",
-    "cpu": "Intel Core Ultra 7 265H",
+    "portability_rating": "Heavy",
+    "cpu": "Intel® Core™ Ultra 7 265H",
     "gpu": "NVidia RTX Pro 2000 (8GB)",
     "memory": "32GB LPDDR5x",
     "storage": "1TB",
@@ -132,16 +142,18 @@
       "touch": "Touch"
     },
     "ports": [
-      "2 x Thunderbolt 5 (Type-C)",
-      "2 x Thunderbolt 4 (Type-C)",
+      "2 x Thunderbolt™ 5 (Type-C)",
+      "1 x Thunderbolt™ 4 (Type-C)",
       "1 x HDMI 2.1"
     ],
-    "power_watt": "165W",
+    "power_watt": 165,
+    "warranty": "3 yrs.",
     "dock": "Dell WD19DCS",
     "description": "High-performance mobile workstation for demanding engineering and design. Features a high-resolution OLED display and a professional GPU, suitable for EA titles.",
-    "not_suitable_for": "Users who prioritize portability and light weight; office tasks that do not require a dedicated GPU, frequent travel.",
-    "intended_for": "Desk-centric Producers, Development or Technical Directors roles as well as Engineers, Architects and Designers.",
-    "image": "/images/dell_pro_max_16_premium.png"
+    "not_suitable_for": "Users prioritizing portability or for basic office tasks.",
+    "intended_for": "Desk-centric creative & technical roles (Engineering, Design); runs EA titles.",
+    "image": "/images/dell_pro_max_16_premium.png",
+    "quantity_in_stock": 17
   },
   {
     "manufacturer": "Dell",
@@ -150,12 +162,13 @@
     "os": "Windows",
     "screen_size": "16\"",
     "price_usd": 4168,
-    "price_cad": 5644,
+    "price_cad": 5683,
     "weight_lbs": 4.82,
     "battery_life_hrs": 7,
     "battery_life_description": "Performance-Focused (Plug-in Recommended)",
     "performance_rating": "Tier 1",
-    "cpu": "Intel Core Ultra 9 285H",
+    "portability_rating": "Heavy",
+    "cpu": "Intel® Core™ Ultra 9 285H",
     "gpu": "NVidia RTX Pro 3000 (12GB)",
     "memory": "64GB LPDDR5x",
     "storage": "4TB",
@@ -168,16 +181,18 @@
       "touch": "Touch"
     },
     "ports": [
-      "2 x Thunderbolt 5 (Type-C)",
-      "2 x Thunderbolt 4 (Type-C)",
+      "2 x Thunderbolt™ 5 (Type-C)",
+      "1 x Thunderbolt™ 4 (Type-C)",
       "1 x HDMI 2.1"
     ],
-    "power_watt": "165W",
+    "power_watt": 165,
+    "warranty": "3 yrs.",
     "dock": "Dell WD19DCS",
     "description": "The most powerful Windows laptop available, ideal for higher intensity development or artistic workloads. Capable of running and building our titles while remaining portable.",
-    "not_suitable_for": "Users who prioritize portability and light weight; office tasks that do not require a dedicated GPU.",
-    "intended_for": "Engineers, Developers, Game Designers, Creative Professionals and Technical Directors.",
-    "image": "/images/dell_pro_max_16_premium.png"
+    "not_suitable_for": "Users prioritizing portability or for basic office tasks.",
+    "intended_for": "Developers, designers, and artists building and running EA titles.",
+    "image": "/images/dell_pro_max_16_premium.png",
+    "quantity_in_stock": 25
   },
   {
     "manufacturer": "Apple",
@@ -186,33 +201,36 @@
     "os": "Mac OS",
     "screen_size": "14\"",
     "price_usd": 2125,
-    "price_cad": 2890,
+    "price_cad": 3769,
     "weight_lbs": 3.5,
     "battery_life_hrs": 18,
     "battery_life_description": "Excellent (All-Day Battery)",
     "performance_rating": "Tier 2",
+    "portability_rating": "Portable",
     "cpu": "M4 Pro - 14 Core",
     "gpu": "M4 Pro - 20 Core",
     "memory": "48GB Unified",
     "storage": "1TB",
     "display": {
       "panel": "Liquid Retina XDR",
-      "resolution": "QHD+ (3024 x 1964)",
+      "resolution": "QHD+ (3024 by 1964)",
       "refresh_rate": "120Hz",
       "brightness_nits": 1000,
       "hdr": "HDR",
       "touch": "Non-Touch"
     },
     "ports": [
-      "3 x Thunderbolt 5 (Type-C)",
+      "3 x Thunderbolt™ 5 (Type-C)",
       "1 x HDMI 2.1"
     ],
-    "power_watt": "96W",
+    "power_watt": 96,
+    "warranty": "3 yrs.",
     "dock": "Belkin Pro ThunderBolt 4",
     "description": "Powerful and portable laptop for users preferring MacOS. Exceptional performance for video editing and graphic design, with a world-class display and long battery life.",
-    "not_suitable_for": "Running EA game titles or Users requiring Windows-specific software.",
-    "intended_for": "Video editors, graphic designers, UI/UX designers, and marketing content creators working within the Apple ecosystem.",
-    "image": "/images/apple_macbook_pro_14.png"
+    "not_suitable_for": "Running EA game titles or Windows-specific software.",
+    "intended_for": "Video editing, graphic/UI/UX design, and marketing content creation.",
+    "image": "/images/apple_macbook_pro_14.png",
+    "quantity_in_stock": 25
   },
   {
     "manufacturer": "Apple",
@@ -221,11 +239,12 @@
     "os": "Mac OS",
     "screen_size": "16\"",
     "price_usd": 3500,
-    "price_cad": 4760,
+    "price_cad": 4059,
     "weight_lbs": 4.7,
     "battery_life_hrs": 20,
     "battery_life_description": "Excellent (All-Day Battery)",
     "performance_rating": "Tier 2",
+    "portability_rating": "Heavy",
     "cpu": "M4 Pro - 14 Core",
     "gpu": "M4 Pro - 20 Core",
     "memory": "48GB Unified",
@@ -239,14 +258,16 @@
       "touch": "Non-Touch"
     },
     "ports": [
-      "3 x Thunderbolt 5 (Type-C)",
+      "3 x Thunderbolt™ 5 (Type-C)",
       "1 x HDMI 2.1"
     ],
-    "power_watt": "140W",
+    "power_watt": 140,
+    "warranty": "3 yrs.",
     "dock": "Belkin Pro ThunderBolt 4",
     "description": "Large-screen creative workstation for users preferring MacOS, with a stunning display and performance for demanding video and design projects.",
-    "not_suitable_for": "Running EA game titles or users requiring Windows-specific software.",
-    "intended_for": "Video editors, motion graphics artists, music producers, and software developers working within the Apple ecosystem.",
-    "image": "/images/apple_macbook_pro_16.png"
+    "not_suitable_for": "Running EA game titles or Windows-specific software.",
+    "intended_for": "High-end video, motion graphics, music production, and development.",
+    "image": "/images/apple_macbook_pro_16.png",
+    "quantity_in_stock": 27
   }
 ]

@@ -1,14 +1,15 @@
 [
   {
     "manufacturer": "Dell",
-    "model": "Pro 24 Plus Monitor",
-    "description": "Boost your productivity and elevate your viewing experience with the Dell P2425H. This full HD LED monitor offers stunning visuals and smooth motion, perfect for both work and play.",
+    "model": "P2425HE",
+    "display_name": "Pro 24 Plus USB-C Hub Monitor",
+    "description": "Standard FHD hub monitor with certified eye comfort and 90W power delivery.",
     "category": "Monitor",
     "screen_size": "24\"",
     "price_usd": 155,
-    "price_cad": 211,
+    "price_cad": 274,
     "image": "/images/dell_p2425he.png",
-    "cdw_price_cad": 274.12,
+    "cdw_price_cad": 274,
     "cdw_price_usd": null,
     "cdw_mfg_number_canada": "DELL-P2425HE",
     "cdw_mfg_number_us": null,
@@ -28,19 +29,22 @@
       "4x USB Type-A",
       "1x 1GbE Ethernet"
     ],
-    "suitable_for": "Standard productivity, web browsing, office applications.",
-    "intended_for": "General business professionals in corporate roles."
+    "best_for": "Everyday productivity, web browsing, and standard office applications.",
+    "intended_for": "General business professionals in corporate roles.",
+    "warranty": "3 yrs.",
+    "quantity_in_stock": 10
   },
   {
     "manufacturer": "Dell",
-    "model": "UltraSharp LED Thunderbolt Monitor",
-    "description": "Experience stunning clarity and vibrant visuals. The U2725QE's expansive 27-inch screen and brilliant display ensure every detail comes to life, making it perfect for both work and entertainment.",
+    "model": "U2725QE",
+    "display_name": "UltraSharp 4K USB-C Hub Monitor",
+    "description": "Premium 27\" 4K monitor with superior color accuracy and a 120Hz refresh rate.",
     "category": "Monitor",
     "screen_size": "27\"",
     "price_usd": 545,
-    "price_cad": 741,
+    "price_cad": 866,
     "image": "/images/dell_u2725qe.png",
-    "cdw_price_cad": 865.7,
+    "cdw_price_cad": 866,
     "cdw_price_usd": null,
     "cdw_mfg_number_canada": "DELL-U2725QE",
     "cdw_mfg_number_us": null,
@@ -62,19 +66,22 @@
       "3x USB Type-C",
       "1x 2.5GbE Ethernet"
     ],
-    "suitable_for": "Color-critical image and video work, high-resolution content creation, design review.",
-    "intended_for": "Creative professionals (Art, Audio, Graphic Design, Video Editing)."
+    "best_for": "Color-critical work, high-resolution content creation, and design reviews.",
+    "intended_for": "Creative professionals (Art, Graphic Design, Video Editing).",
+    "warranty": "3 yrs.",
+    "quantity_in_stock": 78
   },
   {
     "manufacturer": "Dell",
-    "model": "UltraSharp Curved Thunderbolt Monitor",
-    "description": "Experience visual brilliance with this 34-inch curved monitor. The U3425WE delivers an immersive viewing experience, bringing your content to life with stunning clarity.",
+    "model": "U3425WE",
+    "display_name": "UltraSharp Curved USB-C Hub Monitor",
+    "description": "Immersive 34\" curved hub monitor designed for focus and multitasking.",
     "category": "Monitor",
     "screen_size": "34\"",
     "price_usd": 675,
-    "price_cad": 918,
+    "price_cad": 1072,
     "image": "/images/dell_u3425we.png",
-    "cdw_price_cad": 1072.13,
+    "cdw_price_cad": 1072,
     "cdw_price_usd": null,
     "cdw_mfg_number_canada": "DELL-U3425WE",
     "cdw_mfg_number_us": null,
@@ -83,7 +90,7 @@
     "aspect_ratio": "Ultrawide (21:9)",
     "panel": "IPS",
     "refresh_rate": "120 Hz",
-    "response_time": "5ms",
+    "response_time": "8ms",
     "hdr": "No",
     "color_depth": "1.07 Billion Colors",
     "ports": [
@@ -95,7 +102,9 @@
       "3x USB Type-C",
       "1x 2.5GbE Ethernet"
     ],
-    "suitable_for": "Managing large spreadsheets, multiple data streams, coding, timeline-based applications.",
-    "intended_for": "Data science, Software development and those preferring a single monitor setup or with limited desk space."
+    "best_for": "Managing large spreadsheets, coding, and viewing multiple data streams.",
+    "intended_for": "Developers, data scientists, and users preferring a single-screen setup.",
+    "warranty": "3 yrs.",
+    "quantity_in_stock": 15
   }
 ]

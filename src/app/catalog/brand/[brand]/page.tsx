@@ -237,6 +237,7 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
               product={{
                 manufacturer: product.manufacturer,
                 model: product.model,
+                display_name: (product as any).display_name,
                 category: product.category,
                 description: (product as any).description || '',
                 card_description: (product as any).description || '',

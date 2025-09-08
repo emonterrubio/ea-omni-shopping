@@ -1,6 +1,7 @@
 export interface ProductCardProps {
   manufacturer: string;
   model: string;
+  display_name?: string;
   category: string;
   description?: string;
   price_usd: number;

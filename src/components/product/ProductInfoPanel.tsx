@@ -14,7 +14,9 @@ interface ProductInfoPanelProps {
   category?: string;
   intendedFor?: string;
   notSuitableFor?: string;
-  suitableFor?: string;
+  bestFor?: string;
+  idealFor?: string;
+  product?: any;
   onQuantityChange?: (qty: number) => void;
   onAddToCart?: () => void;
   onCompare?: () => void;
@@ -33,7 +35,9 @@ export function ProductInfoPanel({
   category,
   intendedFor,
   notSuitableFor,
-  suitableFor,
+  bestFor,
+  idealFor,
+  product,
   onQuantityChange,
   onAddToCart,
   onCompare,
@@ -58,20 +62,36 @@ export function ProductInfoPanel({
       {/* Description */}
       <div className="text-base text-gray-800 leading-snug">
         {description}
-        {suitableFor && (
-          <span> <strong>Suitable for</strong> {suitableFor.toLowerCase()}</span>
+        {bestFor && !["keyboard", "mouse", "webcam", "mouse & keyboard", "trackpad"].includes(category?.toLowerCase() || "") && (
+          <span> Best for {bestFor.toLowerCase()}</span>
         )}
-        {intendedFor && (
-          <span> <strong>Intended for</strong> {intendedFor.toLowerCase()}</span>
+        {intendedFor && !["keyboard", "mouse", "webcam", "mouse & keyboard", "trackpad"].includes(category?.toLowerCase() || "") && (
+          <span> Intended for {intendedFor.toLowerCase()}</span>
         )}
-        {notSuitableFor && (
-          <span> <strong>Not suitable for</strong> {notSuitableFor.toLowerCase()}</span>
+        {idealFor && !["keyboard", "mouse", "webcam", "mouse & keyboard", "trackpad"].includes(category?.toLowerCase() || "") && (
+          <span> Ideal for {idealFor.toLowerCase()}</span>
         )}
       </div>
+      
+      {/* Not Suitable For Banner - Only show for laptops */}
+      {notSuitableFor && category?.toLowerCase() === "laptop" && (
+        <div className="bg-amber-50 p-4 rounded-r-md">
+          <div className="flex items-start">
+            <div>
+              <h3 className="text-basic font-bold text-amber-800">
+                Not suitable for
+              </h3>
+              <div className="text-sm text-amber-700">
+                {notSuitableFor}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div>
         {/* Availability */}
         <div className="font-base text-green-600 font-medium">
-          {Math.floor(Math.random() * 10) + 1} units in stock
+          {product?.quantity_in_stock || Math.floor(Math.random() * 10) + 1} units in stock
         </div>
         {/* Delivery time */}
         <div className="text-gray-600 text-base">Delivery time: <span className="font-semibold">{deliveryTime}</span></div>

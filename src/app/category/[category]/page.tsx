@@ -22,6 +22,10 @@ function getCategoryPlural(category: string): string {
       return 'Docking Stations';
     case 'headset':
       return 'Headsets';
+    case 'webcam':
+      return 'Webcams';
+    case 'trackpad':
+      return 'Mice';
     default:
       // For any other categories, just add 's' and capitalize first letter
       return category.charAt(0).toUpperCase() + category.slice(1) + 's';
@@ -30,14 +34,23 @@ function getCategoryPlural(category: string): string {
 
 function getProductsForCategory(category: string): ProductCardProps[] {
   // Filter products by category from the unified hardwareData
-  const categoryProducts = hardwareData.filter(product => 
-    product.category.toLowerCase() === category.toLowerCase()
-  );
+  const categoryProducts = hardwareData.filter(product => {
+    const productCategory = product.category.toLowerCase();
+    const targetCategory = category.toLowerCase();
+    
+    // Special case: when filtering for "mouse", also include "trackpad"
+    if (targetCategory === 'mouse') {
+      return productCategory === 'mouse' || productCategory === 'trackpad';
+    }
+    
+    return productCategory === targetCategory;
+  });
 
   // Map to ProductCardProps format
   return categoryProducts.map(product => ({
     manufacturer: product.manufacturer,
     model: product.model,
+    display_name: (product as any).display_name,
     category: product.category,
     description: (product as any).description || `${product.manufacturer} ${product.model}`,
     card_description: (product as any).description || `${product.manufacturer} ${product.model}`,

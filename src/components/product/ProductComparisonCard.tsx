@@ -7,6 +7,7 @@ interface ComparisonProductCardProps {
   image: string;
   brand: string;
   model: string;
+  display_name?: string;
   description: string;
   card_description?: string;
   features: string;
@@ -21,6 +22,7 @@ export function ComparisonProductCard({
   image,
   brand,
   model,
+  display_name,
   description,
   card_description,
   features,
@@ -62,7 +64,11 @@ export function ComparisonProductCard({
           href={`/product/${encodeURIComponent(model)}`}
           className="block"
         >
-          <h2 className="text-2xl font-medium pb-4 hover:text-blue-600 transition-colors cursor-pointer">{model}</h2>
+          <h2 className="text-2xl font-medium pb-4 hover:text-blue-600 transition-colors cursor-pointer">
+            {display_name && !model.includes(display_name) 
+              ? `${display_name} (${model})` 
+              : model}
+          </h2>
         </Link>
         {/* Product Image */}
         <img src={image} alt={model} className="w-48 h-32 object-contain mx-auto mb-4" />

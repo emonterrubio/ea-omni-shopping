@@ -11,7 +11,8 @@
     "microphone": "Yes (Single Stereo)",
     "connectivity": "USB Type-A",
     "description": "Basic webcam for a high-quality video experience when using a desktop computer or a laptop with its lid closed.",
-    "image": "/images/logitech_c920s_pro.png"
+    "image": "/images/logitech_c920s_pro.png",
+    "quantity_in_stock": 10
   },
   {
     "manufacturer": "Logitech",
@@ -25,6 +26,7 @@
     "microphone": "Yes (Dual omni-directional)",
     "connectivity": "USB Type-A/C",
     "description": "Premium webcam for a premium 4K video experience, ideal for desktops or closed laptops. Includes Windows Hello support for secure, face-recognition based passwordless login.",
-    "image": "/images/logitech_brio.png"
+    "image": "/images/logitech_brio.png",
+    "quantity_in_stock": 10
   }
 ]

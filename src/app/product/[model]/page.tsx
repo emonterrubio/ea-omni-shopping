@@ -32,6 +32,8 @@ function getCategoryPlural(category: string): string {
       return 'Headsets';
     case 'webcam':
       return 'Webcams';
+    case 'trackpad':
+      return 'Mice';
     default:
       // For any other categories, just add 's' and capitalize first letter
       return category.charAt(0).toUpperCase() + category.slice(1) + 's';
@@ -139,7 +141,7 @@ function getProductSpecs(product: any) {
       }
       
       // Use cases
-      if ((product as any).suitable_for) specs.push({ label: "Suitable For", value: (product as any).suitable_for });
+      if ((product as any).best_for) specs.push({ label: "Best For", value: (product as any).best_for });
       if ((product as any).intended_for) specs.push({ label: "Intended For", value: (product as any).intended_for });
       break;
       
@@ -288,7 +290,7 @@ export default function ProductDetailPage() {
   // Transform available products for dropdown
   const dropdownOptions = availableProducts.map((product) => ({
     value: product.model,
-    label: `${product.manufacturer} ${product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
+    label: `${product.manufacturer} ${(product as any).display_name ? `${(product as any).display_name} (${product.model})` : product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
     key: `${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}`
   }));
 
@@ -339,7 +341,10 @@ export default function ProductDetailPage() {
         <Breadcrumb
           items={[
             { label: "Catalog", href: "/catalog" },
-            { label: getCategoryPlural(product.category || "Products"), href: `/category/${product.category?.toLowerCase()}` },
+            { 
+              label: getCategoryPlural(product.category || "Products"), 
+              href: `/category/${product.category?.toLowerCase() === 'trackpad' ? 'mouse' : product.category?.toLowerCase()}` 
+            },
             { label: product.model, isActive: true }
           ]}
           className="mb-8"
@@ -351,7 +356,9 @@ export default function ProductDetailPage() {
           <div className="flex-1">
             <ProductInfoPanel
               brand={product.manufacturer}
-              title={product.model}
+              title={(product as any).display_name && !product.model.includes((product as any).display_name) 
+                ? `${(product as any).display_name} (${product.model})` 
+                : product.model}
               sku={product.model}
               price={(product as any).price_usd || (product as any).ea_estimated_price_usd}
               price_cad={(product as any).price_cad}
@@ -362,7 +369,9 @@ export default function ProductDetailPage() {
               category={product.category}
               intendedFor={(product as any).intended_for}
               notSuitableFor={(product as any).not_suitable_for}
-              suitableFor={(product as any).suitable_for}
+              bestFor={(product as any).best_for}
+              idealFor={(product as any).ideal_for}
+              product={product}
               onQuantityChange={setQuantity}
               onAddToCart={() => {
                 addToCart({
@@ -386,7 +395,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
         <div className="mt-6">
-          <ProductSpecsTable specs={specs} />
+          <ProductSpecsTable specs={specs} category={product.category} />
         </div>
         <RequestHardwareBanner />
         {/* --- Comparison Cards --- */}
@@ -435,7 +444,9 @@ export default function ProductDetailPage() {
                 ...p, // Spread all product properties
                 brand: p.manufacturer,
                 model: p.model,
+                display_name: (p as any).display_name,
                 category: p.category,
+                cpu: (p as any).cpu,
                 description: (p as any).description || `${p.manufacturer} ${p.model}`,
                 card_description: (p as any).intended_for ? 
                   `${(p as any).description || `${p.manufacturer} ${p.model}`} Intended for ${(p as any).intended_for}.` : 

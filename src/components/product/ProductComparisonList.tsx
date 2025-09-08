@@ -5,6 +5,7 @@ interface Product {
   image?: string;
   brand: string;
   model: string;
+  display_name?: string;
   description?: string;
   card_description?: string;
   features?: string;
@@ -32,12 +33,13 @@ export function ProductComparisonList({ products, getProductSpecs, noBackground 
             image={p.image || 'https://placehold.co/400x300?text=Product'}
             brand={p.brand}
             model={p.model}
+            display_name={p.display_name}
             description={p.description || ''}
             card_description={p.card_description}
             features={p.features || ''}
             subFeatures={p.features ? p.features.split(',').map((f: string) => f.trim()) : []}
             price={p.price}
-            chip={p.processor || p.category || ''}
+            chip={p.category?.toLowerCase() === 'monitor' ? p.model : (p.cpu || p.processor || p.category || '')}
             specs={getProductSpecs ? getProductSpecs(p) : []}
             noBackground={noBackground}
           />
