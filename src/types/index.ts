@@ -34,7 +34,7 @@ export interface EALaptop extends EAProduct {
     touch: string;
   };
   ports: string[];
-  power_watt: string;
+  power_watt: number;
   dock: string;
 }
 
