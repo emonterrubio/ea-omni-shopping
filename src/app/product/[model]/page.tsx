@@ -290,7 +290,11 @@ export default function ProductDetailPage() {
   // Transform available products for dropdown
   const dropdownOptions = availableProducts.map((product) => ({
     value: product.model,
-    label: `${product.manufacturer} ${(product as any).display_name && !(product as any).display_name.includes(product.model) ? `${(product as any).display_name} (${product.model})` : (product as any).display_name || product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
+    label: `${product.manufacturer} ${(product as any).display_name && product.category?.toLowerCase() === 'monitor'
+      ? (product as any).display_name
+      : (product as any).display_name && product.model && 
+        !(product as any).display_name.includes(product.model) && 
+        !product.model.includes((product as any).display_name) ? `${(product as any).display_name} (${product.model})` : (product as any).display_name || product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
     key: `${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}`
   }));
 
@@ -356,9 +360,13 @@ export default function ProductDetailPage() {
           <div className="flex-1">
             <ProductInfoPanel
               brand={product.manufacturer}
-              title={(product as any).display_name && !(product as any).display_name.includes(product.model) 
-                ? `${(product as any).display_name} (${product.model})` 
-                : (product as any).display_name || product.model}
+              title={(product as any).display_name && product.category?.toLowerCase() === 'monitor'
+                ? (product as any).display_name
+                : (product as any).display_name && product.model && 
+                  !(product as any).display_name.includes(product.model) && 
+                  !product.model.includes((product as any).display_name)
+                  ? `${(product as any).display_name} (${product.model})` 
+                  : (product as any).display_name || product.model}
               sku={product.model}
               price={(product as any).price_usd || (product as any).ea_estimated_price_usd}
               price_cad={(product as any).price_cad}

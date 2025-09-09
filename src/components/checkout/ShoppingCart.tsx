@@ -227,7 +227,10 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
             costCenter={costCenter}
             total_usd={total}
             total_cad={total_cad > 0 ? total_cad : undefined}
+            itemCount={cartItems.length}
             onCheckout={() => onCheckout(costCenter, shippingMethod)}
+            showContinueShopping={true}
+            onContinueShopping={() => router.push('/catalog')}
           />
         </div>
       </div>

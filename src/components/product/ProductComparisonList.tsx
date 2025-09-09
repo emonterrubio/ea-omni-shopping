@@ -35,6 +35,7 @@ export function ProductComparisonList({ products, getProductSpecs, noBackground 
             brand={p.brand}
             model={p.model}
             display_name={p.display_name}
+            category={p.category}
             description={p.description || ''}
             card_description={p.card_description}
             features={p.features || ''}

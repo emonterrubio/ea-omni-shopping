@@ -38,34 +38,24 @@ export function ProductSpecsTable({ specs = [], category }: ProductSpecsTablePro
     "Features"
   ];
 
-  // Define peripheral categories that should show all specs in one panel
-  const peripheralCategories = [
-    "docking station", 
-    "headset", 
-    "webcam", 
-    "mouse", 
-    "keyboard", 
-    "mouse & keyboard", 
-    "trackpad"
-  ];
-  
-  const isPeripheral = category && peripheralCategories.includes(category.toLowerCase());
+  // Only laptops should show basic/advanced toggle, all other products show all specs in one panel
+  const isLaptop = category && category.toLowerCase() === 'laptop';
   
   // Define specs to exclude from technical specifications
   const excludedSpecLabels = ["Intended For", "Best For"];
   
-  // For peripherals, also exclude "Not Suitable For"
-  const peripheralExcludedSpecLabels = isPeripheral 
+  // For non-laptops, also exclude "Not Suitable For"
+  const nonLaptopExcludedSpecLabels = !isLaptop 
     ? [...excludedSpecLabels, "Not Suitable For"]
     : excludedSpecLabels;
   
-  // Split specs into basic and advanced (only for non-peripherals)
-  const basicSpecs = isPeripheral 
-    ? [] 
-    : specs.filter(spec => basicSpecLabels.includes(spec.label) && spec.value && !excludedSpecLabels.includes(spec.label));
-  const advancedSpecs = isPeripheral 
-    ? specs.filter(spec => spec.value && !peripheralExcludedSpecLabels.includes(spec.label))
-    : specs.filter(spec => !basicSpecLabels.includes(spec.label) && spec.value && !excludedSpecLabels.includes(spec.label));
+  // Split specs into basic and advanced (only for laptops)
+  const basicSpecs = isLaptop 
+    ? specs.filter(spec => basicSpecLabels.includes(spec.label) && spec.value && !excludedSpecLabels.includes(spec.label))
+    : [];
+  const advancedSpecs = isLaptop 
+    ? specs.filter(spec => !basicSpecLabels.includes(spec.label) && spec.value && !excludedSpecLabels.includes(spec.label))
+    : specs.filter(spec => spec.value && !nonLaptopExcludedSpecLabels.includes(spec.label));
 
   const SpecSection = ({ specs }: { specs: Spec[] }) => {
     return (
@@ -94,8 +84,8 @@ export function ProductSpecsTable({ specs = [], category }: ProductSpecsTablePro
     <div>
       <h2 className="text-2xl font-normal mb-6">Technical Specifications</h2>
       
-      {/* Toggle Switch - Only show for non-peripherals */}
-      {!isPeripheral && (
+      {/* Toggle Switch - Only show for laptops */}
+      {isLaptop && (
         <div className="mb-6">
           <div className="flex bg-gray-100 rounded-lg p-1 w-fit">
             <button
@@ -123,14 +113,14 @@ export function ProductSpecsTable({ specs = [], category }: ProductSpecsTablePro
       )}
       
       {/* Specifications Table */}
-      {isPeripheral ? (
-        <SpecSection specs={advancedSpecs} />
-      ) : (
+      {isLaptop ? (
         activeTab === 'basic' ? (
           <SpecSection specs={basicSpecs} />
         ) : (
           <SpecSection specs={advancedSpecs} />
         )
+      ) : (
+        <SpecSection specs={advancedSpecs} />
       )}
     </div>
   );

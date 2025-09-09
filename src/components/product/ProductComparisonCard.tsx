@@ -8,6 +8,7 @@ interface ComparisonProductCardProps {
   brand: string;
   model: string;
   display_name?: string;
+  category?: string;
   description: string;
   card_description?: string;
   features: string;
@@ -24,6 +25,7 @@ export function ComparisonProductCard({
   brand,
   model,
   display_name,
+  category,
   description,
   card_description,
   features,
@@ -68,9 +70,13 @@ export function ComparisonProductCard({
           className="block"
         >
           <h2 className="text-2xl font-medium pb-4 hover:text-blue-600 transition-colors cursor-pointer">
-            {display_name && !display_name.includes(model) 
-              ? `${display_name} (${model})` 
-              : display_name || model}
+            {display_name && category?.toLowerCase() === 'monitor'
+              ? display_name
+              : display_name && model && 
+                !display_name.includes(model) && 
+                !model.includes(display_name)
+                ? `${display_name} (${model})` 
+                : display_name || model}
           </h2>
         </Link>
         {/* Product Image */}
