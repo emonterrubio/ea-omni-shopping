@@ -4,7 +4,8 @@ export interface OrderItem {
   description?: string;
   card_description?: string;
   image: string;
-  price: number | string;
+  price_usd: number | string;
+  price_cad?: number;
   quantity: number;
 }
 

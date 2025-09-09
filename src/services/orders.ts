@@ -23,14 +23,20 @@ export function createOrderFromCheckout(
   });
 
   // Convert checkout items to OrderItem format
-  const orderItems: OrderItem[] = items.map(item => ({
-    model: item.model,
-    brand: item.brand,
-    image: item.image,
-    description: item.card_description || item.description || '',
-    price: typeof item.price === 'string' ? parseFloat(item.price.replace(/,/g, '')) : item.price,
-    quantity: item.quantity
-  }));
+  const orderItems: OrderItem[] = items.map(item => {
+    console.log('Processing item for order:', item);
+    const processedItem = {
+      model: item.model,
+      brand: item.brand,
+      image: item.image,
+      description: item.card_description || item.description || '',
+      price_usd: typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd,
+      price_cad: item.price_cad,
+      quantity: item.quantity
+    };
+    console.log('Processed item:', processedItem);
+    return processedItem;
+  });
 
   // Create shipping address string
   let shippingAddress = '';

@@ -57,6 +57,7 @@ function getProductsForCategory(category: string): ProductCardProps[] {
     features: (product as any).description || `${product.manufacturer} ${product.model}`,
     image: product.image || `/images/${product.manufacturer.toLowerCase()}_${product.model.toLowerCase().replace(/\s+/g, "_")}.png`,
     price_usd: product.price_usd,
+    price_cad: (product as any).price_cad,
     recommended: false,
   }));
 }

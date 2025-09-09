@@ -6,6 +6,7 @@ import { PageLayout } from "@/components/layout/PageLayout";
 import { ShoppingCart } from "@/components/checkout/ShoppingCart";
 import { CartContext } from "@/components/CartContext";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { ShoppingCart as ShoppingCartIcon } from "lucide-react";
 
 export default function CartPage() {
   const { cartItems, clearCart, removeFromCart } = useContext(CartContext);
@@ -17,6 +18,9 @@ export default function CartPage() {
 
   const handleCheckout = (costCenter?: string, shippingMethod?: 'free' | 'express') => {
     const shippingCost = shippingMethod === 'express' ? 14 : 0;
+    
+    // Debug: Log cart items to see their structure
+    console.log("Cart items being passed to checkout:", cartItems);
     
     // Save checkout data to localStorage for the checkout page
     const checkoutData = {
@@ -50,9 +54,7 @@ export default function CartPage() {
         /* Empty Cart */
         <div className="bg-white rounded-lg shadow-sm p-12 text-center">
           <div className="text-gray-400 mb-6">
-            <svg className="h-24 w-24 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m6 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
-            </svg>
+            <ShoppingCartIcon className="h-24 w-24 mx-auto" />
           </div>
           <h2 className="text-2xl font-semibold text-gray-900 mb-4">Your cart is empty</h2>
           <p className="text-gray-600 mb-8">

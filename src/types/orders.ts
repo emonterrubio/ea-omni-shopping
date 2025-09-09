@@ -3,7 +3,8 @@ export interface OrderItem {
   brand: string;
   image: string;
   description: string;
-  price: number;
+  price_usd: number;
+  price_cad?: number;
   quantity: number;
 }
 

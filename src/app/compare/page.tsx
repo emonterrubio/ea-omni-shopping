@@ -200,9 +200,10 @@ export default function ComparePage() {
                 cpu: (p as any).cpu,
                 description: (p as any).description || `${p.manufacturer} ${p.model}`,
                 card_description: (p as any).intended_for ? 
-                  `${(p as any).description || `${p.manufacturer} ${p.model}`} Intended for ${(p as any).intended_for}.` : 
+                  `${(p as any).description || `${p.manufacturer} ${p.model}`} Intended for ${(p as any).intended_for}` : 
                   (p as any).description || `${p.manufacturer} ${p.model}`,
-                price: p.price_usd,
+                price_usd: p.price_usd,
+                price_cad: (p as any).price_cad,
                 image: p.image || `/images/${p.manufacturer.toLowerCase()}_${p.model.toLowerCase().replace(/\s+/g, "_")}.png`,
                 features: (p as any).description || `${p.manufacturer} ${p.model}`,
                 recommended: true

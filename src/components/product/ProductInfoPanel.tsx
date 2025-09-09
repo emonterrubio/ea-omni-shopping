@@ -75,13 +75,13 @@ export function ProductInfoPanel({
       
       {/* Not Suitable For Banner - Only show for laptops */}
       {notSuitableFor && category?.toLowerCase() === "laptop" && (
-        <div className="bg-amber-50 p-4 rounded-r-md">
+        <div className="bg-yellow-50 p-4 rounded-r-md">
           <div className="flex items-start">
             <div>
-              <h3 className="text-basic font-bold text-amber-800">
+              <h3 className="text-basic font-bold text-yellow-800">
                 Not suitable for
               </h3>
-              <div className="text-sm text-amber-700">
+              <div className="text-sm text-yellow-700">
                 {notSuitableFor}
               </div>
             </div>

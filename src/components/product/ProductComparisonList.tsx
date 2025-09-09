@@ -9,7 +9,8 @@ interface Product {
   description?: string;
   card_description?: string;
   features?: string;
-  price: number;
+  price_usd: number;
+  price_cad?: number;
   processor?: string;
   category?: string;
   [key: string]: any;
@@ -38,7 +39,8 @@ export function ProductComparisonList({ products, getProductSpecs, noBackground 
             card_description={p.card_description}
             features={p.features || ''}
             subFeatures={p.features ? p.features.split(',').map((f: string) => f.trim()) : []}
-            price={p.price}
+            price_usd={p.price_usd}
+            price_cad={p.price_cad}
             chip={p.category?.toLowerCase() === 'monitor' ? p.model : (p.cpu || p.processor || p.category || '')}
             specs={getProductSpecs ? getProductSpecs(p) : []}
             noBackground={noBackground}

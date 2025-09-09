@@ -228,10 +228,10 @@ export default function OrderDetailsPage() {
 
       {/* Order Summary */}
       <OrderSummary
-          subtotal={subtotal}
-          tax={tax}
-          shippingCost={shippingCost}
-          total={subtotal + tax + shippingCost}
+          subtotal_usd={subtotal}
+          tax_usd={tax}
+          shippingCost_usd={shippingCost}
+          total_usd={subtotal + tax + shippingCost}
           itemCount={items.length}
           showCheckoutButton={false}
           showContinueShopping={false}

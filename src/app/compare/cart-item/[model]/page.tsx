@@ -224,7 +224,7 @@ export default function CartItemComparePage() {
                 card_description={product.card_description}
                 features={product.features || ""}
                 subFeatures={product.features ? product.features.split(',').map((f: string) => f.trim()) : []}
-                price={product.price}
+                price_usd={product.price}
                 chip={product.cpu || product.category || ""}
                 specs={getProductSpecs(product)}
               />

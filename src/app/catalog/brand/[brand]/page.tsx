@@ -9,6 +9,7 @@ import Link from "next/link";
 import { ArrowLeft, Filter, SortAsc } from "lucide-react";
 import { useState, useRef, useEffect, use } from "react";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { Dropdown } from "@/components/ui/Dropdown";
 import { EAProductType } from "@/types";
 
 export default function BrandCatalogPage({ params }: { params: Promise<{ brand: string }> }) {
@@ -28,7 +29,11 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
     'Laptop': 'laptop',
     'Monitor': 'monitor',
     'Docking Station': 'docking station',
-    'Headset': 'headset'
+    'Headset': 'headset',
+    'Mouse': 'mouse',
+    'Keyboard': 'keyboard',
+    'Mouse & Keyboard': 'mouse & keyboard',
+    'TrackPad': 'trackpad'
   };
 
   const [sortOption, setSortOption] = useState("all");
@@ -38,6 +43,23 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
 
   const filterMenuRef = useRef<HTMLDivElement>(null);
   const sortMenuRef = useRef<HTMLDivElement>(null);
+
+  // Dropdown options
+  const categoryOptions = [
+    { value: "all", label: "All" },
+    ...availableCategories.map(category => ({
+      value: categoryFilterMap[category] || category.toLowerCase(),
+      label: category
+    }))
+  ];
+
+  const sortOptions = [
+    { value: "all", label: "All" },
+    { value: "price-low", label: "Price: Low to High" },
+    { value: "price-high", label: "Price: High to Low" },
+    { value: "az", label: "A-Z" },
+    { value: "za", label: "Z-A" }
+  ];
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -115,55 +137,39 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
           className="mb-6"
         />
         
-        <div className="text-left">
-          <h1 className="text-5xl font-medium text-gray-900 mt-6 mb-2">{brand} Products</h1>
-          <h4 className="font-base text-gray-800 mb-8">Browse all {brand} products and find the perfect item for your needs.</h4>
+        <div className="text-left mb-4 sm:px-4 lg:px-0">
+          <h1 className="text-4xl md:text-5xl font-medium text-gray-900 mt-4 lg:mt-6 mb-2">{brand} Products</h1>
+          <h4 className="text-base font-base text-gray-800 mb-2">Browse all {brand} products and find the perfect item for your needs.</h4>
         </div>
+
+        <PlatformInfoBanner />
         
+        {/* Filter & Sort Controls */}
         <div className="flex items-center justify-between mb-6 gap-4 flex-wrap w-full">
           <div className="text-base font-regular text-gray-900 min-w-max">{sortedProducts.length} item{sortedProducts.length === 1 ? "" : "s"} found</div>
           {/* Desktop filter/sort dropdowns */}
-          <div className="hidden md:flex items-center gap-4 ml-auto">
-            <div>
-              <label htmlFor="filter" className="mr-2 text-base font-regular text-gray-700">Filter by:</label>
-              <select
-                id="filter"
+          <div className="hidden lg:flex items-center gap-6 ml-auto">
+            <div className="flex items-center gap-2">
+              <label htmlFor="category-filter" className="text-base font-regular text-gray-700 whitespace-nowrap">Filter by:</label>
+              <Dropdown
                 value={filterOption}
-                onChange={e => setFilterOption(e.target.value)}
-                className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              >
-                <option value="all">All</option>
-                {availableCategories.map(category => {
-                  const filterValue = categoryFilterMap[category];
-                  if (filterValue) {
-                    return (
-                      <option key={filterValue} value={filterValue}>
-                        {category}
-                      </option>
-                    );
-                  }
-                  return null;
-                })}
-              </select>
+                onChange={setFilterOption}
+                options={categoryOptions}
+                placeholder="Select a category..."
+              />
             </div>
-            <div>
-              <label htmlFor="sort" className="mr-2 text-base font-regular text-gray-700">Sort by:</label>
-              <select
-                id="sort"
+            <div className="flex items-center gap-2">
+              <label htmlFor="sort" className="text-base font-regular text-gray-700 whitespace-nowrap">Sort by:</label>
+              <Dropdown
                 value={sortOption}
-                onChange={e => setSortOption(e.target.value)}
-                className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-              >
-                <option value="all">All</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="az">A-Z</option>
-                <option value="za">Z-A</option>
-              </select>
+                onChange={setSortOption}
+                options={sortOptions}
+                placeholder="Select sort option..."
+              />
             </div>
           </div>
           {/* Mobile filter/sort icons */}
-          <div className="flex md:hidden items-center gap-4 ml-auto relative">
+          <div className="flex lg:hidden items-center gap-4 ml-auto relative">
             <button
               aria-label="Filter"
               className="p-2 rounded hover:bg-gray-100"
@@ -181,6 +187,7 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
             {/* Filter menu */}
             {showFilterMenu && (
               <div ref={filterMenuRef} className="absolute right-12 top-10 z-50 bg-white border border-gray-200 rounded shadow-md w-40">
+                <div className="px-4 py-2 text-sm font-medium text-gray-700 border-b border-gray-200">Categories</div>
                 <button
                   key="all"
                   className={`block w-full text-left px-4 py-2 text-sm hover:bg-gray-100 ${filterOption === "all" ? "bg-gray-100 font-semibold" : ""}`}
@@ -228,8 +235,6 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
           </div>
         </div>
         
-        <PlatformInfoBanner />
-        
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {sortedProducts.map((product, idx) => (
             <ProductCard 
@@ -244,6 +249,7 @@ export default function BrandCatalogPage({ params }: { params: Promise<{ brand: 
                 features: (product as any).description || '',
                 image: product.image || `/images/${product.manufacturer.toLowerCase()}_${product.model.toLowerCase().replace(/\s+/g, "_")}.png`,
                 price_usd: product.price_usd,
+                price_cad: (product as any).price_cad,
                 recommended: false,
               }} 
             />

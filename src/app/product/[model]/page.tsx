@@ -290,7 +290,7 @@ export default function ProductDetailPage() {
   // Transform available products for dropdown
   const dropdownOptions = availableProducts.map((product) => ({
     value: product.model,
-    label: `${product.manufacturer} ${(product as any).display_name ? `${(product as any).display_name} (${product.model})` : product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
+    label: `${product.manufacturer} ${(product as any).display_name && !(product as any).display_name.includes(product.model) ? `${(product as any).display_name} (${product.model})` : (product as any).display_name || product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
     key: `${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}`
   }));
 
@@ -356,9 +356,9 @@ export default function ProductDetailPage() {
           <div className="flex-1">
             <ProductInfoPanel
               brand={product.manufacturer}
-              title={(product as any).display_name && !product.model.includes((product as any).display_name) 
+              title={(product as any).display_name && !(product as any).display_name.includes(product.model) 
                 ? `${(product as any).display_name} (${product.model})` 
-                : product.model}
+                : (product as any).display_name || product.model}
               sku={product.model}
               price={(product as any).price_usd || (product as any).ea_estimated_price_usd}
               price_cad={(product as any).price_cad}
@@ -378,7 +378,8 @@ export default function ProductDetailPage() {
                   model: product.model,
                   brand: product.manufacturer,
                   image: product.image || `/images/${product.manufacturer.toLowerCase()}_${product.model.toLowerCase().replace(/\s+/g, "_")}.png`,
-                  price: (product as any).price_usd || (product as any).ea_estimated_price_usd,
+                  price_usd: (product as any).price_usd || (product as any).ea_estimated_price_usd,
+                  price_cad: (product as any).price_cad,
                   quantity,
                   recommended: true,
                   description: product.description || `${product.manufacturer} ${product.model}`,
@@ -449,9 +450,10 @@ export default function ProductDetailPage() {
                 cpu: (p as any).cpu,
                 description: (p as any).description || `${p.manufacturer} ${p.model}`,
                 card_description: (p as any).intended_for ? 
-                  `${(p as any).description || `${p.manufacturer} ${p.model}`} Intended for ${(p as any).intended_for}.` : 
+                  `${(p as any).description || `${p.manufacturer} ${p.model}`} Intended for ${(p as any).intended_for}` : 
                   (p as any).description || `${p.manufacturer} ${p.model}`,
-                price: (p as any).price_usd || (p as any).ea_estimated_price_usd,
+                price_usd: (p as any).price_usd || (p as any).ea_estimated_price_usd,
+                price_cad: (p as any).price_cad,
                 image: p.image || `/images/${p.manufacturer.toLowerCase()}_${p.model.toLowerCase().replace(/\s+/g, "_")}.png`,
                 features: (p as any).description || `${p.manufacturer} ${p.model}`,
                 recommended: true

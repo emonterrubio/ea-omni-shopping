@@ -46,7 +46,8 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
       model: product.model,
       brand: brand,
       image: image,
-      price: price,
+      price_usd: price,
+      price_cad: priceCad > 0 ? priceCad : undefined,
       quantity: 1,
       recommended: product.recommended || true,
       description: product.description,
@@ -89,9 +90,9 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
           className="block"
         >
           <h3 className="text-2xl font-regular text-gray-900 mb-1 hover:text-blue-600 transition-colors cursor-pointer">
-            {(product as any).display_name && !product.model.includes((product as any).display_name) 
+            {(product as any).display_name && !(product as any).display_name.includes(product.model) 
               ? `${(product as any).display_name} (${product.model})` 
-              : product.model}
+              : (product as any).display_name || product.model}
           </h3>
         </Link>
         {/* Description and Price */}

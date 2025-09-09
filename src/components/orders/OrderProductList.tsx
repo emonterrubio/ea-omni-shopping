@@ -9,7 +9,8 @@ interface OrderProductListProps {
 }
 
 export function OrderProductList({ items }: OrderProductListProps) {
-  const formatPrice = (price: number | string) => {
+  const formatPrice = (price: number | string | undefined) => {
+    if (!price) return '$0';
     if (typeof price === 'string') {
       return `$${Number(price.replace(/,/g, "")).toLocaleString()}`;
     }
@@ -74,7 +75,7 @@ export function OrderProductList({ items }: OrderProductListProps) {
                 </td>
                 <td className="text-center px-6 py-4 text-gray-900">{item.quantity || 1}</td>
                 <td className="text-right px-6 py-4 font-semibold text-gray-900">
-                  {formatPrice(item.price)}
+                  {formatPrice(item.price_usd)}
                 </td>
               </tr>
             ))}

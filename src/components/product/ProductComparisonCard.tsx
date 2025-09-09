@@ -12,7 +12,8 @@ interface ComparisonProductCardProps {
   card_description?: string;
   features: string;
   subFeatures: string[];
-  price: number;
+  price_usd: number;
+  price_cad?: number;
   chip: string;
   specs: { label: string; value: any }[];
   noBackground?: boolean;
@@ -27,7 +28,8 @@ export function ComparisonProductCard({
   card_description,
   features,
   subFeatures,
-  price,
+  price_usd,
+  price_cad,
   chip,
   specs,
   noBackground = false,
@@ -38,12 +40,13 @@ export function ComparisonProductCard({
   const { addToCart } = useContext(CartContext);
 
   const handleAddToCart = () => {
-    console.log("[Comparison Debug] Adding to cart:", model, "Price:", price, "Type:", typeof price);
+    console.log("[Comparison Debug] Adding to cart:", model, "Price:", price_usd, "Type:", typeof price_usd);
     const cartItem: CartItem = {
       model,
       brand,
       image,
-      price: price,
+      price_usd: price_usd,
+      price_cad: price_cad,
       quantity: 1,
       recommended: isEligible,
       description,
@@ -65,9 +68,9 @@ export function ComparisonProductCard({
           className="block"
         >
           <h2 className="text-2xl font-medium pb-4 hover:text-blue-600 transition-colors cursor-pointer">
-            {display_name && !model.includes(display_name) 
+            {display_name && !display_name.includes(model) 
               ? `${display_name} (${model})` 
-              : model}
+              : display_name || model}
           </h2>
         </Link>
         {/* Product Image */}
@@ -103,8 +106,10 @@ export function ComparisonProductCard({
         <div className="text-gray-600 text-sm">Recommended based on your role</div> */}
         {/* Price */}
         <div className="space-y-1">
-          <div className="text-2xl font-semibold">${price.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> USD</span></div>
-          {/* Note: CAD pricing would need to be passed as a prop if available */}
+          <div className="text-2xl font-semibold">${price_usd.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> USD</span></div>
+          {price_cad && (
+            <div className="text-2xl font-semibold">${price_cad.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> CAD</span></div>
+          )}
         </div>
         {/* Add to Cart and View Details buttons */}
         <div className="flex gap-2 w-full pt-4">

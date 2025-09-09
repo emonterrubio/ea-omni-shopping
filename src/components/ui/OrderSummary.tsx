@@ -1,11 +1,15 @@
 import React from 'react';
 
 interface OrderSummaryProps {
-  subtotal: number;
-  tax?: number;
-  shippingCost: number;
+  subtotal_usd: number;
+  subtotal_cad?: number;
+  tax_usd?: number;
+  tax_cad?: number;
+  shippingCost_usd: number;
+  shippingCost_cad?: number;
   costCenter?: string;
-  total: number;
+  total_usd: number;
+  total_cad?: number;
   onCheckout?: () => void;
   checkoutButtonText?: string;
   showCheckoutButton?: boolean;
@@ -17,11 +21,15 @@ interface OrderSummaryProps {
 }
 
 export function OrderSummary({
-  subtotal,
-  tax = 0,
-  shippingCost,
+  subtotal_usd,
+  subtotal_cad,
+  tax_usd = 0,
+  tax_cad,
+  shippingCost_usd,
+  shippingCost_cad,
   costCenter,
-  total,
+  total_usd,
+  total_cad,
   onCheckout,
   checkoutButtonText = "Checkout",
   showCheckoutButton = true,
@@ -37,19 +45,48 @@ export function OrderSummary({
         <h3 className="text-2xl font-regular tracking-normal mb-4">Order Summary</h3>
         <div className="flex justify-between font-regular text-gray-800 mb-2">
           <span>Subtotal {itemCount ? `(${itemCount} items)` : ''}</span>
-          <span>${Math.round(subtotal).toLocaleString()}</span>
+          <div className="text-right">
+            <div className="text-base font-bold text-gray-600">${Math.round(subtotal_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
+            {subtotal_cad && (
+              <div className="text-base font-bold text-gray-600">${Math.round(subtotal_cad).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
+            )}
+          </div>
         </div>
-        {tax > 0 && (
+        {tax_usd > 0 && (
           <div className="flex justify-between font-regular text-gray-800 mb-2">
             <span>Tax</span>
-            <span>${Math.round(tax).toLocaleString()}</span>
+            <div className="text-right">
+              <div className="text-base font-bold text-gray-600">${Math.round(tax_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
+              {tax_cad && (
+                <div className="text-base font-bold text-gray-600">${Math.round(tax_cad).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
+              )}
+            </div>
           </div>
         )}
         <div className="flex justify-between font-regular text-gray-800 mb-2">
           <span>Shipping</span>
-          <span>{shippingCost === 0 ? 'Free' : `$${Math.round(shippingCost).toLocaleString()}`}</span>
+          <div className="text-right">
+            <div className="text-base font-bold text-gray-600">
+              {shippingCost_usd === 0 ? 'Free' : (
+                <>
+                  ${Math.round(shippingCost_usd).toLocaleString()}
+                  <span className="text-xs text-gray-600 font-normal"> USD</span>
+                </>
+              )}
+            </div>
+            {shippingCost_cad && (
+              <div className="text-base font-bold text-gray-600">
+                {shippingCost_cad === 0 ? 'Free' : (
+                  <>
+                    ${Math.round(shippingCost_cad).toLocaleString()}
+                    <span className="text-xs text-gray-600 font-normal"> CAD</span>
+                  </>
+                )}
+              </div>
+            )}
+          </div>
         </div>
-        {costCenter && (
+        {/* {costCenter && (
           <div className="flex justify-between text-gray-800 mb-2">
             <span>Cost Center</span>
             <div className="flex items-center gap-2">
@@ -59,11 +96,16 @@ export function OrderSummary({
               </div>
             </div>
           </div>
-        )}
+        )} */}
         <div className="border-t border-gray-200 my-4"></div>
         <div className="flex justify-between font-bold text-xl mt-2">
           <span>Total</span>
-          <span>${Math.round(total).toLocaleString()}</span>
+          <div className="text-right">
+            <div className="text-xl font-bold text-gray-600">${Math.round(total_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
+            {total_cad && (
+              <div className="text-xl font-bold text-gray-600">${Math.round(total_cad).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
+            )}
+          </div>
         </div>
         
 

@@ -17,7 +17,7 @@ interface Item {
   brand: string;
   description?: string;
   image: string;
-  price: number | string;
+  price_usd: number | string;
   recommended: boolean;
   quantity?: number;
 }
@@ -46,7 +46,8 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
       card_description: (product as any).description || `${product.manufacturer} ${product.model}`,
       features: (product as any).description || `${product.manufacturer} ${product.model}`,
       image: product.image || `/images/${product.manufacturer.toLowerCase()}_${product.model.toLowerCase().replace(/\s+/g, "_")}.png`,
-      price: product.price_usd as number,
+      price_usd: product.price_usd as number,
+      price_cad: (product as any).price_cad,
       recommended: true,
     }));
 
@@ -75,7 +76,8 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
             card_description: compatibleDock.description || `${compatibleDock.manufacturer} ${compatibleDock.model}`,
             features: compatibleDock.description || `${compatibleDock.manufacturer} ${compatibleDock.model}`,
             image: compatibleDock.image || `/images/${compatibleDock.manufacturer.toLowerCase()}_${compatibleDock.model.toLowerCase().replace(/\s+/g, "_")}.png`,
-            price: compatibleDock.price_usd as number,
+            price_usd: compatibleDock.price_usd as number,
+            price_cad: (compatibleDock as any).price_cad,
             recommended: true,
           });
         }
@@ -131,17 +133,28 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
 
   const subtotal = cart.reduce((sum, item) => {
     let price = 0;
-    if (typeof item.price === 'string') {
-      price = Number((item.price as string).replace(/,/g, ''));
-    } else if (typeof item.price === 'number') {
-      price = item.price;
+    if (typeof item.price_usd === 'string') {
+      price = Number((item.price_usd as string).replace(/,/g, ''));
+    } else if (typeof item.price_usd === 'number') {
+      price = item.price_usd;
     }
     return sum + price * (item.quantity || 1);
   }, 0);
 
+  const subtotal_cad = cart.reduce((sum, item) => {
+    const price_cad = (item as any).price_cad;
+    if (price_cad && typeof price_cad === 'number') {
+      return sum + price_cad * (item.quantity || 1);
+    }
+    return sum;
+  }, 0);
+
   const tax = Math.round((subtotal * 0.047) * 100) / 100; // 4.7% tax rate, rounded to 2 decimal places
+  const tax_cad = subtotal_cad > 0 ? Math.round((subtotal_cad * 0.047) * 100) / 100 : 0;
   const shippingCost = shippingMethod === 'express' ? 14 : 0;
+  const shippingCost_cad = shippingMethod === 'express' ? 19 : 0; // Approximate CAD conversion
   const total = Math.round((subtotal + tax + shippingCost) * 100) / 100; // Total rounded to 2 decimal places
+  const total_cad = subtotal_cad > 0 ? Math.round((subtotal_cad + tax_cad + shippingCost_cad) * 100) / 100 : 0;
 
   return (
     <div>
@@ -205,11 +218,15 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
             onChange={handleCostCenterChange}
           /> */}
           <OrderSummary
-            subtotal={subtotal}
-            tax={tax}
-            shippingCost={shippingCost}
+            subtotal_usd={subtotal}
+            subtotal_cad={subtotal_cad > 0 ? subtotal_cad : undefined}
+            tax_usd={tax}
+            tax_cad={tax_cad > 0 ? tax_cad : undefined}
+            shippingCost_usd={shippingCost}
+            shippingCost_cad={shippingCost_cad > 0 ? shippingCost_cad : undefined}
             costCenter={costCenter}
-            total={total}
+            total_usd={total}
+            total_cad={total_cad > 0 ? total_cad : undefined}
             onCheckout={() => onCheckout(costCenter, shippingMethod)}
           />
         </div>
@@ -231,8 +248,8 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
                   description: product.description,
                   card_description: product.card_description,
                   image: product.image,
-                  price_usd: product.price,
-                  price: product.price,
+                  price_usd: product.price_usd,
+                  price_cad: product.price_cad,
                   recommended: product.recommended,
                 }} 
                 fromCatalog={true} 

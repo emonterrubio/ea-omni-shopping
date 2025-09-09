@@ -69,7 +69,7 @@ export default function CompareClient() {
                 card_description={product.description || ''}
                 features={product.description || ''}
                 subFeatures={product.description ? product.description.split(',').map((f: string) => f.trim()) : []}
-                price={product.price_usd}
+                price_usd={product.price_usd}
                 chip={product.cpu || product.os || product.category || ''}
                 specs={[]}
               />

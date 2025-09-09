@@ -28,7 +28,8 @@ export function RecommendedItems({ displayedProducts, showCompareButton }: Recom
         {displayedProducts.map((product, idx) => (
           <ProductCard key={`${product.model}-${idx}`} product={{
             ...product, 
-            price: product.price_usd,
+            price_usd: product.price_usd,
+            price_cad: product.price_cad,
             image: product.image || `/images/${product.manufacturer.toLowerCase()}_${product.model.toLowerCase().replace(/\s+/g, "_")}.png`
           }} />
         ))}

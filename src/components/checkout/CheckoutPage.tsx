@@ -11,7 +11,8 @@ interface Item {
   model: string;
   brand: string;
   image: string;
-  price: number | string;
+  price_usd: number | string;
+  price_cad?: number;
   quantity: number;
   recommended: boolean;
 }
@@ -177,13 +178,28 @@ export function CheckoutPage({ items, shippingCost, costCenter, onBack }: Checko
 
   // Calculate totals
   const subtotal = items.reduce((sum, item) => {
-    const price = typeof item.price === 'string' ? parseFloat(item.price.replace(/,/g, '')) : item.price;
+    const price = typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd;
     return sum + (price * item.quantity);
   }, 0);
+  
+  const subtotal_cad = items.reduce((sum, item) => {
+    const price_cad = item.price_cad;
+    if (price_cad && typeof price_cad === 'number') {
+      return sum + price_cad * item.quantity;
+    }
+    return sum;
+  }, 0);
+  
   const tax = Math.round((subtotal * 0.047) * 100) / 100; // 4.7% tax rate, rounded to 2 decimal places
+  const tax_cad = subtotal_cad > 0 ? Math.round((subtotal_cad * 0.047) * 100) / 100 : 0;
+  const shippingCost_cad = shippingCost > 0 ? 19 : 0; // Approximate CAD conversion
   const total = Math.round((subtotal + tax + shippingCost) * 100) / 100; // Total rounded to 2 decimal places
+  const total_cad = subtotal_cad > 0 ? Math.round((subtotal_cad + tax_cad + shippingCost_cad) * 100) / 100 : 0;
 
   const handlePlaceOrder = () => {
+    // Debug: Log items being passed to createOrderFromCheckout
+    console.log('Items being passed to createOrderFromCheckout:', items);
+    
     // Create and save the order
     const order = createOrderFromCheckout(
       billing,
@@ -256,11 +272,15 @@ export function CheckoutPage({ items, shippingCost, costCenter, onBack }: Checko
             onChange={setCostCenterValue}
           /> */}
           <OrderSummary
-            subtotal={subtotal}
-            tax={tax}
-            shippingCost={shippingCost}
+            subtotal_usd={subtotal}
+            subtotal_cad={subtotal_cad > 0 ? subtotal_cad : undefined}
+            tax_usd={tax}
+            tax_cad={tax_cad > 0 ? tax_cad : undefined}
+            shippingCost_usd={shippingCost}
+            shippingCost_cad={shippingCost_cad > 0 ? shippingCost_cad : undefined}
             costCenter={costCenterValue}
-            total={total}
+            total_usd={total}
+            total_cad={total_cad > 0 ? total_cad : undefined}
             onCheckout={handlePlaceOrder}
             checkoutButtonText="Submit"
             showCheckoutButton={true}

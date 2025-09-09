@@ -10,7 +10,8 @@ interface CartItemCardProps {
     description?: string;
     card_description?: string;
     image: string;
-    price: number | string;
+    price_usd: number | string;
+    price_cad?: number;
     recommended?: boolean;
     quantity: number;
     category?: string;
@@ -67,9 +68,16 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
           <div className="flex-1 min-w-0">
             {/* Desktop Price - positioned to the right */}
             <div className="hidden sm:block absolute top-0 right-0">
-              <p className="text-xl font-medium text-gray-900">
-                {formatPrice(item.price)}<span className="text-sm text-gray-500 font-normal"> USD</span>
-              </p>
+              <div className="text-right">
+                <p className="text-xl font-medium text-gray-900">
+                  {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
+                </p>
+                {item.price_cad && (
+                  <p className="text-xl font-medium text-gray-900">
+                    {formatPrice(item.price_cad)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
+                  </p>
+                )}
+              </div>
             </div>
             <h3 className="text-xl font-medium text-gray-900 sm:w-4/5">
               <Link 
@@ -85,8 +93,13 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
             {/* Price - Mobile: below description, Desktop: to the right */}
             <div className="block sm:hidden mb-1">
               <p className="text-xl font-medium text-gray-900">
-                {formatPrice(item.price)}<span className="text-sm text-gray-500 font-normal"> USD</span>
+                {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
               </p>
+              {item.price_cad && (
+                <p className="text-lg font-medium text-gray-600">
+                  {formatPrice(item.price_cad)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
+                </p>
+              )}
             </div>
             {/* Quantity Controls and Action Links */}
             <div className="flex flex-row gap-4 py-2">
