@@ -49,9 +49,9 @@ export function OrderSummary({
           <span>Subtotal {itemCount ? `(${itemCount} items)` : ''}</span>
           <div className="text-right">
             {currency === 'USD' ? (
-              <div className="text-lg font-bold text-gray-600">${Math.round(subtotal_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
+              <div className="text-lg font-regular text-gray-600">${Math.round(subtotal_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
             ) : (
-              <div className="text-lg font-bold text-gray-600">${Math.round(subtotal_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
+              <div className="text-lg font-regular text-gray-600">${Math.round(subtotal_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
             )}
           </div>
         </div>
@@ -60,9 +60,9 @@ export function OrderSummary({
             <span>Tax</span>
             <div className="text-right">
               {currency === 'USD' ? (
-                <div className="text-lg font-bold text-gray-600">${Math.round(tax_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
+                <div className="text-lg font-regular text-gray-600">${Math.round(tax_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
               ) : (
-                <div className="text-lg font-bold text-gray-600">${Math.round(tax_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
+                <div className="text-lg font-regular text-gray-600">${Math.round(tax_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
               )}
             </div>
           </div>

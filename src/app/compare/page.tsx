@@ -58,10 +58,11 @@ export default function ComparePage() {
         if ((product as any).storage) specs.push({ label: "Storage", value: (product as any).storage });
         if ((product as any).screen_size) specs.push({ label: "Screen Size", value: (product as any).screen_size });
         if ((product as any).weight_lbs) specs.push({ label: "Weight", value: `${(product as any).weight_lbs} lbs` });
-        if ((product as any).battery_life_hrs) specs.push({ label: "Battery Life", value: `${(product as any).battery_life_hrs} hours` });
-        if ((product as any).battery_life_description) specs.push({ label: "Battery Rating", value: (product as any).battery_life_description });
+        if ((product as any).battery_life_description) specs.push({ label: "Battery Life", value: (product as any).battery_life_description });
+        if ((product as any).portability_rating) specs.push({ label: "Portability Rating", value: (product as any).portability_rating });
         if ((product as any).performance_rating) specs.push({ label: "Performance Tier", value: (product as any).performance_rating });
         if ((product as any).power_watt) specs.push({ label: "Power Adapter", value: `${(product as any).power_watt}W` });
+        if ((product as any).warranty) specs.push({ label: "Warranty", value: (product as any).warranty });
         if ((product as any).dock) specs.push({ label: "Compatible Dock", value: (product as any).dock });
         
         // Display specifications
@@ -100,6 +101,7 @@ export default function ComparePage() {
         // Use cases
         if ((product as any).best_for) specs.push({ label: "Best For", value: (product as any).best_for });
         if ((product as any).intended_for) specs.push({ label: "Intended For", value: (product as any).intended_for });
+        if ((product as any).warranty) specs.push({ label: "Warranty", value: (product as any).warranty });
         break;
         
       case "docking station":
@@ -113,6 +115,7 @@ export default function ComparePage() {
         }
         
         if ((product as any).intended_for) specs.push({ label: "Intended For", value: (product as any).intended_for });
+        if ((product as any).warranty) specs.push({ label: "Warranty", value: (product as any).warranty });
         break;
         
       case "headset":
