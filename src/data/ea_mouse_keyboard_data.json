@@ -151,7 +151,7 @@
   },
   {
     "manufacturer": "Apple",
-    "model": "Magic Keyboard",
+    "model": "Magic Keyboard Full Size",
     "display_name": "Magic Keyboard (Full Size)",
     "category": "Keyboard",
     "price_usd": 180,
@@ -176,7 +176,7 @@
   },
   {
     "manufacturer": "Apple",
-    "model": "Magic Keyboard",
+    "model": "Magic Keyboard Compact",
     "display_name": "Magic Keyboard (Compact)",
     "category": "Keyboard",
     "price_usd": 150,
@@ -197,7 +197,7 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 11
+    "quantity_in_stock": 2
   },
   {
     "manufacturer": "Apple",

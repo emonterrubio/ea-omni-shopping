@@ -1,4 +1,5 @@
 import React from 'react';
+import { useCurrency } from '../CurrencyContext';
 
 interface OrderSummaryProps {
   subtotal_usd: number;
@@ -39,6 +40,7 @@ export function OrderSummary({
   showContinueShopping = true,
   onContinueShopping
 }: OrderSummaryProps) {
+  const { currency } = useCurrency();
   return (
     <div className={`lg:min-w-72 bg-white rounded-md border border-gray-200 p-6 h-fit ${className}`}>
       <div>
@@ -46,19 +48,21 @@ export function OrderSummary({
         <div className="flex justify-between font-regular text-gray-800 mb-2">
           <span>Subtotal {itemCount ? `(${itemCount} items)` : ''}</span>
           <div className="text-right">
-            <div className="text-lg font-normal text-gray-600">${Math.round(subtotal_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
-            {subtotal_cad && (
-              <div className="text-lg font-normal text-gray-600">${Math.round(subtotal_cad).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
+            {currency === 'USD' ? (
+              <div className="text-lg font-bold text-gray-600">${Math.round(subtotal_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
+            ) : (
+              <div className="text-lg font-bold text-gray-600">${Math.round(subtotal_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
             )}
           </div>
         </div>
-        {tax_usd > 0 && (
+        {((currency === 'USD' && tax_usd > 0) || (currency === 'CAD' && (tax_cad || 0) > 0)) && (
           <div className="flex justify-between font-regular text-gray-800 mb-2">
             <span>Tax</span>
             <div className="text-right">
-              <div className="text-lg font-normal text-gray-600">${Math.round(tax_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
-              {tax_cad && (
-                <div className="text-lg font-normal text-gray-600">${Math.round(tax_cad).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
+              {currency === 'USD' ? (
+                <div className="text-lg font-bold text-gray-600">${Math.round(tax_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
+              ) : (
+                <div className="text-lg font-bold text-gray-600">${Math.round(tax_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
               )}
             </div>
           </div>
@@ -66,19 +70,20 @@ export function OrderSummary({
         <div className="flex justify-between font-regular text-gray-800 mb-2">
           <span>Shipping</span>
           <div className="text-right">
-            <div className="text-base font-regular text-gray-600">
-              {shippingCost_usd === 0 ? 'Free' : (
-                <>
-                  ${Math.round(shippingCost_usd).toLocaleString()}
-                  <span className="text-xs text-gray-600 font-normal"> USD</span>
-                </>
-              )}
-            </div>
-            {shippingCost_cad && (
-              <div className="text-base font-bold text-gray-600">
-                {shippingCost_cad === 0 ? 'Free' : (
+            {currency === 'USD' ? (
+              <div className="text-base font-regular text-gray-600">
+                {shippingCost_usd === 0 ? 'Free' : (
                   <>
-                    ${Math.round(shippingCost_cad).toLocaleString()}
+                    ${Math.round(shippingCost_usd).toLocaleString()}
+                    <span className="text-xs text-gray-600 font-normal"> USD</span>
+                  </>
+                )}
+              </div>
+            ) : (
+              <div className="text-base font-regular text-gray-600">
+                {(shippingCost_cad || 0) === 0 ? 'Free' : (
+                  <>
+                    ${Math.round(shippingCost_cad || 0).toLocaleString()}
                     <span className="text-xs text-gray-600 font-normal"> CAD</span>
                   </>
                 )}
@@ -101,9 +106,10 @@ export function OrderSummary({
         <div className="flex justify-between font-bold text-xl mt-2">
           <span>Total</span>
           <div className="text-right">
-            <div className="text-xl font-bold text-gray-600">${Math.round(total_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
-            {total_cad && (
-              <div className="text-xl font-bold text-gray-600">${Math.round(total_cad).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
+            {currency === 'USD' ? (
+              <div className="text-xl font-bold text-gray-600">${Math.round(total_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
+            ) : (
+              <div className="text-xl font-bold text-gray-600">${Math.round(total_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
             )}
           </div>
         </div>

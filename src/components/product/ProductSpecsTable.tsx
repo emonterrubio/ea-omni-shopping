@@ -82,11 +82,11 @@ export function ProductSpecsTable({ specs = [], category }: ProductSpecsTablePro
 
   return (
     <div>
-      <h2 className="text-2xl font-normal mb-6">Technical Specifications</h2>
+      <h2 className="text-2xl font-normal mb-4">Technical Specifications</h2>
       
       {/* Toggle Switch - Only show for laptops */}
       {isLaptop && (
-        <div className="mb-6">
+        <div className="mb-4">
           <div className="flex bg-gray-100 rounded-lg p-1 w-fit">
             <button
               onClick={() => setActiveTab('basic')}

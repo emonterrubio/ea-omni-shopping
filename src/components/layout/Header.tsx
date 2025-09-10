@@ -5,6 +5,7 @@ import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import { CartContext } from "../CartContext";
 import type { CartContextType } from "../CartContext";
+import { CurrencyToggle } from "../ui/CurrencyToggle";
 import { useSpring, animated } from "@react-spring/web";
 
 export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
@@ -69,6 +70,10 @@ export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
             </Link>
           </div>
           <div className="flex-1 flex justify-end items-center relative space-x-1 sm:space-x-4">
+            {/* Currency Toggle */}
+            <div className="hidden sm:block">
+              <CurrencyToggle />
+            </div>
             {/* TODO: Add search back in */}
             {/* {!isHome && (
               <Link

@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import { Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { useCurrency } from '../CurrencyContext';
 
 interface CartItemCardProps {
   item: {
@@ -23,6 +24,8 @@ interface CartItemCardProps {
 }
 
 export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: CartItemCardProps) {
+  const { currency } = useCurrency();
+  
   // Helper function to infer category from model name if not provided
   const inferCategory = (model: string): string => {
     const name = model.toLowerCase();
@@ -43,9 +46,9 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
 
   const formatPrice = (price: number | string) => {
     if (typeof price === 'string') {
-      return `$${Number(price.replace(/,/g, '')).toLocaleString()}`;
+      return `$${Math.round(Number(price.replace(/,/g, ''))).toLocaleString()}`;
     }
-    return `$${price.toLocaleString()}`;
+    return `$${Math.round(price).toLocaleString()}`;
   };
 
 
@@ -69,12 +72,13 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
             {/* Desktop Price - positioned to the right */}
             <div className="hidden sm:block absolute top-0 right-0">
               <div className="text-right">
-                <p className="text-xl font-medium text-gray-900">
-                  {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
-                </p>
-                {item.price_cad && (
+                {currency === 'USD' ? (
                   <p className="text-xl font-medium text-gray-900">
-                    {formatPrice(item.price_cad)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
+                    {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
+                  </p>
+                ) : (
+                  <p className="text-xl font-medium text-gray-900">
+                    {formatPrice(item.price_cad || 0)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
                   </p>
                 )}
               </div>
@@ -92,12 +96,13 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
             )}
             {/* Price - Mobile: below description, Desktop: to the right */}
             <div className="block sm:hidden mb-1">
-              <p className="text-xl font-medium text-gray-900">
-                {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
-              </p>
-              {item.price_cad && (
-                <p className="text-lg font-medium text-gray-600">
-                  {formatPrice(item.price_cad)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
+              {currency === 'USD' ? (
+                <p className="text-xl font-medium text-gray-900">
+                  {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
+                </p>
+              ) : (
+                <p className="text-xl font-medium text-gray-900">
+                  {formatPrice(item.price_cad || 0)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
                 </p>
               )}
             </div>

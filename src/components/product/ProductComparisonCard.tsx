@@ -1,6 +1,7 @@
 import { CheckCircle, AlertCircle } from "lucide-react";
 import React, { useContext } from "react";
 import { CartContext, CartItem } from "@/components/CartContext";
+import { useCurrency } from "@/components/CurrencyContext";
 import Link from "next/link";
 
 interface ComparisonProductCardProps {
@@ -36,6 +37,7 @@ export function ComparisonProductCard({
   specs,
   noBackground = false,
 }: ComparisonProductCardProps) {
+  const { currency } = useCurrency();
   // Split features string into array by comma
   const featureList = features.split(',').map(f => f.trim());
   const isEligible = true;
@@ -73,8 +75,8 @@ export function ComparisonProductCard({
             {display_name && category?.toLowerCase() === 'monitor'
               ? display_name
               : display_name && model && 
-                !display_name.includes(model) && 
-                !model.includes(display_name)
+                !display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
+                !model.toLowerCase().replace(/[^a-z0-9]/g, '').includes(display_name.toLowerCase().replace(/[^a-z0-9]/g, ''))
                 ? `${display_name} (${model})` 
                 : display_name || model}
           </h2>
@@ -112,9 +114,10 @@ export function ComparisonProductCard({
         <div className="text-gray-600 text-sm">Recommended based on your role</div> */}
         {/* Price */}
         <div className="space-y-1">
-          <div className="text-2xl font-semibold">${price_usd.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> USD</span></div>
-          {price_cad && (
-            <div className="text-2xl font-semibold">${price_cad.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> CAD</span></div>
+          {currency === 'USD' ? (
+            <div className="text-2xl font-semibold">${Math.round(price_usd).toLocaleString()}<span className="text-sm text-gray-500 font-normal"> USD</span></div>
+          ) : (
+            <div className="text-2xl font-semibold">${Math.round(price_cad || 0).toLocaleString()}<span className="text-sm text-gray-500 font-normal"> CAD</span></div>
           )}
         </div>
         {/* Add to Cart and View Details buttons */}

@@ -3,18 +3,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { OrderProductRow } from './OrderProductRow';
 import { OrderItem } from './types';
+import { useCurrency } from '../CurrencyContext';
 
 interface OrderProductListProps {
   items: OrderItem[];
 }
 
 export function OrderProductList({ items }: OrderProductListProps) {
+  const { currency } = useCurrency();
+  
   const formatPrice = (price: number | string | undefined) => {
     if (!price) return '$0';
     if (typeof price === 'string') {
-      return `$${Number(price.replace(/,/g, "")).toLocaleString()}`;
+      return `$${Math.round(Number(price.replace(/,/g, ""))).toLocaleString()}`;
     }
-    return `$${price.toLocaleString()}`;
+    return `$${Math.round(price).toLocaleString()}`;
   };
 
   return (
@@ -40,9 +43,9 @@ export function OrderProductList({ items }: OrderProductListProps) {
         <table className="w-full">
           <thead className="bg-gray-100">
             <tr>
-              <th className="text-base text-left px-6 py-4 font-semibold text-gray-900">Product Details</th>
-              <th className="text-base text-center px-6 py-4 font-semibold text-gray-900">Quantity</th>
-              <th className="text-base text-right px-6 py-4 font-semibold text-gray-900">Price</th>
+              <th className="text-base text-left px-4 py-4 font-semibold text-gray-900">Product Details</th>
+              <th className="text-base text-center px-4 py-4 font-semibold text-gray-900">Quantity</th>
+              <th className="text-base text-right px-4 py-4 font-semibold text-gray-900">Price</th>
             </tr>
           </thead>
           <tbody>
@@ -73,9 +76,17 @@ export function OrderProductList({ items }: OrderProductListProps) {
                     </div>
                   </div>
                 </td>
-                <td className="text-center px-6 py-4 text-gray-900">{item.quantity || 1}</td>
-                <td className="text-right px-6 py-4 font-semibold text-gray-900">
-                  {formatPrice(item.price_usd)}
+                <td className="text-center px-4 py-4 text-gray-900">{item.quantity || 1}</td>
+                <td className="text-right px-4 py-4 font-semibold text-gray-900">
+                  {currency === 'USD' ? (
+                    <>
+                      {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
+                    </>
+                  ) : (
+                    <>
+                      {formatPrice(item.price_cad)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
+                    </>
+                  )}
                 </td>
               </tr>
             ))}

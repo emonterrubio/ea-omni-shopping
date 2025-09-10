@@ -254,16 +254,21 @@ export default function CategoryCatalogPage() {
       <Breadcrumb
         items={[
           { label: "Catalog", href: "/catalog" },
-          { label: `All ${pluralCategoryName}`, isActive: true }
+          { label: selectedBrand !== "all" ? `All ${selectedBrand} ${pluralCategoryName}` : `All ${pluralCategoryName}`, isActive: true }
         ]}
         className="mb-4 sm:px-4 lg:px-0"
       />
 
       <div className="text-left mb-4 sm:px-4 lg:px-0">
         <h1 className="text-4xl md:text-5xl font-medium text-gray-900 mt-4 lg:mt-6 mb-2">
-          All {pluralCategoryName}
+          {selectedBrand !== "all" ? `All ${selectedBrand} ${pluralCategoryName}` : `All ${pluralCategoryName}`}
         </h1>
-        <h4 className="text-base font-base text-gray-800 mb-2">Browse our catalog of {pluralCategoryName.toLowerCase()} and find the perfect item for your needs.</h4>
+        <h4 className="text-base font-base text-gray-800 mb-2">
+          {selectedBrand !== "all" 
+            ? `Browse our catalog of ${selectedBrand} ${pluralCategoryName.toLowerCase()} and find the perfect item for your needs.`
+            : `Browse our catalog of ${pluralCategoryName.toLowerCase()} and find the perfect item for your needs.`
+          }
+        </h4>
       </div>
 
       <PlatformInfoBanner />

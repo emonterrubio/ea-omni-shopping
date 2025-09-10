@@ -4,6 +4,7 @@ import React, { useContext } from "react";
 import { CheckCircle, AlertCircle } from "lucide-react";
 import { ProductCardProps } from "@/types/ProductCardProps";
 import { CartContext, CartItem } from "@/components/CartContext";
+import { useCurrency } from "@/components/CurrencyContext";
 import Link from "next/link";
 
 const PLACEHOLDER_IMAGE = "https://placehold.co/128x128?text=No+Image";
@@ -30,6 +31,7 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
   // For EA products, we'll consider them all eligible
   const isEligible = true;
   const { addToCart } = useContext(CartContext);
+  const { currency } = useCurrency();
 
   // Use manufacturer as brand for EA products
   const brand = product.manufacturer || product.brand || 'Unknown';
@@ -93,8 +95,8 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
             {(product as any).display_name && product.category?.toLowerCase() === 'monitor'
               ? (product as any).display_name
               : (product as any).display_name && product.model && 
-                !(product as any).display_name.includes(product.model) && 
-                !product.model.includes((product as any).display_name)
+                !(product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
+                !product.model.toLowerCase().replace(/[^a-z0-9]/g, '').includes((product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, ''))
                 ? `${(product as any).display_name} (${product.model})` 
                 : (product as any).display_name || product.model}
           </h3>
@@ -103,12 +105,13 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
         <div className="space-y-2 pb-4 flex-1">
           {(product.card_description || product.description) && <div className="text-gray-700 text-base leading-tight">{product.card_description || product.description}</div>}
           <div>
-            <div className="text-xl font-semibold text-gray-900">
-              ${price.toLocaleString()}<span className="text-sm font-normal text-gray-500"> USD</span>
-            </div>
-            {priceCad > 0 && (
+            {currency === 'USD' ? (
               <div className="text-xl font-semibold text-gray-900">
-                ${priceCad.toLocaleString()}<span className="text-sm font-normal text-gray-500"> CAD</span>
+                ${Math.round(price).toLocaleString()}<span className="text-sm font-normal text-gray-500"> USD</span>
+              </div>
+            ) : (
+              <div className="text-xl font-semibold text-gray-900">
+                ${Math.round(priceCad).toLocaleString()}<span className="text-sm font-normal text-gray-500"> CAD</span>
               </div>
             )}
           </div>

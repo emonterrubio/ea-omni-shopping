@@ -1,5 +1,6 @@
 import React from 'react';
 import Image from 'next/image';
+import { useCurrency } from '../CurrencyContext';
 
 interface SummaryProductCardProps {
   item: {
@@ -8,6 +9,7 @@ interface SummaryProductCardProps {
     description?: string;
     image: string;
     price: number | string;
+    price_cad?: number | string;
     recommended?: boolean;
     quantity: number;
   };
@@ -16,6 +18,7 @@ interface SummaryProductCardProps {
 }
 
 export function SummaryProductCard({ item, onQuantityChange, onRemove }: SummaryProductCardProps) {
+  const { currency } = useCurrency();
   return (
     <div className="flex flex-col sm:flex-row items-center bg-white rounded-xl border border-gray-200 px-4 py-4 sm:px-6 sm:py-6 gap-4 sm:gap-6">
       {/* Image */}
@@ -48,11 +51,15 @@ export function SummaryProductCard({ item, onQuantityChange, onRemove }: Summary
           </button>
           {/* Price */}
           <div className="font-semibold text-xl text-gray-900 mt-2 sm:mt-0 sm:ml-auto w-full sm:w-auto text-right">
-            {
+            {currency === 'USD' ? (
               typeof item.price === 'string'
-                ? `$${Number((item.price as string).replace(/,/g, '')).toLocaleString()}`
-                : `$${item.price.toLocaleString()}`
-            }
+                ? `$${Math.round(Number((item.price as string).replace(/,/g, ''))).toLocaleString()}`
+                : `$${Math.round(item.price).toLocaleString()}`
+            ) : (
+              typeof item.price_cad === 'string'
+                ? `$${Math.round(Number((item.price_cad as string).replace(/,/g, ''))).toLocaleString()}`
+                : `$${Math.round(item.price_cad || 0).toLocaleString()}`
+            )}
           </div>
         </div>
       </div>

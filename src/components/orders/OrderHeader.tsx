@@ -2,12 +2,19 @@ import React from 'react';
 import Link from 'next/link';
 import { Order } from '@/types/orders';
 import { OrderStatus } from './OrderStatus';
+import { useCurrency } from '../CurrencyContext';
 
 interface OrderHeaderProps {
   order: Order;
 }
 
 export function OrderHeader({ order }: OrderHeaderProps) {
+  const { currency } = useCurrency();
+  
+  // Calculate CAD total if needed (assuming 1.35 conversion rate)
+  const displayTotal = currency === 'CAD' 
+    ? Math.round(order.total * 1.35) 
+    : Math.round(order.total);
   return (
     <div className="bg-gray-100 px-5 lg:px-6 py-4 border-b border-gray-200">
       {/* Mobile: Card Layout */}
@@ -35,7 +42,7 @@ export function OrderHeader({ order }: OrderHeaderProps) {
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Total</span>
-              <span className="text-base text-gray-900 font-bold">${order.total.toLocaleString()}</span>
+              <span className="text-base text-gray-900 font-bold">${displayTotal.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> {currency}</span></span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Shipping to</span>
@@ -86,7 +93,7 @@ export function OrderHeader({ order }: OrderHeaderProps) {
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Total</span>
-              <span className="text-sm xl:text-base text-gray-900 font-bold">${order.total.toLocaleString()}</span>
+              <span className="text-sm xl:text-base text-gray-900 font-bold">${displayTotal.toLocaleString()}<span className="text-xs text-gray-500 font-normal"> {currency}</span></span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Shipping to</span>

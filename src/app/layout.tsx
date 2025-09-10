@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./styles/globals.css";
 import { CartProvider } from "../components/CartContext";
 import { ToastProvider } from "../components/ToastContext";
+import { CurrencyProvider } from "../components/CurrencyContext";
 import { ToastContainer } from "../components/ui/ToastContainer";
 import { PasswordProtection } from "../components/auth/PasswordProtection";
 import { AUTH_CONFIG } from "../config/auth";
@@ -26,10 +27,12 @@ export default function RootLayout({
       <body className="font-sans">
         <PasswordProtection correctPassword={AUTH_CONFIG.ACCESS_PASSWORD}>
           <ToastProvider>
-            <CartProvider>
-              {children}
-              <ToastContainer />
-            </CartProvider>
+            <CurrencyProvider>
+              <CartProvider>
+                {children}
+                <ToastContainer />
+              </CartProvider>
+            </CurrencyProvider>
           </ToastProvider>
         </PasswordProtection>
       </body>

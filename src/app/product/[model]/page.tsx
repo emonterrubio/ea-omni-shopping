@@ -73,11 +73,11 @@ function getProductSpecs(product: any) {
       // Screen Size
       if ((product as any).screen_size) specs.push({ label: "Screen Size", value: (product as any).screen_size });
       
-      // Portability Rating (using battery_life_description as proxy)
-      if ((product as any).battery_life_description) specs.push({ label: "Portability Rating", value: (product as any).battery_life_description });
+      // Portability Rating
+      if ((product as any).portability_rating) specs.push({ label: "Portability Rating", value: (product as any).portability_rating });
       
       // Typical Battery Life
-      if ((product as any).battery_life_hrs) specs.push({ label: "Typical Battery Life", value: `${(product as any).battery_life_hrs} hours` });
+      if ((product as any).battery_life_description) specs.push({ label: "Typical Battery Life", value: (product as any).battery_life_description });
       
       // Performance Rating
       if ((product as any).performance_rating) specs.push({ label: "Performance Rating", value: (product as any).performance_rating });
@@ -293,8 +293,8 @@ export default function ProductDetailPage() {
     label: `${product.manufacturer} ${(product as any).display_name && product.category?.toLowerCase() === 'monitor'
       ? (product as any).display_name
       : (product as any).display_name && product.model && 
-        !(product as any).display_name.includes(product.model) && 
-        !product.model.includes((product as any).display_name) ? `${(product as any).display_name} (${product.model})` : (product as any).display_name || product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
+        !(product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
+        !product.model.toLowerCase().replace(/[^a-z0-9]/g, '').includes((product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '')) ? `${(product as any).display_name} (${product.model})` : (product as any).display_name || product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
     key: `${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}`
   }));
 
@@ -363,15 +363,15 @@ export default function ProductDetailPage() {
               title={(product as any).display_name && product.category?.toLowerCase() === 'monitor'
                 ? (product as any).display_name
                 : (product as any).display_name && product.model && 
-                  !(product as any).display_name.includes(product.model) && 
-                  !product.model.includes((product as any).display_name)
+                  !(product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
+                  !product.model.toLowerCase().replace(/[^a-z0-9]/g, '').includes((product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, ''))
                   ? `${(product as any).display_name} (${product.model})` 
                   : (product as any).display_name || product.model}
               sku={product.model}
               price={(product as any).price_usd || (product as any).ea_estimated_price_usd}
               price_cad={(product as any).price_cad}
               available={isEligible}
-              deliveryTime={"within 5 days"}
+              deliveryTime={"within 5 business days"}
               description={product.description || `${product.manufacturer} ${product.model}`}
               quantity={quantity}
               category={product.category}

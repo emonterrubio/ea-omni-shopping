@@ -8,9 +8,11 @@ import { hardwareData } from "@/data/eaProductData";
 import { EAProductType } from "@/types";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { Laptop } from 'lucide-react';
+import { useCurrency } from "@/components/CurrencyContext";
 
 export default function ComparePage() {
   const [selectedProducts, setSelectedProducts] = useState<EAProductType[]>([]);
+  const { currency } = useCurrency();
   
   // Get all available products for selection
   const availableProducts = hardwareData;
@@ -173,11 +175,16 @@ export default function ComparePage() {
                 >
                   <option value="">Select a product...</option>
                   <option value="none">None</option>
-                  {availableProducts.map((product, productIndex) => (
-                    <option key={`${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}-${productIndex}`} value={product.model}>
-                      {product.manufacturer} {(product as any).display_name ? `${(product as any).display_name} (${product.model})` : product.model} - ${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}
-                    </option>
-                  ))}
+                  {availableProducts.map((product, productIndex) => {
+                    const price = currency === 'USD' 
+                      ? (product.price_usd || (product as any).ea_estimated_price_usd || 0)
+                      : (product.price_cad || Math.round((product.price_usd || (product as any).ea_estimated_price_usd || 0) * 1.35));
+                    return (
+                      <option key={`${product.manufacturer}-${product.model}-${price}-${productIndex}`} value={product.model}>
+                        {product.manufacturer} {(product as any).display_name ? `${(product as any).display_name} (${product.model})` : product.model} - ${Math.round(price).toLocaleString()} {currency}
+                      </option>
+                    );
+                  })}
                 </select>
                 <ChevronDownIcon
                   aria-hidden="true"
