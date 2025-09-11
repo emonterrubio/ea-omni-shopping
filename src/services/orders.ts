@@ -62,7 +62,7 @@ export function createOrderFromCheckout(
       type: shippingType,
       address: shippingAddress
     },
-    status: 'pending',
+    status: 'pending-approval',
     items: orderItems,
     total
   };
@@ -91,7 +91,7 @@ export function clearOrdersForTesting(): void {
   console.log('Orders cleared for testing');
 }
 
-export function updateOrderStatus(orderId: string, status: 'pending' | 'delivered' | 'in-transit', deliveryDate?: string): void {
+export function updateOrderStatus(orderId: string, status: 'pending-approval' | 'order-sent-to-vendor' | 'order-shipped' | 'order-delivered', deliveryDate?: string): void {
   const orders = getOrders();
   const updatedOrders = orders.map(order => {
     if (order.id === orderId) {

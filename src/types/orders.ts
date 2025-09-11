@@ -18,7 +18,7 @@ export interface Order {
     type: 'residential' | 'office';
     address: string;
   };
-  status: 'pending' | 'delivered' | 'in-transit';
+  status: 'pending-approval' | 'order-sent-to-vendor' | 'order-shipped' | 'order-delivered';
   deliveryDate?: string;
   items: OrderItem[];
   total: number;

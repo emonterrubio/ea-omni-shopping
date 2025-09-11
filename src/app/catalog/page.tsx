@@ -6,17 +6,15 @@ import { PlatformInfoBanner } from "../../components/ui/PlatformInfoBanner";
 import { PageLayout } from "../../components/layout/PageLayout";
 import { Pagination } from "../../components/ui/Pagination";
 import { CatalogSidebar } from "../../components/catalog/CatalogSidebar";
-import { SortAsc, Filter, PackageSearch } from "lucide-react";
+import { SortAsc, Filter, PackageSearch, ChevronDownIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { Breadcrumb } from "../../components/ui/Breadcrumb";
-import { Dropdown } from "../../components/ui/Dropdown";
+import { CurrencyToggle } from "../../components/ui/CurrencyToggle";
 
 export default function CatalogPage() {
   // Use the EA product data directly
   const allProducts = hardwareData.map((product) => ({
     brand: product.manufacturer,
     model: product.model,
-    display_name: (product as any).display_name,
     category: product.category,
     description: (product as any).description || `${product.manufacturer} ${product.model}`,
     card_description: (product as any).description || `${product.manufacturer} ${product.model}`,
@@ -47,33 +45,6 @@ export default function CatalogPage() {
 
   const sortMenuRef = useRef<HTMLDivElement>(null);
   const filterMenuRef = useRef<HTMLDivElement>(null);
-
-  // Dropdown options
-  const categoryOptions = [
-    { value: "all", label: "All" },
-    ...Array.from(new Set(allProducts.map((p: any) => p.category))).sort().map(category => ({
-      value: category,
-      label: category === 'Laptop' ? 'Laptops' : 
-             category === 'Monitor' ? 'Monitors' : 
-             category === 'Docking Station' ? 'Docking Stations' : 
-             category === 'Headset' ? 'Headsets' : 
-             category === 'Mouse' ? 'Mice' :
-             category === 'Keyboard' ? 'Keyboards' :
-             category === 'Mouse & Keyboard' ? 'Mouse & Keyboard' :
-             category === 'TrackPad' ? 'Mice' :
-             category === 'Webcam' ? 'Webcams' :
-             category
-    }))
-  ];
-
-  const sortOptions = [
-    { value: "all", label: "All" },
-    { value: "price-low", label: "Price: Low to High" },
-    { value: "price-high", label: "Price: High to Low" },
-    { value: "az", label: "A-Z" },
-    { value: "za", label: "Z-A" }
-  ];
-
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -116,7 +87,12 @@ export default function CatalogPage() {
       const targetCategory = selectedCategory.toLowerCase();
       
       // Handle specific category mappings
-      if (targetCategory === 'mouse') {
+      if (targetCategory === 'mice and keyboards') {
+        return productCategory === 'mouse' || 
+               productCategory === 'trackpad' ||
+               productCategory === 'keyboard' ||
+               productCategory === 'mouse & keyboard';
+      } else if (targetCategory === 'mouse') {
         return productCategory === 'mouse' || 
                productCategory === 'trackpad';
       } else if (targetCategory === 'keyboard') {
@@ -179,28 +155,11 @@ export default function CatalogPage() {
         return acc;
       }, {} as { [brand: string]: number });
     } else {
-      // If category is selected, count only products in that category using the same logic as main filtering
+      // If category is selected, count only products in that category
       return Object.keys(productsByBrand).reduce((acc, brand) => {
-        const count = productsByBrand[brand].filter(product => {
-          if (!product.category) return false;
-          
-          const productCategory = product.category.toLowerCase();
-          const targetCategory = selectedCategory.toLowerCase();
-          
-          // Handle specific category mappings (same logic as main filtering)
-          if (targetCategory === 'mouse') {
-            return productCategory === 'mouse' || 
-                   productCategory === 'trackpad';
-          } else if (targetCategory === 'keyboard') {
-            return productCategory === 'keyboard';
-          } else if (targetCategory === 'mouse & keyboard') {
-            return productCategory === 'mouse & keyboard';
-          } else if (targetCategory === 'webcam') {
-            return productCategory === 'webcam';
-          } else {
-            return productCategory === targetCategory;
-          }
-        }).length;
+        const count = productsByBrand[brand].filter(product => 
+          product.category && product.category.toLowerCase() === selectedCategory.toLowerCase()
+        ).length;
         acc[brand] = count;
         return acc;
       }, {} as { [brand: string]: number });
@@ -209,86 +168,52 @@ export default function CatalogPage() {
 
   const brandCounts = getBrandCountsForCategory();
 
-  // Brand options with counts
-  const brandOptions = [
-    { value: "all", label: "All Brands" },
-    ...Object.keys(productsByBrand).sort().map((brand) => ({
-      value: brand,
-      label: `${brand} (${brandCounts[brand]})`
-    }))
-  ];
-
-  // Get plural category name for display
-  const getPluralCategoryName = (singular: string): string => {
-    switch (singular.toLowerCase()) {
-      case 'laptop':
-        return 'Laptops';
-      case 'monitor':
-        return 'Monitors';
-      case 'docking station':
-        return 'Docking Stations';
-      case 'headset':
-        return 'Headsets';
-      case 'mouse':
-        return 'Mice';
-      default:
-        return singular.charAt(0).toUpperCase() + singular.slice(1) + 's';
-    }
-  };
-
   return (
     <PageLayout>
-            {/* Breadcrumb Navigation */}
-      <Breadcrumb
-        items={[
-          { label: "Catalog", href: "/catalog" },
-          { label: selectedBrand !== "all" && selectedCategory !== "all" 
-            ? `All ${selectedBrand} ${getPluralCategoryName(selectedCategory)}`
-            : selectedBrand !== "all" 
-            ? `All ${selectedBrand} Products`
-            : selectedCategory === "all" 
-            ? "All Products" 
-            : `All ${getPluralCategoryName(selectedCategory)}`, 
-            isActive: true 
-          }
-        ]}
-        className="mb-4 sm:px-4 lg:px-0"
-      />
 
-      <div className="text-left mb-4 sm:px-4 lg:px-0">
+      <div className="text-left mb-8 sm:px-4 lg:px-0">
         <h1 className="text-4xl md:text-5xl font-medium text-gray-900 mt-4 lg:mt-6 mb-2">
-          {selectedBrand !== "all" && selectedCategory !== "all" 
-            ? `All ${selectedBrand} ${getPluralCategoryName(selectedCategory)}`
-            : selectedBrand !== "all" 
-            ? `All ${selectedBrand} Products`
-            : selectedCategory === "all" 
-            ? "All Products" 
-            : `All ${getPluralCategoryName(selectedCategory)}`
-          }
+          {(() => {
+            if (selectedCategory === "all" && selectedBrand === "all") {
+              return "All Products";
+            } else if (selectedCategory === "all" && selectedBrand !== "all") {
+              return `All ${selectedBrand.charAt(0).toUpperCase() + selectedBrand.slice(1)} Products`;
+            } else if (selectedCategory !== "all" && selectedBrand === "all") {
+              return `All ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`;
+            } else {
+              return `All ${selectedBrand.charAt(0).toUpperCase() + selectedBrand.slice(1)} ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`;
+            }
+          })()}
         </h1>
-        <h4 className="text-base font-base text-gray-800 mb-2">
-          {selectedBrand !== "all" && selectedCategory !== "all"
-            ? `Browse our catalog of ${selectedBrand} ${getPluralCategoryName(selectedCategory).toLowerCase()} and find the perfect item for your needs.`
-            : selectedBrand !== "all"
-            ? `Browse our catalog of ${selectedBrand} products and find the perfect item for your needs.`
-            : "Browse our catalog of products and find the perfect item for your needs."
-          }
-        </h4>
+        <h4 className="text-base font-base text-gray-800 mb-2">Browse our catalog of products and find the perfect item for your needs.</h4>
       </div>
-
-      <PlatformInfoBanner />
       
       <div className="flex flex-col lg:flex-row">
         {/* Mobile: Filter Panel */}
         <div className="lg:hidden my-0 sm:my-4 sm:px-4">
           <div>
             <label className="block text-2xl font-regular text-gray-700 mb-2">Categories</label>
-            <Dropdown
+            <select
               value={selectedCategory}
-              onChange={setSelectedCategory}
-              options={categoryOptions}
-              placeholder="Select a category..."
-            />
+              onChange={e => setSelectedCategory(e.target.value)}
+              className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+            >
+              <option value="all">All</option>
+              {Array.from(new Set(allProducts.map((p: any) => p.category))).sort().map(category => (
+                <option key={category} value={category}>
+                  {category === 'Laptop' ? 'Laptops' : 
+                   category === 'Monitor' ? 'Monitors' : 
+                   category === 'Docking Station' ? 'Docking Stations' : 
+                   category === 'Headset' ? 'Headsets' : 
+                   category === 'Mouse' ? 'Mice' :
+                   category === 'Keyboard' ? 'Keyboards' :
+                   category === 'Mouse & Keyboard' ? 'Mouse & Keyboard' :
+                   category === 'TrackPad' ? 'Mice' :
+                   category === 'Webcam' ? 'Webcams' :
+                   category}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
         
@@ -310,30 +235,49 @@ export default function CatalogPage() {
               Showing {startIndex + 1}-{Math.min(endIndex, sortedProducts.length)} of {sortedProducts.length} item{sortedProducts.length === 1 ? "" : "s"}
             </div>
             {/* Desktop filter and sort dropdowns */}
-            <div className="hidden lg:flex items-center gap-6 ml-auto">
+            <div className="hidden lg:flex items-center gap-4 ml-auto">
+              <CurrencyToggle />
               <div className="flex items-center gap-2">
                 <label htmlFor="brand-filter" className="text-base font-regular text-gray-700 whitespace-nowrap">Filter by:</label>
-                <Dropdown
-                  value={selectedBrand}
-                  onChange={setSelectedBrand}
-                  options={brandOptions}
-                  placeholder="Select a brand..."
-                  className="min-w-[180px]"
-                />
+                <div className="relative">
+                  <select
+                    id="brand-filter"
+                    value={selectedBrand}
+                    onChange={e => setSelectedBrand(e.target.value)}
+                    className="appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 min-w-[140px]"
+                  >
+                    <option value="all">All Brands</option>
+                    {Object.keys(productsByBrand).sort().map((brand) => (
+                      <option key={brand} value={brand}>
+                        {brand} ({brandCounts[brand]})
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDownIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <label htmlFor="sort" className="text-base font-regular text-gray-700 whitespace-nowrap">Sort by:</label>
-                <Dropdown
-                  value={sortOption}
-                  onChange={setSortOption}
-                  options={sortOptions}
-                  placeholder="Select sort option..."
-                  className="min-w-[160px]"
-                />
+                <div className="relative">
+                  <select
+                    id="sort"
+                    value={sortOption}
+                    onChange={e => setSortOption(e.target.value)}
+                    className="appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6 min-w-[140px]"
+                  >
+                    <option value="all">All</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="az">A-Z</option>
+                    <option value="za">Z-A</option>
+                  </select>
+                  <ChevronDownIcon className="absolute right-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500 pointer-events-none" />
+                </div>
               </div>
             </div>
             {/* Mobile filter and sort icons */}
             <div className="flex lg:hidden items-center gap-2 ml-auto relative">
+              <CurrencyToggle />
               <button
                 aria-label="Filter"
                 className="p-2 rounded hover:bg-gray-100"

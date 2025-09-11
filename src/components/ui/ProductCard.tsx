@@ -55,6 +55,7 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
       description: product.description,
       card_description: product.card_description,
       category: category,
+      display_name: (product as any).display_name,
     };
     addToCart(cartItem);
   };

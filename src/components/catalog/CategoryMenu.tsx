@@ -23,12 +23,8 @@ export function CategoryMenu({ selectedCategory, onCategorySelect }: CategoryMen
         return eaProductData.dockingStations.length;
       case "headsets":
         return eaProductData.headsets.length;
-      case "mice":
-        return mouseData.length;
-      case "keyboards":
-        return keyboardData.length;
-      case "mouse & keyboard":
-        return mouseKeyboardComboData.length;
+      case "mice and keyboards":
+        return mouseData.length + keyboardData.length + mouseKeyboardComboData.length;
       case "webcams":
         return webcamDataExport.length;
       default:
@@ -81,12 +77,8 @@ export function CategoryMenu({ selectedCategory, onCategorySelect }: CategoryMen
                 return 'docking-stations';
               case 'headsets':
                 return 'headsets';
-              case 'mice':
-                return 'mice';
-              case 'keyboards':
-                return 'keyboards';
-              case 'mouse & keyboard':
-                return 'mouse-keyboard';
+              case 'mice and keyboards':
+                return 'mice-keyboard';
               case 'webcams':
                 return 'webcams';
               default:
@@ -105,12 +97,8 @@ export function CategoryMenu({ selectedCategory, onCategorySelect }: CategoryMen
                 return 'docking station';
               case 'headsets':
                 return 'headset';
-              case 'mice':
-                return 'mouse';
-              case 'keyboards':
-                return 'keyboard';
-              case 'mouse & keyboard':
-                return 'mouse & keyboard';
+              case 'mice and keyboards':
+                return 'mice and keyboards';
               case 'webcams':
                 return 'webcam';
               default:

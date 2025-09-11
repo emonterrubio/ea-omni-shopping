@@ -235,14 +235,15 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
             onCheckout={() => onCheckout(costCenter, shippingMethod)}
             showContinueShopping={true}
             onContinueShopping={() => router.push('/catalog')}
+            showTax={false}
           />
         </div>
       </div>
 
-      {/* Related Items - Full Width */}
+      {/* Continue Shopping - Full Width */}
       {relatedItems.length > 0 && (
         <div className="mt-8">
-          <h3 className="text-2xl font-medium tracking-normal mb-4">Related Items</h3>
+          <h3 className="text-2xl font-medium tracking-normal mb-4">Continue Shopping</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {relatedItems.map((product, idx) => (
               <ProductCard 

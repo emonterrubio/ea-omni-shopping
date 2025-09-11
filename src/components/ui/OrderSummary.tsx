@@ -19,6 +19,7 @@ interface OrderSummaryProps {
   itemCount?: number;
   showContinueShopping?: boolean;
   onContinueShopping?: () => void;
+  showTax?: boolean; // New prop to control tax display
 }
 
 export function OrderSummary({
@@ -38,7 +39,8 @@ export function OrderSummary({
   className = "",
   itemCount,
   showContinueShopping = true,
-  onContinueShopping
+  onContinueShopping,
+  showTax = true
 }: OrderSummaryProps) {
   const { currency } = useCurrency();
   return (
@@ -55,7 +57,7 @@ export function OrderSummary({
             )}
           </div>
         </div>
-        {((currency === 'USD' && tax_usd > 0) || (currency === 'CAD' && (tax_cad || 0) > 0)) && (
+        {showTax && ((currency === 'USD' && tax_usd > 0) || (currency === 'CAD' && (tax_cad || 0) > 0)) && (
           <div className="flex justify-between font-regular text-gray-800 mb-2">
             <span>Tax</span>
             <div className="text-right">

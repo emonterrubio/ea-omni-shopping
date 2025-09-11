@@ -18,7 +18,10 @@ export default function CategoryCatalogPage() {
   
   // Convert URL slug to singular category name for filtering
   const getSingularCategory = (slug: string): string => {
-    switch (slug.toLowerCase()) {
+    // Decode URL-encoded characters first
+    const decodedSlug = decodeURIComponent(slug);
+    
+    switch (decodedSlug.toLowerCase()) {
       case 'laptops':
         return 'laptop';
       case 'monitors':
@@ -27,16 +30,14 @@ export default function CategoryCatalogPage() {
         return 'docking station';
       case 'headsets':
         return 'headset';
-      case 'mice':
-        return 'mouse';
-      case 'keyboards':
-        return 'keyboard';
-      case 'mouse-keyboard':
-        return 'mouse & keyboard';
+      case 'mice-keyboard':
+      case 'mice-%26-keyboard':
+      case 'mice-&-keyboard':
+        return 'mice and keyboards';
       case 'webcams':
         return 'webcam';
       default:
-        return slug.toLowerCase();
+        return decodedSlug.toLowerCase();
     }
   };
   
@@ -119,7 +120,12 @@ export default function CategoryCatalogPage() {
       const targetCategory = selectedCategory.toLowerCase();
       
       // Handle specific category mappings
-      if (targetCategory === 'mouse') {
+      if (targetCategory === 'mice and keyboards') {
+        return productCategory === 'mouse' || 
+               productCategory === 'trackpad' ||
+               productCategory === 'keyboard' ||
+               productCategory === 'mouse & keyboard';
+      } else if (targetCategory === 'mouse') {
         return productCategory === 'mouse' || 
                productCategory === 'trackpad';
       } else if (targetCategory === 'keyboard') {
@@ -191,7 +197,12 @@ export default function CategoryCatalogPage() {
           const targetCategory = selectedCategory.toLowerCase();
           
           // Handle specific category mappings (same logic as main filtering)
-          if (targetCategory === 'mouse') {
+          if (targetCategory === 'mice and keyboards') {
+            return productCategory === 'mouse' || 
+                   productCategory === 'trackpad' ||
+                   productCategory === 'keyboard' ||
+                   productCategory === 'mouse & keyboard';
+          } else if (targetCategory === 'mouse') {
             return productCategory === 'mouse' || 
                    productCategory === 'trackpad';
           } else if (targetCategory === 'keyboard') {
@@ -260,6 +271,8 @@ export default function CategoryCatalogPage() {
         return 'Headsets';
       case 'mouse':
         return 'Mice';
+       case 'mice and keyboards':
+         return 'All Mice and Keyboards';
       default:
         return singular.charAt(0).toUpperCase() + singular.slice(1) + 's';
     }
@@ -453,14 +466,61 @@ export default function CategoryCatalogPage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
-              {paginatedProducts.map((product, idx) => (
-                <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
-              ))}
-            </div>
+            <>
+              {selectedCategory === 'mice and keyboards' ? (
+                // Special layout for Mice & Keyboard category with three sections
+                <div className="space-y-12">
+                  {/* Mice Section */}
+                  <div>
+                    <h3 className="text-2xl font-medium text-gray-900 mb-4">Mice</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
+                      {filteredProducts
+                        .filter(product => {
+                          const category = product.category?.toLowerCase();
+                          return category === 'mouse' || category === 'trackpad';
+                        })
+                        .map((product, idx) => (
+                          <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* Keyboards Section */}
+                  <div>
+                    <h3 className="text-2xl font-medium text-gray-900 mb-4">Keyboards</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
+                      {filteredProducts
+                        .filter(product => product.category?.toLowerCase() === 'keyboard')
+                        .map((product, idx) => (
+                          <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* Mouse & Keyboard Combos Section */}
+                  <div>
+                    <h3 className="text-2xl font-medium text-gray-900 mb-4">Mouse & Keyboard Combos</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
+                      {filteredProducts
+                        .filter(product => product.category?.toLowerCase() === 'mouse & keyboard')
+                        .map((product, idx) => (
+                          <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
+                        ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                // Regular grid layout for other categories
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
+                  {paginatedProducts.map((product, idx) => (
+                    <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
+                  ))}
+                </div>
+              )}
+            </>
           )}
           
-          {filteredProducts.length > 0 && (
+          {filteredProducts.length > 0 && selectedCategory !== 'mice and keyboards' && (
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}

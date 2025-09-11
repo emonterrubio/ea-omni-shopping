@@ -1,37 +1,58 @@
 import React from 'react';
-import { CheckCircle, Clock, Truck } from 'lucide-react';
+import { CheckCircle, Clock, Truck, PackageSearch } from 'lucide-react';
+
+export type OrderStatusType = 
+  | "pending-approval" 
+  | "order-sent-to-vendor" 
+  | "order-shipped" 
+  | "order-delivered";
 
 interface OrderStatusProps {
-  status: 'pending' | 'delivered' | 'in-transit';
+  status: OrderStatusType;
   deliveryDate?: string;
+  showIcon?: boolean;
+  className?: string;
 }
 
-export function OrderStatus({ status, deliveryDate }: OrderStatusProps) {
+export function OrderStatus({ 
+  status, 
+  deliveryDate, 
+  showIcon = true, 
+  className = "" 
+}: OrderStatusProps) {
   const getStatusConfig = () => {
     switch (status) {
-      case 'delivered':
-        return {
-          icon: CheckCircle,
-          color: 'text-green-600',
-          bgColor: 'bg-green-50',
-          text: 'Delivered',
-          date: deliveryDate ? `on ${deliveryDate}` : ''
-        };
-      case 'in-transit':
-        return {
-          icon: Truck,
-          color: 'text-blue-600',
-          bgColor: 'bg-blue-50',
-          text: 'In Transit',
-          date: ''
-        };
-      case 'pending':
+      case 'pending-approval':
         return {
           icon: Clock,
           color: 'text-yellow-600',
-          bgColor: 'bg-yellow-50',
-          text: 'Pending',
+          bgColor: 'bg-yellow-100',
+          text: 'Pending approval',
           date: ''
+        };
+      case 'order-sent-to-vendor':
+        return {
+          icon: PackageSearch,
+          color: 'text-blue-600',
+          bgColor: 'bg-blue-100',
+          text: 'Order sent to vendor',
+          date: ''
+        };
+      case 'order-shipped':
+        return {
+          icon: Truck,
+          color: 'text-purple-600',
+          bgColor: 'bg-purple-100',
+          text: 'Order shipped',
+          date: ''
+        };
+      case 'order-delivered':
+        return {
+          icon: CheckCircle,
+          color: 'text-green-600',
+          bgColor: 'bg-green-100',
+          text: 'Order delivered',
+          date: deliveryDate ? `on ${deliveryDate}` : ''
         };
     }
   };
@@ -40,8 +61,8 @@ export function OrderStatus({ status, deliveryDate }: OrderStatusProps) {
   const IconComponent = config.icon;
 
   return (
-    <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${config.bgColor}`}>
-      <IconComponent className={`w-4 h-4 ${config.color}`} />
+    <div className={`flex items-center gap-2 px-3 py-1 rounded-full ${config.bgColor} ${className}`}>
+      {showIcon && <IconComponent className={`w-4 h-4 ${config.color}`} />}
       <span className={`text-sm font-medium ${config.color}`}>
         {config.text} {config.date}
       </span>

@@ -55,6 +55,8 @@ export function ComparisonProductCard({
       recommended: isEligible,
       description,
       card_description,
+      display_name,
+      category,
     };
     addToCart(cartItem);
   };

@@ -16,6 +16,7 @@ interface CartItemCardProps {
     recommended?: boolean;
     quantity: number;
     category?: string;
+    display_name?: string;
   };
   onQuantityChange: (model: string, quantity: number) => void;
   onRemove: (model: string) => void;
@@ -26,6 +27,19 @@ interface CartItemCardProps {
 export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: CartItemCardProps) {
   const { currency } = useCurrency();
   
+  // Helper function to generate proper product title (same logic as ProductCard)
+  const generateProductTitle = (display_name?: string, model?: string, category?: string): string => {
+    if (display_name && category?.toLowerCase() === 'monitor') {
+      return display_name;
+    }
+    if (display_name && model && 
+        !display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
+        !model.toLowerCase().replace(/[^a-z0-9]/g, '').includes(display_name.toLowerCase().replace(/[^a-z0-9]/g, ''))) {
+      return `${display_name} (${model})`;
+    }
+    return display_name || model || 'Unknown Product';
+  };
+
   // Helper function to infer category from model name if not provided
   const inferCategory = (model: string): string => {
     const name = model.toLowerCase();
@@ -56,7 +70,7 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
   return (
     <div className="flex flex-col sm:flex-row items-center sm:gap-4 py-6 px-2 border-b border-gray-200 last:border-b-0">
       {/* Product Image */}
-      <div className="w-36 h-36 sm:w-24 sm:h-24 mb-2 sm:mb-0 flex-shrink-0 relative mx-auto sm:mx-0">
+      <div className="w-24 h-24 mb-2 sm:mb-0 flex-shrink-0 relative mx-auto sm:mx-0">
         <Image 
           src={item.image} 
           alt={item.model} 
@@ -88,7 +102,7 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
                 href={`/product/${encodeURIComponent(item.model)}`}
                 className="hover:text-blue-600 transition-colors cursor-pointer"
               >
-                {item.brand} {item.model}
+                {item.brand} {generateProductTitle(item.display_name, item.model, item.category)}
               </Link>
             </h3>
             {(item.card_description || item.description) && (

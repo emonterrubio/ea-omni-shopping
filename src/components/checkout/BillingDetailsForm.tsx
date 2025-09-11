@@ -55,7 +55,7 @@ export function BillingDetailsForm({ value, onChange }: BillingDetailsFormProps)
             <div className="flex items-center gap-1">
               Requested by<span className="text-red-500">*</span>
               <Tooltip content="This field is automatically populated and cannot be edited.">
-                <InformationCircleIcon className="w-4 h-4 text-gray-400 cursor-help" />
+                <InformationCircleIcon className="w-4 h-4 text-gray-600 cursor-help" />
               </Tooltip>
             </div>
           </label>
@@ -95,7 +95,7 @@ export function BillingDetailsForm({ value, onChange }: BillingDetailsFormProps)
             <div className="flex items-center gap-1">
               Project Code<span className="text-red-500">*</span>
               <Tooltip content="This optional code assigns the purchase to a specific project budget. Please leave the default value '000000' unless your Finance Partner has instructed you to use a specific code.">
-                <InformationCircleIcon className="h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help" />
+                <InformationCircleIcon className="h-4 w-4 text-gray-600 hover:text-gray-600 cursor-help" />
               </Tooltip>
             </div>
           </label>
@@ -110,7 +110,7 @@ export function BillingDetailsForm({ value, onChange }: BillingDetailsFormProps)
               <div className="flex items-center gap-1">
                 Finance Approver<span className="text-red-500">*</span>
                 <Tooltip content="This is the designated Finance Partner for your selected department. They will be the first approver for this purchase.">
-                  <InformationCircleIcon className="h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help" />
+                  <InformationCircleIcon className="h-4 w-4 text-gray-600 hover:text-gray-600 cursor-help" />
                 </Tooltip>
               </div>
             </label>
@@ -123,7 +123,7 @@ export function BillingDetailsForm({ value, onChange }: BillingDetailsFormProps)
               <div className="flex items-center gap-1">
                 Budget Owner<span className="text-red-500">*</span>
                 <Tooltip content="This is the designated Budget Owner for your selected department. They provide the final approval for this purchase.">
-                  <InformationCircleIcon className="h-4 w-4 text-gray-400 hover:text-gray-600 cursor-help" />
+                  <InformationCircleIcon className="h-4 w-4 text-gray-600 hover:text-gray-600 cursor-help" />
                 </Tooltip>
               </div>
             </label>
@@ -137,7 +137,7 @@ export function BillingDetailsForm({ value, onChange }: BillingDetailsFormProps)
             <div className="flex items-center gap-1">
               Business Justification
               <Tooltip content="Justification for the equipment requested is highly recommended as it will inform the approval decision from Finance and Budget Owner." maxWidth="260px">
-                <InformationCircleIcon className="w-4 h-4 text-gray-400 cursor-help" />
+                <InformationCircleIcon className="w-4 h-4 text-gray-600 cursor-help" />
               </Tooltip>
             </div>
           </label>

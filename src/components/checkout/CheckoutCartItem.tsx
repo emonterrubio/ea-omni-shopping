@@ -11,6 +11,8 @@ interface CheckoutCartItemProps {
     price_cad?: number | string;
     quantity: number;
     recommended: boolean;
+    display_name?: string;
+    category?: string;
   };
 }
 
@@ -20,6 +22,19 @@ export function CheckoutCartItem({ item }: CheckoutCartItemProps) {
     ? (typeof item.price === 'string' ? Number(item.price.replace(/,/g, '')) : item.price)
     : (typeof item.price_cad === 'string' ? Number(item.price_cad.replace(/,/g, '')) : (item.price_cad || 0));
 
+  // Helper function to generate proper product title (same logic as ProductCard)
+  const generateProductTitle = (display_name?: string, model?: string, category?: string): string => {
+    if (display_name && category?.toLowerCase() === 'monitor') {
+      return display_name;
+    }
+    if (display_name && model && 
+        !display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
+        !model.toLowerCase().replace(/[^a-z0-9]/g, '').includes(display_name.toLowerCase().replace(/[^a-z0-9]/g, ''))) {
+      return `${display_name} (${model})`;
+    }
+    return display_name || model || 'Unknown Product';
+  };
+
   return (
     <div className="flex items-start gap-2 py-3 border-b border-gray-200">
       {/* Image */}
@@ -28,7 +43,7 @@ export function CheckoutCartItem({ item }: CheckoutCartItemProps) {
       </div>
       {/* Product Details */}
       <div className="flex-1">
-        <p className="font-medium text-sm text-gray-900 leading-tight mb-1">{item.brand} {item.model}</p>
+        <p className="font-medium text-sm text-gray-900 leading-tight mb-1">{item.brand} {generateProductTitle(item.display_name, item.model, item.category)}</p>
         <div className="flex items-center gap-2">
           <p className="text-xs text-gray-800">Qty {item.quantity}</p>
           {/* {item.recommended && (

@@ -10,6 +10,7 @@ import { OrderDetailsHeader } from "@/components/orders/OrderDetailsHeader";
 import { OrderSummaryCard } from "@/components/orders/OrderSummaryCard";
 import { OrderProductList } from "@/components/orders/OrderProductList";
 import { OrderActions } from "@/components/orders/OrderActions";
+import { calculateTax } from "@/services/taxCalculation";
 
 function generateOrderNumber() {
   return `112-${Math.floor(1000000 + Math.random() * 9000000)}`;
@@ -199,7 +200,8 @@ export default function OrderDetailsPage() {
   }
 
   const { billing, shipping, shippingType, items, subtotal, shippingCost, total } = order;
-  const tax = Math.round((subtotal * 0.0725) * 100) / 100; // 7.25% tax rate
+  // Calculate tax based on shipping location
+  const tax = calculateTax(subtotal, shippingType, shipping.officeLocation || shipping.zip || '');
 
   return (
     <PageLayout>

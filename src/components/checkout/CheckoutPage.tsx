@@ -6,6 +6,7 @@ import { CostCenter } from '../ui/CostCenter';
 import { useRouter } from "next/navigation";
 import { createOrderFromCheckout, saveOrder } from '@/services/orders';
 import { CartContext } from '../CartContext';
+import { calculateTax } from '@/services/taxCalculation';
 
 interface Item {
   model: string;
@@ -190,8 +191,9 @@ export function CheckoutPage({ items, shippingCost, costCenter, onBack }: Checko
     return sum;
   }, 0);
   
-  const tax = Math.round((subtotal * 0.047) * 100) / 100; // 4.7% tax rate, rounded to 2 decimal places
-  const tax_cad = subtotal_cad > 0 ? Math.round((subtotal_cad * 0.047) * 100) / 100 : 0;
+  // Calculate tax based on shipping location
+  const tax = calculateTax(subtotal, shippingType, shipping.officeLocation || shipping.zip || '');
+  const tax_cad = subtotal_cad > 0 ? calculateTax(subtotal_cad, shippingType, shipping.officeLocation || shipping.zip || '') : 0;
   const shippingCost_cad = shippingCost > 0 ? 19 : 0; // Approximate CAD conversion
   const total = Math.round((subtotal + tax + shippingCost) * 100) / 100; // Total rounded to 2 decimal places
   const total_cad = subtotal_cad > 0 ? Math.round((subtotal_cad + tax_cad + shippingCost_cad) * 100) / 100 : 0;

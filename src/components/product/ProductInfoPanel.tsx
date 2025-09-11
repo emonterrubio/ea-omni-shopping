@@ -208,7 +208,7 @@ export function ProductInfoPanel({
               <div className="flex items-start">
                 <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3"></div>
                 <div>
-                  <span className="text-sm font-bold text-gray-800">Team Orders:</span> Please place a separate order for each employee.
+                  <span className="text-sm font-bold text-gray-800">Team Orders:</span> Please place a separate order for each employee (limited to 2 docking stations, 2 headsets, 5 keyboards/mice, 1 webcam per order).
                 </div>
               </div>
               <div className="flex items-start">
@@ -221,12 +221,6 @@ export function ProductInfoPanel({
                 <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3"></div>
                 <div>
                   <span className="text-sm font-bold text-gray-800">Final Price:</span> The displayed price excludes shipping and any applicable fees, which are calculated at checkout.
-                </div>
-              </div>
-              <div className="flex items-start">
-                <div className="flex-shrink-0 w-2 h-2 bg-blue-500 rounded-full mt-2 mr-3"></div>
-                <div>
-                  <span className="text-sm font-bold text-gray-800">Compatibility:</span> Please verify device compatibility with your system before ordering.
                 </div>
               </div>
               <div className="flex items-start">

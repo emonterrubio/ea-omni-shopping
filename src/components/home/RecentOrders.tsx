@@ -3,9 +3,10 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { CheckCircle, Clock, Truck, PackageSearch } from "lucide-react";
+import { PackageSearch } from "lucide-react";
 import { getOrders } from "@/services/orders";
 import { Order } from "@/types/orders";
+import { OrderStatus, OrderStatusType } from "../orders/OrderStatus";
 
 interface RecentOrdersProps {
   maxOrders?: number;
@@ -48,40 +49,18 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
     setOrders(sortedOrders);
   }, [maxOrders]);
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'delivered':
-        return <CheckCircle className="w-4 h-4 text-green-600" />;
-      case 'in-transit':
-        return <Truck className="w-4 h-4 text-blue-600" />;
-      case 'pending':
-      default:
-        return <Clock className="w-4 h-4 text-yellow-600" />;
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'delivered':
-        return "bg-green-100 text-green-800";
-      case 'in-transit':
-        return "bg-blue-100 text-blue-800";
-      case 'pending':
-      default:
-        return "bg-yellow-100 text-yellow-800";
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'delivered':
-        return "Delivered";
-      case 'in-transit':
-        return "In Transit";
-      case 'pending':
-      default:
-        return "Processing";
-    }
+  // Helper function to assign different statuses to orders for demonstration
+  const getOrderStatus = (order: Order): OrderStatusType => {
+    // You can customize this logic based on your needs
+    // For now, let's assign different statuses based on order index
+    const orderIndex = orders.findIndex(o => o.id === order.id);
+    const statuses: OrderStatusType[] = [
+      'pending-approval',
+      'order-sent-to-vendor', 
+      'order-shipped',
+      'order-delivered'
+    ];
+    return statuses[orderIndex % statuses.length];
   };
 
   const formatOrderDate = (dateString: string) => {
@@ -169,9 +148,9 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
           const firstItem = order.items[0];
           return (
             <div key={order.id} className="p-4">
-              <div className="flex items-start lg:items-center justify-between">
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between">
                 {/* Left side: Product Image and Info */}
-                <div className="flex items-start lg:items-center space-x-3">
+                <div className="flex items-center lg:items-center space-x-3">
                   {/* Product Image */}
                   <div className="flex-shrink-0">
                     <Image
@@ -184,13 +163,13 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                   </div>
                   
                   {/* Product Name and Order Number */}
-                  <div className="flex flex-col min-w-0">
+                  <div className="flex flex-col min-w-0 flex-1">
                     <h3 className="text-lg font-regular leading-tight text-gray-900 truncate">
                       {firstItem.model}
                     </h3>
                     <Link 
                       href={`/orders/details?orderId=${order.id}`}
-                      className="text-sm lg:text-base text-blue-600 hover:text-blue-800 font-regular transition-colors block lg:-mt-0.5"
+                      className="text-sm lg:text-base text-blue-600 hover:text-blue-800 font-regular transition-colors block"
                     >
                       Order #{order.orderNumber}
                     </Link>
@@ -212,16 +191,13 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                   </div>
                 </div>
                 
-                {/* Right side: Status and Date */}
-                <div className="flex flex-col items-end text-right">
-                {/* <p className="text-sm text-gray-600">
-                      {order.items.length} items total
-                    </p> */}
-                  <span
-                    className={`inline-block px-2 py-1 text-xs font-regular rounded-full ${getStatusColor(order.status)} text-white`}
-                  >
-                    {getStatusText(order.status)}
-                  </span>
+                {/* Status - Desktop: Right side, Mobile: Bottom */}
+                <div className="flex flex-col items-center lg:items-end text-right mt-3 lg:mt-0">
+                  <OrderStatus 
+                    status={getOrderStatus(order)} 
+                    showIcon={true}
+                    deliveryDate={getOrderStatus(order) === 'order-delivered' ? 'Dec 15, 2024' : undefined}
+                  />
                 </div>
               </div>
             </div>

@@ -15,6 +15,7 @@ export interface CartItem {
   description?: string;
   card_description?: string;
   category?: string;
+  display_name?: string;
   // Add other fields as needed
 }
 
