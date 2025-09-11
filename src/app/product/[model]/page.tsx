@@ -18,6 +18,7 @@ import { ProductComparisonList } from '@/components/product/ProductComparisonLis
 import { SupportBanner } from '@/components/product/SupportBanner';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { Dropdown } from '@/components/ui/Dropdown';
+import { useCurrency } from '@/components/CurrencyContext';
 
 function getCategoryPlural(category: string): string {
   // Convert category to plural form
@@ -195,6 +196,7 @@ export default function ProductDetailPage() {
   const params = useParams();
   const searchParams = useSearchParams();
   const router = useRouter();
+  const { currency } = useCurrency();
   const from = searchParams.get("from");
 
   const modelParam = params.model;
@@ -430,7 +432,7 @@ export default function ProductDetailPage() {
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Current Product</label>
                     <div className="w-full appearance-none rounded-md bg-gray-100 py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 sm:text-sm/6 cursor-not-allowed">
-                      {product?.manufacturer} {product?.model}
+                      {product?.manufacturer} {product?.model} - ${currency === 'USD' ? Math.round(product?.price_usd || 0).toLocaleString() : Math.round(product?.price_cad || 0).toLocaleString()} {currency}
                     </div>
                   </div>
                   

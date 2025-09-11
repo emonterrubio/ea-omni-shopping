@@ -66,14 +66,23 @@ export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
         <div className="flex items-center justify-between ml-1 px-4 sm:px-6 md:px-8 py-6">
           <div className="flex items-center">
             <Link href="/">
-              <img src="/logo/ea_logo_white.svg" alt="Omni Shopping" className="h-10 object-contain" />
+              {/* Mobile logo - condensed version */}
+              <img 
+                src="/logo/ea_logo_emblem_white.svg" 
+                alt="Omni Shopping" 
+                className="h-10 object-contain sm:hidden" 
+              />
+              {/* Desktop logo - full version */}
+              <img 
+                src="/logo/ea_logo_white.svg" 
+                alt="Omni Shopping" 
+                className="h-10 object-contain hidden sm:block" 
+              />
             </Link>
           </div>
-          <div className="flex-1 flex justify-end items-center relative space-x-1 sm:space-x-4">
+          <div className="flex-1 flex justify-end items-center relative space-x-2 sm:space-x-4">
             {/* Currency Toggle */}
-            <div className="hidden sm:block">
-              <CurrencyToggle />
-            </div>
+            <CurrencyToggle />
             {/* TODO: Add search back in */}
             {/* {!isHome && (
               <Link

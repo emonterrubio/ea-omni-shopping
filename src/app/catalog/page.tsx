@@ -179,11 +179,28 @@ export default function CatalogPage() {
         return acc;
       }, {} as { [brand: string]: number });
     } else {
-      // If category is selected, count only products in that category
+      // If category is selected, count only products in that category using the same logic as main filtering
       return Object.keys(productsByBrand).reduce((acc, brand) => {
-        const count = productsByBrand[brand].filter(product => 
-          product.category && product.category.toLowerCase() === selectedCategory.toLowerCase()
-        ).length;
+        const count = productsByBrand[brand].filter(product => {
+          if (!product.category) return false;
+          
+          const productCategory = product.category.toLowerCase();
+          const targetCategory = selectedCategory.toLowerCase();
+          
+          // Handle specific category mappings (same logic as main filtering)
+          if (targetCategory === 'mouse') {
+            return productCategory === 'mouse' || 
+                   productCategory === 'trackpad';
+          } else if (targetCategory === 'keyboard') {
+            return productCategory === 'keyboard';
+          } else if (targetCategory === 'mouse & keyboard') {
+            return productCategory === 'mouse & keyboard';
+          } else if (targetCategory === 'webcam') {
+            return productCategory === 'webcam';
+          } else {
+            return productCategory === targetCategory;
+          }
+        }).length;
         acc[brand] = count;
         return acc;
       }, {} as { [brand: string]: number });
@@ -201,6 +218,24 @@ export default function CatalogPage() {
     }))
   ];
 
+  // Get plural category name for display
+  const getPluralCategoryName = (singular: string): string => {
+    switch (singular.toLowerCase()) {
+      case 'laptop':
+        return 'Laptops';
+      case 'monitor':
+        return 'Monitors';
+      case 'docking station':
+        return 'Docking Stations';
+      case 'headset':
+        return 'Headsets';
+      case 'mouse':
+        return 'Mice';
+      default:
+        return singular.charAt(0).toUpperCase() + singular.slice(1) + 's';
+    }
+  };
+
   return (
     <PageLayout>
             {/* Breadcrumb Navigation */}
@@ -208,12 +243,12 @@ export default function CatalogPage() {
         items={[
           { label: "Catalog", href: "/catalog" },
           { label: selectedBrand !== "all" && selectedCategory !== "all" 
-            ? `All ${selectedBrand} ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`
+            ? `All ${selectedBrand} ${getPluralCategoryName(selectedCategory)}`
             : selectedBrand !== "all" 
             ? `All ${selectedBrand} Products`
             : selectedCategory === "all" 
             ? "All Products" 
-            : `All ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`, 
+            : `All ${getPluralCategoryName(selectedCategory)}`, 
             isActive: true 
           }
         ]}
@@ -223,17 +258,17 @@ export default function CatalogPage() {
       <div className="text-left mb-4 sm:px-4 lg:px-0">
         <h1 className="text-4xl md:text-5xl font-medium text-gray-900 mt-4 lg:mt-6 mb-2">
           {selectedBrand !== "all" && selectedCategory !== "all" 
-            ? `All ${selectedBrand} ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`
+            ? `All ${selectedBrand} ${getPluralCategoryName(selectedCategory)}`
             : selectedBrand !== "all" 
             ? `All ${selectedBrand} Products`
             : selectedCategory === "all" 
             ? "All Products" 
-            : `All ${selectedCategory.charAt(0).toUpperCase() + selectedCategory.slice(1)}`
+            : `All ${getPluralCategoryName(selectedCategory)}`
           }
         </h1>
         <h4 className="text-base font-base text-gray-800 mb-2">
           {selectedBrand !== "all" && selectedCategory !== "all"
-            ? `Browse our catalog of ${selectedBrand} ${selectedCategory.toLowerCase()} and find the perfect item for your needs.`
+            ? `Browse our catalog of ${selectedBrand} ${getPluralCategoryName(selectedCategory).toLowerCase()} and find the perfect item for your needs.`
             : selectedBrand !== "all"
             ? `Browse our catalog of ${selectedBrand} products and find the perfect item for your needs.`
             : "Browse our catalog of products and find the perfect item for your needs."

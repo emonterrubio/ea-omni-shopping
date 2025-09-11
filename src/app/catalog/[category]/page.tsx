@@ -182,11 +182,28 @@ export default function CategoryCatalogPage() {
         return acc;
       }, {} as { [brand: string]: number });
     } else {
-      // If category is selected, count only products in that category
+      // If category is selected, count only products in that category using the same logic as main filtering
       return Object.keys(productsByBrand).reduce((acc, brand) => {
-        const count = productsByBrand[brand].filter(product => 
-          product.category && product.category.toLowerCase() === selectedCategory.toLowerCase()
-        ).length;
+        const count = productsByBrand[brand].filter(product => {
+          if (!product.category) return false;
+          
+          const productCategory = product.category.toLowerCase();
+          const targetCategory = selectedCategory.toLowerCase();
+          
+          // Handle specific category mappings (same logic as main filtering)
+          if (targetCategory === 'mouse') {
+            return productCategory === 'mouse' || 
+                   productCategory === 'trackpad';
+          } else if (targetCategory === 'keyboard') {
+            return productCategory === 'keyboard';
+          } else if (targetCategory === 'mouse & keyboard') {
+            return productCategory === 'mouse & keyboard';
+          } else if (targetCategory === 'webcam') {
+            return productCategory === 'webcam';
+          } else {
+            return productCategory === targetCategory;
+          }
+        }).length;
         acc[brand] = count;
         return acc;
       }, {} as { [brand: string]: number });
@@ -241,6 +258,8 @@ export default function CategoryCatalogPage() {
         return 'Docking Stations';
       case 'headset':
         return 'Headsets';
+      case 'mouse':
+        return 'Mice';
       default:
         return singular.charAt(0).toUpperCase() + singular.slice(1) + 's';
     }

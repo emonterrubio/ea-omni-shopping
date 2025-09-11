@@ -59,7 +59,7 @@ export function ProductSpecsTable({ specs = [], category }: ProductSpecsTablePro
 
   const SpecSection = ({ specs }: { specs: Spec[] }) => {
     return (
-      <div className="bg-white rounded-lg shadow p-6">
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
           {specs.length > 0 ? (
             specs.map((spec, idx) => {
