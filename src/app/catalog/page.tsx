@@ -8,7 +8,6 @@ import { Pagination } from "../../components/ui/Pagination";
 import { CatalogSidebar } from "../../components/catalog/CatalogSidebar";
 import { SortAsc, Filter, PackageSearch, ChevronDownIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
-import { CurrencyToggle } from "../../components/ui/CurrencyToggle";
 
 export default function CatalogPage() {
   // Use the EA product data directly
@@ -236,7 +235,6 @@ export default function CatalogPage() {
             </div>
             {/* Desktop filter and sort dropdowns */}
             <div className="hidden lg:flex items-center gap-4 ml-auto">
-              <CurrencyToggle />
               <div className="flex items-center gap-2">
                 <label htmlFor="brand-filter" className="text-base font-regular text-gray-700 whitespace-nowrap">Filter by:</label>
                 <div className="relative">
@@ -277,7 +275,6 @@ export default function CatalogPage() {
             </div>
             {/* Mobile filter and sort icons */}
             <div className="flex lg:hidden items-center gap-2 ml-auto relative">
-              <CurrencyToggle />
               <button
                 aria-label="Filter"
                 className="p-2 rounded hover:bg-gray-100"

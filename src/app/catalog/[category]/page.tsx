@@ -272,7 +272,7 @@ export default function CategoryCatalogPage() {
       case 'mouse':
         return 'Mice';
        case 'mice and keyboards':
-         return 'All Mice and Keyboards';
+         return 'Mice and Keyboards';
       default:
         return singular.charAt(0).toUpperCase() + singular.slice(1) + 's';
     }
@@ -334,7 +334,14 @@ export default function CategoryCatalogPage() {
         <div className="flex-1 mt-4 sm:mt-0 lg:pl-3 sm:px-4 lg:px-0">
           <div className="flex items-center justify-between mb-2 sm:mb-4 gap-4 flex-wrap w-full">
             <div className="text-base font-regular text-gray-900 min-w-max">
-              Showing {startIndex + 1}-{Math.min(endIndex, sortedProducts.length)} of {sortedProducts.length} item{sortedProducts.length === 1 ? "" : "s"}
+              {selectedCategory === 'mice and keyboards' ? (
+                // For Mice & Keyboards, show total count since all products are displayed
+                // When filtering by brand, only show count of filtered products
+                `Showing ${filteredProducts.length} item${filteredProducts.length === 1 ? "" : "s"}`
+              ) : (
+                // For other categories, show pagination range
+                `Showing ${startIndex + 1}-${Math.min(endIndex, sortedProducts.length)} of ${sortedProducts.length} item${sortedProducts.length === 1 ? "" : "s"}`
+              )}
             </div>
             {/* Desktop filter and sort dropdowns */}
             <div className="hidden lg:flex items-center gap-6 ml-auto">
@@ -470,44 +477,53 @@ export default function CategoryCatalogPage() {
               {selectedCategory === 'mice and keyboards' ? (
                 // Special layout for Mice & Keyboard category with three sections
                 <div className="space-y-12">
-                  {/* Mice Section */}
-                  <div>
-                    <h3 className="text-2xl font-medium text-gray-900 mb-4">Mice</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
-                      {filteredProducts
-                        .filter(product => {
-                          const category = product.category?.toLowerCase();
-                          return category === 'mouse' || category === 'trackpad';
-                        })
-                        .map((product, idx) => (
-                          <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
-                        ))}
-                    </div>
-                  </div>
+                  {/* Mice Section - only show if there are products */}
+                  {(() => {
+                    const miceProducts = filteredProducts.filter(product => {
+                      const category = product.category?.toLowerCase();
+                      return category === 'mouse' || category === 'trackpad';
+                    });
+                    return miceProducts.length > 0 ? (
+                      <div>
+                        <h3 className="text-2xl font-medium text-gray-900 mb-4">Mice</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
+                          {miceProducts.map((product, idx) => (
+                            <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
+                          ))}
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
 
-                  {/* Keyboards Section */}
-                  <div>
-                    <h3 className="text-2xl font-medium text-gray-900 mb-4">Keyboards</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
-                      {filteredProducts
-                        .filter(product => product.category?.toLowerCase() === 'keyboard')
-                        .map((product, idx) => (
-                          <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
-                        ))}
-                    </div>
-                  </div>
+                  {/* Keyboards Section - only show if there are products */}
+                  {(() => {
+                    const keyboardProducts = filteredProducts.filter(product => product.category?.toLowerCase() === 'keyboard');
+                    return keyboardProducts.length > 0 ? (
+                      <div>
+                        <h3 className="text-2xl font-medium text-gray-900 mb-4">Keyboards</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
+                          {keyboardProducts.map((product, idx) => (
+                            <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
+                          ))}
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
 
-                  {/* Mouse & Keyboard Combos Section */}
-                  <div>
-                    <h3 className="text-2xl font-medium text-gray-900 mb-4">Mouse & Keyboard Combos</h3>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
-                      {filteredProducts
-                        .filter(product => product.category?.toLowerCase() === 'mouse & keyboard')
-                        .map((product, idx) => (
-                          <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
-                        ))}
-                    </div>
-                  </div>
+                  {/* Mouse & Keyboard Combos Section - only show if there are products */}
+                  {(() => {
+                    const comboProducts = filteredProducts.filter(product => product.category?.toLowerCase() === 'mouse & keyboard');
+                    return comboProducts.length > 0 ? (
+                      <div>
+                        <h3 className="text-2xl font-medium text-gray-900 mb-4">Mouse & Keyboard Combos</h3>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-3">
+                          {comboProducts.map((product, idx) => (
+                            <ProductCard key={`${product.model}-${idx}`} product={product} fromCatalog={true} />
+                          ))}
+                        </div>
+                      </div>
+                    ) : null;
+                  })()}
                 </div>
               ) : (
                 // Regular grid layout for other categories
