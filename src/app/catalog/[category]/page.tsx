@@ -336,8 +336,8 @@ export default function CategoryCatalogPage() {
             <div className="text-base font-regular text-gray-900 min-w-max">
               {selectedCategory === 'mice and keyboards' ? (
                 // For Mice & Keyboards, show total count since all products are displayed
-                // When filtering by brand, only show count of filtered products
-                `Showing ${filteredProducts.length} item${filteredProducts.length === 1 ? "" : "s"}`
+                // When filtering by brand, only show count of sorted products
+                `Showing ${sortedProducts.length} item${sortedProducts.length === 1 ? "" : "s"}`
               ) : (
                 // For other categories, show pagination range
                 `Showing ${startIndex + 1}-${Math.min(endIndex, sortedProducts.length)} of ${sortedProducts.length} item${sortedProducts.length === 1 ? "" : "s"}`
@@ -479,7 +479,7 @@ export default function CategoryCatalogPage() {
                 <div className="space-y-12">
                   {/* Mice Section - only show if there are products */}
                   {(() => {
-                    const miceProducts = filteredProducts.filter(product => {
+                    const miceProducts = sortedProducts.filter(product => {
                       const category = product.category?.toLowerCase();
                       return category === 'mouse' || category === 'trackpad';
                     });
@@ -497,7 +497,7 @@ export default function CategoryCatalogPage() {
 
                   {/* Keyboards Section - only show if there are products */}
                   {(() => {
-                    const keyboardProducts = filteredProducts.filter(product => product.category?.toLowerCase() === 'keyboard');
+                    const keyboardProducts = sortedProducts.filter(product => product.category?.toLowerCase() === 'keyboard');
                     return keyboardProducts.length > 0 ? (
                       <div>
                         <h3 className="text-2xl font-medium text-gray-900 mb-4">Keyboards</h3>
@@ -512,7 +512,7 @@ export default function CategoryCatalogPage() {
 
                   {/* Mouse & Keyboard Combos Section - only show if there are products */}
                   {(() => {
-                    const comboProducts = filteredProducts.filter(product => product.category?.toLowerCase() === 'mouse & keyboard');
+                    const comboProducts = sortedProducts.filter(product => product.category?.toLowerCase() === 'mouse & keyboard');
                     return comboProducts.length > 0 ? (
                       <div>
                         <h3 className="text-2xl font-medium text-gray-900 mb-4">Mouse & Keyboard Combos</h3>
