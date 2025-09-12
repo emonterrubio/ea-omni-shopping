@@ -93,17 +93,7 @@ export function OrderSummary({
             )}
           </div>
         </div>
-        {/* {costCenter && (
-          <div className="flex justify-between text-gray-800 mb-2">
-            <span>Cost Center</span>
-            <div className="flex items-center gap-2">
-              <div className="flex flex-col items-end">
-                <span className="font-bold">{costCenter}</span>
-                <button className="text-blue-600 text-sm hover:underline">Edit</button>
-              </div>
-            </div>
-          </div>
-        )} */}
+
         <div className="border-t border-gray-200 my-4"></div>
         <div className="flex justify-between font-bold text-xl mt-2">
           <span>Total</span>

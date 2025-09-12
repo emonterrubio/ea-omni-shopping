@@ -122,7 +122,7 @@ export function ITStorefront({
         <Header />
         <MainNavigationClient />
       </div>  
-      <main className="max-w-7xl mx-auto flex-1 overflow-y-auto px-6 sm:px-12 md:px-16 py-8">
+      <main className="max-w-7xl mx-auto flex-1 overflow-y-auto px-6 lg:px-10 py-8">
           {/* Hero Banner */}
           <HeroBanner products={products} />
           {/* Recent Orders */}

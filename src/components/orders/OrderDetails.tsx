@@ -1,8 +1,9 @@
 import React from 'react';
 import { BillingInfo, ShippingInfo, OrderItem } from './types';
 import { OrderProductList } from './OrderProductList';
+import { useCurrency } from '../CurrencyContext';
 
-interface OrderSummaryCardProps {
+interface OrderDetailsProps {
   orderNumber: string;
   orderDate: string;
   billing: BillingInfo;
@@ -12,7 +13,7 @@ interface OrderSummaryCardProps {
   items: OrderItem[];
 }
 
-export function OrderSummaryCard({ 
+export function OrderDetails({ 
   orderNumber, 
   orderDate, 
   billing, 
@@ -20,11 +21,12 @@ export function OrderSummaryCard({
   shippingType, 
   total,
   items
-}: OrderSummaryCardProps) {
+}: OrderDetailsProps) {
+  const { currency } = useCurrency();
   return (
-    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4 px-4 lg:px-0">
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4 px-3 lg:px-0">
       {/* Order Details Header */}
-      <div className="px-4 lg:px-8 pt-6 lg:pt-8">   
+      <div className="px-4 lg:px-8 py-6">   
         {/* Order Number Header */}
         <div className="text-lg font-regular text-gray-900 mb-4">{'Order'.toUpperCase()} # {orderNumber}</div>
         <div className="border-b border-gray-200"></div>
@@ -34,27 +36,30 @@ export function OrderSummaryCard({
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Number</span>
-              <span className="text-base text-gray-900 font-bold">{orderNumber}</span>
+              <span className="text-base text-gray-900 font-regular">{orderNumber}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Date</span>
-              <span className="text-base text-gray-900 font-bold">{orderDate}</span>
+              <span className="text-base text-gray-900 font-regular">{orderDate}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered for</span>
-              <span className="text-base text-gray-900 font-bold">{shipping.firstName} {shipping.lastName}</span>
+              <span className="text-base text-gray-900 font-regular">{shipping.firstName} {shipping.lastName}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered by</span>
-              <span className="text-base text-gray-900 font-bold">{billing.name} {billing.lastName}</span>
+              <span className="text-base text-gray-900 font-regular">{billing.name} {billing.lastName}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Total</span>
-              <span className="text-base text-gray-900 font-bold">${total.toLocaleString()}</span>
+              <span className="text-base text-gray-900 font-regular">
+                ${total.toLocaleString()} 
+                <span className="text-xs font-normal text-gray-600 ml-1">{currency}</span>
+              </span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Shipping to</span>
-              <span className="text-base text-gray-900 font-bold">
+              <span className="text-base text-gray-900 font-regular">
                 {shippingType === 'residential' ? 'Residential' : 'Office'}
               </span>
               <span className="text-sm text-gray-600 mt-1">
@@ -71,26 +76,26 @@ export function OrderSummaryCard({
         {/* Desktop: Original horizontal layout */}
         <div className="hidden lg:flex mt-4 gap-12">
           <div className="flex flex-col">
-            <h2 className="text-base font-bold text-gray-900">Ordered by</h2>
-            <div className="text-base font-regular text-gray-900">
+            <h2 className="text-base font-regular text-gray-900">Ordered by</h2>
+            <div className="text-base font-bold text-gray-900">
               {billing.name} {billing.lastName}
             </div>
           </div>
           <div className="flex flex-col">
-            <h2 className="text-base font-bold text-gray-900">Ordered for</h2>
-            <div className="text-base font-regular text-gray-900">
+            <h2 className="text-base font-regular text-gray-900">Ordered for</h2>
+            <div className="text-base font-bold text-gray-900">
               {shipping.firstName} {shipping.lastName}
             </div>
           </div>
           <div className="flex flex-col">
-            <h2 className="text-base font-bold text-gray-900">Order submitted</h2>
-            <div className="text-base font-regular text-gray-900">{orderDate}</div>
+            <h2 className="text-base font-regular text-gray-900">Order submitted</h2>
+            <div className="text-base font-bold text-gray-900">{orderDate}</div>
           </div>
           <div className="flex flex-col">
-            <h2 className="text-base font-bold text-gray-900">
+            <h2 className="text-base font-regular text-gray-900">
               Shipping to {shippingType === 'residential' ? 'Residential Address' : 'Office Address'}: &nbsp;
             </h2>
-            <div className="text-base font-regular text-gray-900">
+            <div className="text-base font-bold text-gray-900">
               {shipping.address1}
               {shipping.city && `, ${shipping.city}`}
               {shipping.state && `, ${shipping.state}`}
@@ -102,7 +107,10 @@ export function OrderSummaryCard({
       </div>
       
       {/* Product Details Section */}
-      <OrderProductList items={items} />
+      <div className="px-4 lg:px-8 pb-3 lg:pb-4">
+        <OrderProductList items={items} />
+      </div>
+      
     </div>
   );
 }

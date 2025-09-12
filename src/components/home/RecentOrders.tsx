@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { PackageSearch } from "lucide-react";
-import { getOrders } from "@/services/orders";
+import { PackageSearch, Truck } from "lucide-react";
+import { getOrders, updateAllOrdersStatus } from "@/services/orders";
 import { Order } from "@/types/orders";
 import { OrderStatus, OrderStatusType } from "../orders/OrderStatus";
 
@@ -41,26 +41,22 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
+    // Update all orders to pending-approval status
+    updateAllOrdersStatus('pending-approval');
+    
     const userOrders = getOrders();
     // Sort by order date (newest first) and take the most recent orders
     const sortedOrders = userOrders
       .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
-      .slice(0, maxOrders);
+      .slice(0, maxOrders)
+      .map(order => ({ ...order, status: 'pending-approval' as const })); // Force status
     setOrders(sortedOrders);
   }, [maxOrders]);
 
-  // Helper function to assign different statuses to orders for demonstration
+  // Helper function to assign status to orders
   const getOrderStatus = (order: Order): OrderStatusType => {
-    // You can customize this logic based on your needs
-    // For now, let's assign different statuses based on order index
-    const orderIndex = orders.findIndex(o => o.id === order.id);
-    const statuses: OrderStatusType[] = [
-      'pending-approval',
-      'order-sent-to-vendor', 
-      'order-shipped',
-      'order-delivered'
-    ];
-    return statuses[orderIndex % statuses.length];
+    // For now, all orders are set to pending-approval
+    return 'pending-approval';
   };
 
   const formatOrderDate = (dateString: string) => {
@@ -167,12 +163,21 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                     <h3 className="text-lg font-regular leading-tight text-gray-900 truncate">
                       {firstItem.model}
                     </h3>
-                    <Link 
-                      href={`/orders/details?orderId=${order.id}`}
-                      className="text-sm lg:text-base text-blue-600 hover:text-blue-800 font-regular transition-colors block"
-                    >
-                      Order #{order.orderNumber}
-                    </Link>
+                    <div className="flex items-center gap-3">
+                      <Link 
+                        href={`/orders/details?orderId=${order.id}`}
+                        className="text-sm lg:text-base text-blue-600 hover:text-blue-800 font-regular transition-colors"
+                      >
+                        Order #{order.orderNumber}
+                      </Link>
+                      <Link
+                        href={`/orders/track/${order.id}`}
+                        className="inline-flex items-center text-xs text-green-600 hover:text-green-800 font-medium transition-colors"
+                      >
+                        <Truck className="w-3 h-3 mr-1" />
+                        Track
+                      </Link>
+                    </div>
                     <div className="flex flex-col sm:flex-row text-left sm:gap-2">
                       <p className="text-sm text-gray-800">
                         {order.items.length} items total

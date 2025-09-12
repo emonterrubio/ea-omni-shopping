@@ -333,16 +333,7 @@ export default function ProductDetailPage() {
   const isEligible = Boolean((product as any).price_usd || (product as any).ea_estimated_price_usd);
 
   return (
-    <PageLayout>
-        {/* <button
-          onClick={handleBackClick}
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors mb-4"
-          aria-label="Go back"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </button> */}
-        
+    <PageLayout>   
         {/* Breadcrumb Navigation */}
         <Breadcrumb
           items={[

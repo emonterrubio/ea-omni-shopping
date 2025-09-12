@@ -54,6 +54,15 @@ export function OrderStatus({
           text: 'Order delivered',
           date: deliveryDate ? `on ${deliveryDate}` : ''
         };
+      default:
+        console.warn('Unknown order status:', status);
+        return {
+          icon: Clock,
+          color: 'text-gray-600',
+          bgColor: 'bg-gray-100',
+          text: 'Unknown status',
+          date: ''
+        };
     }
   };
 

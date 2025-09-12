@@ -81,6 +81,16 @@ export function getOrders(): Order[] {
   return ordersData ? JSON.parse(ordersData) : [];
 }
 
+export function getOrderById(orderId: string): Order | null {
+  try {
+    const orders = getOrders();
+    return orders.find(order => order.id === orderId) || null;
+  } catch (error) {
+    console.error('Error loading order by ID:', error);
+    return null;
+  }
+}
+
 export function clearOrders(): void {
   localStorage.removeItem(ORDERS_STORAGE_KEY);
 }
@@ -100,4 +110,17 @@ export function updateOrderStatus(orderId: string, status: 'pending-approval' | 
     return order;
   });
   localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updatedOrders));
+}
+
+export function updateAllOrdersStatus(status: 'pending-approval' | 'order-sent-to-vendor' | 'order-shipped' | 'order-delivered'): void {
+  try {
+    const orders = getOrders();
+    const updatedOrders = orders.map(order => ({
+      ...order,
+      status: status
+    }));
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updatedOrders));
+  } catch (error) {
+    console.error('Error updating all orders status:', error);
+  }
 } 

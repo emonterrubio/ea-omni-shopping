@@ -7,7 +7,7 @@ import { OrderSummary } from "@/components/ui/OrderSummary";
 import { CartContext } from "@/components/CartContext";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { OrderDetailsHeader } from "@/components/orders/OrderDetailsHeader";
-import { OrderSummaryCard } from "@/components/orders/OrderSummaryCard";
+import { OrderDetails } from "@/components/orders/OrderDetails";
 import { OrderProductList } from "@/components/orders/OrderProductList";
 import { OrderActions } from "@/components/orders/OrderActions";
 import { calculateTax } from "@/services/taxCalculation";
@@ -22,6 +22,10 @@ export default function OrderDetailsPage() {
   const [orderNumber, setOrderNumber] = useState<string>("");
   const [orderDate, setOrderDate] = useState<string>("");
   const { clearCart } = useContext(CartContext);
+
+  useEffect(() => {
+    console.log('OrderDetails - order:', order, 'orderId:', order?.id);
+  }, [order]);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(window.location.search);
@@ -71,6 +75,7 @@ export default function OrderDetailsPage() {
         }
         
         const convertedOrder = {
+          id: existingOrder.id,
           billing: {
             name: orderedByParts[0] || '',
             lastName: orderedByParts.slice(1).join(' ') || ''
@@ -142,6 +147,7 @@ export default function OrderDetailsPage() {
           }
           
           const convertedOrder = {
+            id: latestOrder.id,
             billing: {
               name: orderedByParts[0] || '',
               lastName: orderedByParts.slice(1).join(' ') || ''
@@ -185,7 +191,7 @@ export default function OrderDetailsPage() {
   if (!order) {
     return (
       <PageLayout>
-        <div className="max-w-3xl mx-auto flex flex-col items-center justify-center px-4">
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center px-4">
           <h1 className="text-3xl font-semibold mb-4">No Order Found</h1>
           <p className="mb-6 text-gray-600">It looks like you haven't placed an order yet.</p>
           <button
@@ -218,7 +224,7 @@ export default function OrderDetailsPage() {
       <OrderDetailsHeader orderNumber={orderNumber} orderDate={orderDate} />
 
       {/* Combined Order Details and Product List */}
-      <OrderSummaryCard
+      <OrderDetails
         orderNumber={orderNumber}
         orderDate={orderDate}
         billing={billing}
@@ -227,24 +233,29 @@ export default function OrderDetailsPage() {
         total={total}
         items={items}
       />
+      <div className="flex justify-end">
+        {/* Order Summary */}
+        <div className="w-full max-w-md lg:w-2/3">
+          <OrderSummary
+              subtotal_usd={subtotal}
+              subtotal_cad={Math.round(subtotal * 1.35)}
+              tax_usd={tax}
+              tax_cad={Math.round(tax * 1.35)}
+              shippingCost_usd={shippingCost}
+              shippingCost_cad={Math.round(shippingCost * 1.35)}
+              total_usd={subtotal + tax + shippingCost}
+              total_cad={Math.round((subtotal + tax + shippingCost) * 1.35)}
+              itemCount={items.length}
+              showCheckoutButton={false}
+              showContinueShopping={false}
+            />
+        </div>
+      </div>
 
-      {/* Order Summary */}
-      <OrderSummary
-          subtotal_usd={subtotal}
-          subtotal_cad={Math.round(subtotal * 1.35)}
-          tax_usd={tax}
-          tax_cad={Math.round(tax * 1.35)}
-          shippingCost_usd={shippingCost}
-          shippingCost_cad={Math.round(shippingCost * 1.35)}
-          total_usd={subtotal + tax + shippingCost}
-          total_cad={Math.round((subtotal + tax + shippingCost) * 1.35)}
-          itemCount={items.length}
-          showCheckoutButton={false}
-          showContinueShopping={false}
-        />
       
       {/* Continue Shopping Button */}
       <OrderActions />
     </PageLayout>
+
   );
 } 

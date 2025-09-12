@@ -1,6 +1,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useCurrency } from '../CurrencyContext';
 
 import { OrderItem } from './types';
 
@@ -10,6 +11,8 @@ interface OrderProductRowProps {
 }
 
 export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
+  const { currency } = useCurrency();
+  
   const formatPrice = (price: number | string | undefined) => {
     if (!price) return '$0';
     if (typeof price === 'string') {
@@ -45,7 +48,15 @@ export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
           <div className="flex flex-col">
             <span className="text-sm text-gray-700 mb-1">Quantity: {item.quantity || 1}</span>
             <span className="text-xl font-bold text-gray-900">
-              {formatPrice(item.price_usd)}
+              {currency === 'USD' ? (
+                <>
+                  {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
+                </>
+              ) : (
+                <>
+                  {formatPrice(item.price_cad)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
+                </>
+              )}
             </span>
           </div>
         </div>
@@ -76,7 +87,15 @@ export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
           <div className="flex justify-between items-center">
             <span className="text-sm text-gray-700">Quantity: {item.quantity || 1}</span>
             <span className="text-base font-bold text-gray-900">
-              {formatPrice(item.price_usd)}
+              {currency === 'USD' ? (
+                <>
+                  {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
+                </>
+              ) : (
+                <>
+                  {formatPrice(item.price_cad)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
+                </>
+              )}
             </span>
           </div>
         </div>
