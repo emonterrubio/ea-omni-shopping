@@ -15,6 +15,31 @@ export function OrderHeader({ order }: OrderHeaderProps) {
   const displayTotal = currency === 'CAD' 
     ? Math.round(order.total * 1.35) 
     : Math.round(order.total);
+
+  // Format date to abbreviated format (e.g., "Sep 11, 2025")
+  const formatAbbreviatedDate = (dateString: string): string => {
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) {
+        // If parsing fails, try to extract and abbreviate month from existing format
+        const monthMatch = dateString.match(/^(\w+)\s+(\d+),\s+(\d+)/);
+        if (monthMatch) {
+          const month = monthMatch[1].substring(0, 3);
+          const day = monthMatch[2];
+          const year = monthMatch[3];
+          return `${month} ${day}, ${year}`;
+        }
+        return dateString; // Return original if parsing fails
+      }
+      
+      const month = date.toLocaleDateString('en-US', { month: 'short' });
+      const day = date.getDate();
+      const year = date.getFullYear();
+      return `${month} ${day}, ${year}`;
+    } catch (error) {
+      return dateString; // Return original if any error occurs
+    }
+  };
   return (
     <div className="bg-gray-100 px-5 lg:px-6 py-4 border-b border-gray-200">
       {/* Mobile: Card Layout */}
@@ -29,7 +54,7 @@ export function OrderHeader({ order }: OrderHeaderProps) {
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Date</span>
-              <span className="text-base text-gray-900 font-bold">{order.orderDate}</span>
+              <span className="text-base text-gray-900 font-bold">{formatAbbreviatedDate(order.orderDate)}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered for</span>
@@ -74,46 +99,46 @@ export function OrderHeader({ order }: OrderHeaderProps) {
         </div>
       </div>
       
-      {/* Desktop: Original Layout */}
+      {/* Desktop: Single Row Layout */}
       <div className="hidden lg:block">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex flex-col md:flex-row sm:items-center gap-6 md:gap-10 text-base">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4 lg:gap-8">
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order number</span>
-              <span className="text-sm xl:text-base text-gray-600 font-bold">{order.orderNumber}</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderNumber}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order submitted</span>
-              <span className="text-sm xl:text-base text-gray-600 font-bold">{order.orderDate}</span>
+              <span className="text-base text-gray-900 font-bold">{formatAbbreviatedDate(order.orderDate)}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered by</span>
-              <span className="text-sm xl:text-base text-gray-900 font-bold">{order.orderedBy}</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderedBy}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered for</span>
-              <span className="text-sm xl:text-base text-gray-900 font-bold">{order.orderedFor}</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderedFor}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Total</span>
-              <span className="text-sm xl:text-base text-gray-900 font-bold">${displayTotal.toLocaleString()}<span className="text-xs text-gray-500 font-normal"> {currency}</span></span>
+              <span className="text-base text-gray-900 font-bold">${displayTotal.toLocaleString()}<span className="text-xs text-gray-500 font-normal"> {currency}</span></span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Shipping to</span>
               <span className="text-base text-gray-900 font-bold">
                 {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}
               </span>
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-gray-600 truncate max-w-24">
                 {order.shippingAddress?.address}
               </span>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 lg:gap-4 ml-4 lg:ml-8">
-            <Link href={`/orders/details?orderId=${order.id}`} className="text-sm xl:text-base font-regular text-blue-600 hover:text-blue-800">View order details</Link>
-            <div className="mr-2 ml-2 hidden h-6 w-px bg-gray-400 sm:block"></div>
+          <div className="flex items-center gap-4 ml-4">
+            <Link href={`/orders/details?orderId=${order.id}`} className="text-base font-regular text-blue-600 hover:text-blue-800 whitespace-nowrap">View order details</Link>
+            <div className="h-4 w-px bg-gray-400"></div>
             <Link 
               href={`/orders/track/${order.id}`}
-              className="text-left text-sm xl:text-base font-regular text-blue-600 hover:text-blue-800"
+              className="text-base font-regular text-blue-600 hover:text-blue-800 whitespace-nowrap"
             >
               Track order
             </Link>
