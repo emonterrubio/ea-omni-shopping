@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { PackageSearch, Truck } from "lucide-react";
+import { PackageSearch } from "lucide-react";
 import { getOrders, updateAllOrdersStatus } from "@/services/orders";
 import { Order } from "@/types/orders";
 import { OrderStatus, OrderStatusType } from "../orders/OrderStatus";
@@ -169,13 +169,6 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                         className="text-sm lg:text-base text-blue-600 hover:text-blue-800 font-regular transition-colors"
                       >
                         Order #{order.orderNumber}
-                      </Link>
-                      <Link
-                        href={`/orders/track/${order.id}`}
-                        className="inline-flex items-center text-xs text-green-600 hover:text-green-800 font-medium transition-colors"
-                      >
-                        <Truck className="w-3 h-3 mr-1" />
-                        Track
                       </Link>
                     </div>
                     <div className="flex flex-col sm:flex-row text-left sm:gap-2">
