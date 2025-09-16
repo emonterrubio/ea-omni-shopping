@@ -60,7 +60,6 @@ export function OrderStatusAssignment() {
     <OrderStatus 
       status={order.status} 
       showIcon={true}
-      deliveryDate={order.deliveryDate}
     />
   );
 
@@ -181,7 +180,6 @@ const getOrderStatus = (order: Order): OrderStatusType => {
 <OrderStatus 
   status={getOrderStatus(order)} 
   showIcon={true}
-  deliveryDate={getOrderStatus(order) === 'order-delivered' ? 'Dec 15, 2024' : undefined}
 />`}</pre>
         </div>
       </div>

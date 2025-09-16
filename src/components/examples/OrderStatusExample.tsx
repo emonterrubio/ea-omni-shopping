@@ -25,7 +25,6 @@ export function OrderStatusExample() {
             <OrderStatus 
               status={status} 
               showIcon={true}
-              deliveryDate={status === 'order-delivered' ? 'Dec 15, 2024' : undefined}
             />
           </div>
         ))}
@@ -36,7 +35,7 @@ export function OrderStatusExample() {
         <div className="text-xs text-gray-600 space-y-1">
           <div><code>&lt;OrderStatus status="pending-approval" /&gt;</code></div>
           <div><code>&lt;OrderStatus status="order-sent-to-vendor" showIcon={false} /&gt;</code></div>
-          <div><code>&lt;OrderStatus status="order-delivered" deliveryDate="Dec 15, 2024" /&gt;</code></div>
+          <div><code>&lt;OrderStatus status="order-delivered" /&gt;</code></div>
         </div>
       </div>
     </div>
