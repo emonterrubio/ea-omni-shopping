@@ -35,20 +35,16 @@ export function OrderDetails({
         <div className="lg:hidden">
           <div className="grid grid-cols-2 gap-4 mt-4">
             <div className="flex flex-col">
-              <span className="font-regular text-sm text-gray-700">Order Number</span>
-              <span className="text-base text-gray-900 font-regular">{orderNumber}</span>
-            </div>
-            <div className="flex flex-col">
-              <span className="font-regular text-sm text-gray-700">Order Date</span>
-              <span className="text-base text-gray-900 font-regular">{orderDate}</span>
-            </div>
-            <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered for</span>
               <span className="text-base text-gray-900 font-regular">{shipping.firstName} {shipping.lastName}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Ordered by</span>
               <span className="text-base text-gray-900 font-regular">{billing.name} {billing.lastName}</span>
+            </div>
+            <div className="flex flex-col">
+              <span className="font-regular text-sm text-gray-700">Order Submitted</span>
+              <span className="text-base text-gray-900 font-regular">{orderDate}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Total</span>
@@ -58,18 +54,17 @@ export function OrderDetails({
               </span>
             </div>
             <div className="flex flex-col">
-              <span className="font-regular text-sm text-gray-700">Shipping to</span>
-              <span className="text-base text-gray-900 font-regular">
-                {shippingType === 'residential' ? 'Residential' : 'Office'}
-              </span>
-              <span className="text-sm text-gray-600 mt-1">
-                {shipping.address1}
-                {shipping.city && `, ${shipping.city}`}
-                {shipping.state && `, ${shipping.state}`}
-                {shipping.zip && ` ${shipping.zip}`}
-                {shipping.country && `, ${shipping.country}`}
-              </span>
+            <h2 className="text-base font-regular text-gray-900">
+              Shipping to {shippingType === 'residential' ? 'Residential' : 'Office'} &nbsp;
+            </h2>
+            <div className="text-base font-bold text-gray-900">
+              {shipping.address1}
+              {shipping.city && `, ${shipping.city}`}
+              {shipping.state && `, ${shipping.state}`}
+              {shipping.zip && ` ${shipping.zip}`}
+              {shipping.country && `, ${shipping.country}`}
             </div>
+          </div>
           </div>
         </div>
         
@@ -92,8 +87,15 @@ export function OrderDetails({
             <div className="text-base font-bold text-gray-900">{orderDate}</div>
           </div>
           <div className="flex flex-col">
+              <span className="text-base font-regular text-gray-900">Order Total</span>
+              <span className="text-base font-bold text-gray-900">
+                ${total.toLocaleString()} 
+                <span className="text-xs font-normal text-gray-600 ml-1">{currency}</span>
+              </span>
+            </div>
+          <div className="flex flex-col">
             <h2 className="text-base font-regular text-gray-900">
-              Shipping to {shippingType === 'residential' ? 'Residential Address' : 'Office Address'}: &nbsp;
+              Shipping to {shippingType === 'residential' ? 'Residential' : 'Office'} &nbsp;
             </h2>
             <div className="text-base font-bold text-gray-900">
               {shipping.address1}

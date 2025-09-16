@@ -7,6 +7,8 @@ export interface OrderItem {
   price_usd: number | string;
   price_cad?: number;
   quantity: number;
+  display_name?: string;
+  category?: string;
 }
 
 export interface BillingInfo {

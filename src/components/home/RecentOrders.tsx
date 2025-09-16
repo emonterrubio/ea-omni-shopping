@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { PackageSearch } from "lucide-react";
-import { getOrders, updateAllOrdersStatus } from "@/services/orders";
+import { getOrders, assignRandomStatusesToOrders } from "@/services/orders";
 import { Order } from "@/types/orders";
 import { OrderStatus, OrderStatusType } from "../orders/OrderStatus";
 
@@ -40,23 +40,22 @@ interface RecentOrdersProps {
 export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
   const [orders, setOrders] = useState<Order[]>([]);
 
+
   useEffect(() => {
-    // Update all orders to pending-approval status
-    updateAllOrdersStatus('pending-approval');
+    // Assign random statuses to all orders in localStorage
+    assignRandomStatusesToOrders();
     
     const userOrders = getOrders();
     // Sort by order date (newest first) and take the most recent orders
     const sortedOrders = userOrders
       .sort((a, b) => new Date(b.orderDate).getTime() - new Date(a.orderDate).getTime())
-      .slice(0, maxOrders)
-      .map(order => ({ ...order, status: 'pending-approval' as const })); // Force status
+      .slice(0, maxOrders);
     setOrders(sortedOrders);
   }, [maxOrders]);
 
-  // Helper function to assign status to orders
+  // Helper function to get status for display
   const getOrderStatus = (order: Order): OrderStatusType => {
-    // For now, all orders are set to pending-approval
-    return 'pending-approval';
+    return order.status || 'pending-approval';
   };
 
   const formatOrderDate = (dateString: string) => {
@@ -184,17 +183,22 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                         <p className="text-sm text-gray-800">
                           for <span className="font-bold">{order.orderedFor}</span>
                         </p>
+                        <div className="mt-1 lg:hidden max-w-40">
+                          <OrderStatus 
+                            status={getOrderStatus(order)} 
+                            showIcon={true}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
                 
                 {/* Status - Desktop: Right side, Mobile: Bottom */}
-                <div className="flex flex-col items-center lg:items-end text-right mt-3 lg:mt-0">
+                <div className="flex flex-col items-center hidden lg:block">
                   <OrderStatus 
                     status={getOrderStatus(order)} 
                     showIcon={true}
-                    deliveryDate={getOrderStatus(order) === 'order-delivered' ? 'Dec 15, 2024' : undefined}
                   />
                 </div>
               </div>

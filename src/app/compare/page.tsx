@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import { ProductComparisonList } from "@/components/product/ProductComparisonList";
+import { SupportBanner } from "@/components/product/SupportBanner";
 import { hardwareData } from "@/data/eaProductData";
 import { EAProductType } from "@/types";
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
@@ -237,12 +238,8 @@ export default function ComparePage() {
           </div>
         )}
         
-        {/* Need Help Section */}
-        <div className="bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow p-6 flex flex-col items-center mt-8">
-          <div className="text-2xl font-medium mb-1">Need help?</div>
-          <div className="mb-3 text-gray-600 text-center text-base">Talk to one of our IT experts</div>
-          <button className="bg-blue-600 text-white px-6 py-2 rounded">Start a Conversation</button>
-        </div>
+        {/* Support Banner */}
+        <SupportBanner />
       </div>
     </PageLayout>
   );

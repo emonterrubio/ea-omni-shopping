@@ -194,18 +194,18 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
               <label className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${shippingMethod === 'free' ? 'border-blue-600 bg-blue-50 ring-2 ring-blue-500' : 'border-gray-300'}`}>
                 <input type="radio" name="shipping" value="free" checked={shippingMethod === 'free'} onChange={() => setShippingMethod('free')} className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300" />
                 <div className="ml-4 flex-grow">
-                  <p className="font-semibold text-gray-800">Free Shipping</p>
+                  <p className="font-bold text-gray-800">Free Shipping</p>
                   <p className="text-sm text-gray-500">7-20 days</p>
                 </div>
-                <p className="text-lg font-regular text-gray-800">$0 <span className="text-sm text-gray-500 font-normal">{currency}</span></p>
+                <p className="text-base font-regular text-gray-800">$0 <span className="text-sm text-gray-500 font-normal">{currency}</span></p>
               </label>
               <label className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${shippingMethod === 'express' ? 'border-blue-600 bg-blue-50 ring-2 ring-blue-500' : 'border-gray-300'}`}>
                 <input type="radio" name="shipping" value="express" checked={shippingMethod === 'express'} onChange={() => setShippingMethod('express')} className="h-5 w-5 text-blue-600 focus:ring-blue-500 border-gray-300" />
                 <div className="ml-4 flex-grow">
-                  <p className="font-semibold text-gray-800">Express Shipping</p>
+                  <p className="font-bold text-gray-800">Express Shipping</p>
                   <p className="text-sm text-gray-500">1-3 days</p>
                 </div>
-                <p className="text-lg font-regular text-gray-800">
+                <p className="text-base font-regular text-gray-800">
                   {currency === 'USD' ? '$14' : '$19'} <span className="text-sm text-gray-500 font-normal">{currency}</span>
                 </p>
               </label>

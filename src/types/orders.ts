@@ -6,6 +6,9 @@ export interface OrderItem {
   price_usd: number;
   price_cad?: number;
   quantity: number;
+  display_name?: string;
+  category?: string;
+  card_description?: string;
 }
 
 export interface Order {

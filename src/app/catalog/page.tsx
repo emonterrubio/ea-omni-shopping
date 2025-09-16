@@ -6,6 +6,7 @@ import { PlatformInfoBanner } from "../../components/ui/PlatformInfoBanner";
 import { PageLayout } from "../../components/layout/PageLayout";
 import { Pagination } from "../../components/ui/Pagination";
 import { CatalogSidebar } from "../../components/catalog/CatalogSidebar";
+import { Breadcrumb } from "../../components/ui/Breadcrumb";
 import { SortAsc, Filter, PackageSearch, ChevronDownIcon } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 
@@ -24,6 +25,7 @@ export default function CatalogPage() {
     manufacturer: product.manufacturer,
     price_usd: (product as any).price_usd || (product as any).ea_estimated_price_usd,
     price_cad: (product as any).price_cad,
+    display_name: (product as any).display_name,
   }));
 
   // Group products by brand
@@ -169,7 +171,12 @@ export default function CatalogPage() {
 
   return (
     <PageLayout>
-
+      <Breadcrumb
+        items={[
+          { label: "All Products", isActive: true }
+        ]}
+        className="mb-6"
+      />
       <div className="text-left mb-8 sm:px-4 lg:px-0">
         <h1 className="text-4xl md:text-5xl font-medium text-gray-900 mt-4 lg:mt-6 mb-2">
           {(() => {
@@ -192,11 +199,12 @@ export default function CatalogPage() {
         <div className="lg:hidden my-0 sm:my-4 sm:px-4">
           <div>
             <label className="block text-2xl font-regular text-gray-700 mb-2">Categories</label>
-            <select
-              value={selectedCategory}
-              onChange={e => setSelectedCategory(e.target.value)}
-              className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
-            >
+            <div className="relative">
+              <select
+                value={selectedCategory}
+                onChange={e => setSelectedCategory(e.target.value)}
+                className="w-full appearance-none rounded-md bg-white py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+              >
               <option value="all">All</option>
               {Array.from(new Set(allProducts.map((p: any) => p.category))).sort().map(category => (
                 <option key={category} value={category}>
@@ -212,7 +220,11 @@ export default function CatalogPage() {
                    category}
                 </option>
               ))}
-            </select>
+              </select>
+              <div className="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                <ChevronDownIcon className="h-4 w-4 text-gray-400" />
+              </div>
+            </div>
           </div>
         </div>
         

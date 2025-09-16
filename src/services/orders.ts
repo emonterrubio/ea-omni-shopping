@@ -32,7 +32,10 @@ export function createOrderFromCheckout(
       description: item.card_description || item.description || '',
       price_usd: typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd,
       price_cad: item.price_cad,
-      quantity: item.quantity
+      quantity: item.quantity,
+      display_name: item.display_name,
+      category: item.category,
+      card_description: item.card_description
     };
     console.log('Processed item:', processedItem);
     return processedItem;
@@ -101,6 +104,11 @@ export function clearOrdersForTesting(): void {
   console.log('Orders cleared for testing');
 }
 
+// Make clearOrders available globally for debugging
+if (typeof window !== 'undefined') {
+  (window as any).clearOrders = clearOrders;
+}
+
 export function updateOrderStatus(orderId: string, status: 'pending-approval' | 'order-sent-to-vendor' | 'order-shipped' | 'order-delivered', deliveryDate?: string): void {
   const orders = getOrders();
   const updatedOrders = orders.map(order => {
@@ -122,5 +130,36 @@ export function updateAllOrdersStatus(status: 'pending-approval' | 'order-sent-t
     localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updatedOrders));
   } catch (error) {
     console.error('Error updating all orders status:', error);
+  }
+}
+
+export function assignRandomStatusesToOrders(): void {
+  try {
+    const orders = getOrders();
+    const statuses: ('pending-approval' | 'order-sent-to-vendor' | 'order-shipped' | 'order-delivered')[] = [
+      'pending-approval',
+      'order-sent-to-vendor', 
+      'order-shipped',
+      'order-delivered'
+    ];
+    
+    const updatedOrders = orders.map(order => {
+      // Use order ID to generate a consistent "random" status for each order
+      const hash = order.id.split('').reduce((a, b) => {
+        a = ((a << 5) - a) + b.charCodeAt(0);
+        return a & a;
+      }, 0);
+      
+      const randomStatus = statuses[Math.abs(hash) % statuses.length];
+      
+      return {
+        ...order,
+        status: randomStatus
+      };
+    });
+    
+    localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updatedOrders));
+  } catch (error) {
+    console.error('Error assigning random statuses to orders:', error);
   }
 } 

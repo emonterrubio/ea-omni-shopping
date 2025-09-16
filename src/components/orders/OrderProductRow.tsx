@@ -21,6 +21,19 @@ export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
     return `$${price.toLocaleString()}`;
   };
 
+  // Helper function to generate proper product title (same logic as ProductCard)
+  const generateProductTitle = (display_name?: string, model?: string, category?: string): string => {
+    if (display_name && category?.toLowerCase() === 'monitor') {
+      return display_name;
+    }
+    if (display_name && model && 
+        !display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
+        !model.toLowerCase().replace(/[^a-z0-9]/g, '').includes(display_name.toLowerCase().replace(/[^a-z0-9]/g, ''))) {
+      return `${display_name} (${model})`;
+    }
+    return display_name || model || 'Unknown Product';
+  };
+
   return (
     <div className={`px-4 pb-4 ${!isLast ? "border-b border-gray-200" : ""}`}>
       {/* Mobile: Vertical stacking */}
@@ -42,7 +55,7 @@ export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
             href={`/product/${encodeURIComponent(item.model)}?from=orders`}
             className="text-xl font-regular text-gray-900 hover:text-blue-600 mb-1 block transition-colors"
           >
-            {item.brand} {item.model}
+            {item.brand} {generateProductTitle(item.display_name, item.model, item.category)}
           </Link>
           <div className="text-base leading-tight text-gray-600 mb-2">{item.card_description || item.description}</div>
           <div className="flex flex-col">
@@ -81,7 +94,7 @@ export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
             href={`/product/${encodeURIComponent(item.model)}?from=orders`}
             className="text-2xl font-regular text-gray-900 hover:text-blue-600 mb-1 block transition-colors"
           >
-            {item.brand} {item.model}
+            {item.brand} {generateProductTitle(item.display_name, item.model, item.category)}
           </Link>
           <div className="text-sm text-gray-600 mb-2">{item.card_description || item.description}</div>
           <div className="flex justify-between items-center">

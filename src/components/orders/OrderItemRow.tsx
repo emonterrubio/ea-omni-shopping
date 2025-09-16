@@ -87,7 +87,7 @@ export function OrderItemRow({ item }: OrderItemRowProps) {
             <div className="flex-1 min-w-0">
               <Link 
                 href={`/product/${encodeURIComponent(item.model)}?from=orders`}
-                className="text-xl font-regular text-gray-900 hover:text-blue-600 truncate transition-colors"
+                className="text-lg font-regular text-gray-900 hover:text-blue-600 truncate transition-colors"
               >
                 {item.brand} {item.model}
               </Link>

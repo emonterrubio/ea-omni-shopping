@@ -83,7 +83,7 @@ export function ShippingDetailsForm({ value, onChange, shippingType, setShipping
   return (
     <div className="px-2 py-2 sm:px-6 sm:py-4">
       <h3 className="text-2xl font-regular mb-4">Shipping Details</h3>
-      <div className="flex items-center gap-6 mb-4">
+      <div className="space-y-4 mb-4">
         <label className="flex items-center cursor-pointer">
           <input type="radio" name="shippingType" value="office" checked={shippingType === 'office'} onChange={() => setShippingType('office')} className="h-4 w-4 text-blue-600 focus:ring-blue-500" />
           <span className="ml-2 text-sm font-medium text-gray-700">Ship to office for IT setup</span>

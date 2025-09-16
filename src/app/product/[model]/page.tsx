@@ -290,15 +290,20 @@ export default function ProductDetailPage() {
   const comparisonProducts = selectedComparisonProducts.length > 0 ? selectedComparisonProducts : defaultComparisonProducts;
 
   // Transform available products for dropdown
-  const dropdownOptions = availableProducts.map((product) => ({
-    value: product.model,
-    label: `${product.manufacturer} ${(product as any).display_name && product.category?.toLowerCase() === 'monitor'
-      ? (product as any).display_name
-      : (product as any).display_name && product.model && 
-        !(product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
-        !product.model.toLowerCase().replace(/[^a-z0-9]/g, '').includes((product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '')) ? `${(product as any).display_name} (${product.model})` : (product as any).display_name || product.model} - $${(product.price_usd || (product as any).ea_estimated_price_usd || 0).toLocaleString()}`,
-    key: `${product.manufacturer}-${product.model}-${product.price_usd || (product as any).ea_estimated_price_usd}`
-  }));
+  const dropdownOptions = availableProducts.map((product) => {
+    const displayPrice = currency === 'USD' 
+      ? (product.price_usd || (product as any).ea_estimated_price_usd || 0)
+      : (product.price_cad || (product.price_usd || (product as any).ea_estimated_price_usd || 0) * 1.35);
+    
+    return {
+      value: product.model,
+      label: `${product.manufacturer} ${(product as any).display_name && product.category?.toLowerCase() === 'monitor'
+        ? (product as any).display_name
+        : (product as any).display_name && product.model && 
+          !(product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
+          !product.model.toLowerCase().replace(/[^a-z0-9]/g, '').includes((product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '')) ? `${(product as any).display_name} (${product.model})` : (product as any).display_name || product.model} - $${Math.round(displayPrice).toLocaleString()} ${currency}`,
+    };
+  });
 
   const handleBackClick = () => {
     // Use browser back navigation if there's history, otherwise fallback to home

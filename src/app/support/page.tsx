@@ -1,10 +1,17 @@
 import React from "react";
 import { Mail, Phone, MessageCircle, HelpCircle, FileText, Users } from "lucide-react";
 import { PageLayout } from "@/components/layout/PageLayout";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 
 export default function SupportPage() {
   return (
     <PageLayout>
+        <Breadcrumb
+          items={[
+            { label: "Support & Help", isActive: true }
+          ]}
+          className="mb-6"
+        />
         <div className="mb-8">
           <h1 className="text-5xl font-medium text-gray-900 mt-6 mb-4">Support & Help</h1>
           <p className="font-base font-regular text-gray-600 mb-8">Get help with your IT hardware needs and technical support</p>

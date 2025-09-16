@@ -53,28 +53,25 @@ export function OrderHeader({ order }: OrderHeaderProps) {
               <span className="text-base text-gray-900 font-bold">{order.orderNumber}</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-regular text-sm text-gray-700">Order Date</span>
+              <span className="font-regular text-sm text-gray-700">Order Submitted</span>
               <span className="text-base text-gray-900 font-bold">{formatAbbreviatedDate(order.orderDate)}</span>
             </div>
             <div className="flex flex-col">
-              <span className="font-regular text-sm text-gray-700">Ordered for</span>
-              <span className="text-base text-gray-900 font-bold">{order.orderedFor}</span>
+              <span className="font-regular text-sm text-gray-700">Ordered by</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderedBy}</span>
             </div>
             {/* Row 2 */}
             <div className="flex flex-col">
-              <span className="font-regular text-sm text-gray-700">Ordered by</span>
-              <span className="text-base text-gray-900 font-bold">{order.orderedBy}</span>
+              <span className="font-regular text-sm text-gray-700">Ordered for</span>
+              <span className="text-base text-gray-900 font-bold">{order.orderedFor}</span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Total</span>
               <span className="text-base text-gray-900 font-bold">${displayTotal.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> {currency}</span></span>
             </div>
             <div className="flex flex-col">
-              <span className="font-regular text-sm text-gray-700">Shipping to</span>
-              <span className="text-base text-gray-900 font-bold">
-                {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}
-              </span>
-              <span className="text-sm text-gray-600">
+              <span className="font-regular text-sm text-gray-700">Shipping to {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}</span>
+              <span className="text-base text-gray-900 font-bold truncate max-w-48">
                 {order.shippingAddress?.address}
               </span>
             </div>
@@ -93,7 +90,7 @@ export function OrderHeader({ order }: OrderHeaderProps) {
               href={`/orders/track/${order.id}`}
               className="text-base font-regular text-blue-600 hover:text-blue-800"
             >
-              Track package
+              Track order
             </Link>
           </div>
         </div>
@@ -124,11 +121,8 @@ export function OrderHeader({ order }: OrderHeaderProps) {
               <span className="text-base text-gray-900 font-bold">${displayTotal.toLocaleString()}<span className="text-xs text-gray-500 font-normal"> {currency}</span></span>
             </div>
             <div className="flex flex-col">
-              <span className="font-regular text-sm text-gray-700">Shipping to</span>
-              <span className="text-base text-gray-900 font-bold">
-                {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}
-              </span>
-              <span className="text-sm text-gray-600 truncate max-w-24">
+              <span className="font-regular text-sm text-gray-700">Shipping to {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}</span>
+              <span className="text-base text-gray-900 font-bold truncate max-w-48">
                 {order.shippingAddress?.address}
               </span>
             </div>

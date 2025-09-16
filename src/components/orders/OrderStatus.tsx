@@ -9,14 +9,12 @@ export type OrderStatusType =
 
 interface OrderStatusProps {
   status: OrderStatusType;
-  deliveryDate?: string;
   showIcon?: boolean;
   className?: string;
 }
 
 export function OrderStatus({ 
   status, 
-  deliveryDate, 
   showIcon = true, 
   className = "" 
 }: OrderStatusProps) {
@@ -52,7 +50,7 @@ export function OrderStatus({
           color: 'text-green-600',
           bgColor: 'bg-green-100',
           text: 'Order delivered',
-          date: deliveryDate ? `on ${deliveryDate}` : ''
+          date: ''
         };
       default:
         console.warn('Unknown order status:', status);

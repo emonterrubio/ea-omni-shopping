@@ -87,17 +87,17 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
             <div className="hidden sm:block absolute top-0 right-0">
               <div className="text-right">
                 {currency === 'USD' ? (
-                  <p className="text-xl font-medium text-gray-900">
+                  <p className="text-base font-medium text-gray-900">
                     {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
                   </p>
                 ) : (
-                  <p className="text-xl font-medium text-gray-900">
+                  <p className="text-base font-medium text-gray-900">
                     {formatPrice(item.price_cad || 0)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
                   </p>
                 )}
               </div>
             </div>
-            <h3 className="text-xl font-medium text-gray-900 sm:w-4/5">
+            <h3 className="text-lg font-medium text-gray-900 sm:w-4/5">
               <Link 
                 href={`/product/${encodeURIComponent(item.model)}`}
                 className="hover:text-blue-600 transition-colors cursor-pointer"
