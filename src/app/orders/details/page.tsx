@@ -239,12 +239,16 @@ export default function OrderDetailsPage() {
           <OrderSummary
               subtotal_usd={subtotal}
               subtotal_cad={Math.round(subtotal * 1.35)}
+              subtotal_eur={Math.round(subtotal * 0.85)}
               tax_usd={tax}
               tax_cad={Math.round(tax * 1.35)}
+              tax_eur={Math.round(tax * 0.85)}
               shippingCost_usd={shippingCost}
               shippingCost_cad={Math.round(shippingCost * 1.35)}
+              shippingCost_eur={Math.round(shippingCost * 0.85)}
               total_usd={subtotal + tax + shippingCost}
               total_cad={Math.round((subtotal + tax + shippingCost) * 1.35)}
+              total_eur={Math.round((subtotal + tax + shippingCost) * 0.85)}
               itemCount={items.length}
               showCheckoutButton={false}
               showContinueShopping={false}

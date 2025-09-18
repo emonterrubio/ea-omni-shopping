@@ -16,6 +16,7 @@ interface ComparisonProductCardProps {
   subFeatures: string[];
   price_usd: number;
   price_cad?: number;
+  price_eur?: number;
   chip: string;
   specs: { label: string; value: any }[];
   noBackground?: boolean;
@@ -33,11 +34,12 @@ export function ComparisonProductCard({
   subFeatures,
   price_usd,
   price_cad,
+  price_eur,
   chip,
   specs,
   noBackground = false,
 }: ComparisonProductCardProps) {
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
   // Split features string into array by comma
   const featureList = features.split(',').map(f => f.trim());
   const isEligible = true;
@@ -51,6 +53,7 @@ export function ComparisonProductCard({
       image,
       price_usd: price_usd,
       price_cad: price_cad,
+      price_eur: price_eur,
       quantity: 1,
       recommended: isEligible,
       description,
@@ -116,11 +119,27 @@ export function ComparisonProductCard({
         <div className="text-gray-600 text-sm">Recommended based on your role</div> */}
         {/* Price */}
         <div className="space-y-1">
-          {currency === 'USD' ? (
-            <div className="text-2xl font-semibold">${Math.round(price_usd).toLocaleString()}<span className="text-sm text-gray-500 font-normal"> USD</span></div>
-          ) : (
-            <div className="text-2xl font-semibold">${Math.round(price_cad || 0).toLocaleString()}<span className="text-sm text-gray-500 font-normal"> CAD</span></div>
-          )}
+          {(() => {
+            let displayPrice: number;
+            switch (currency) {
+              case 'USD':
+                displayPrice = price_usd;
+                break;
+              case 'CAD':
+                displayPrice = price_cad || Math.round(price_usd * 1.35);
+                break;
+              case 'EUR':
+                displayPrice = price_eur || Math.round(price_usd * 0.85);
+                break;
+              default:
+                displayPrice = price_usd;
+            }
+            return (
+              <div className="text-2xl font-semibold">
+                {getCurrencySymbol()}{Math.round(displayPrice).toLocaleString()}<span className="text-sm text-gray-500 font-normal"> {currency}</span>
+              </div>
+            );
+          })()}
         </div>
         {/* Add to Cart and View Details buttons */}
         <div className="flex gap-2 w-full pt-4">

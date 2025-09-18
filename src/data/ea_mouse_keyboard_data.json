@@ -22,7 +22,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 3
+    "quantity_in_stock": 3,
+    "price_eur": 20
   },
   {
     "manufacturer": "Dell",
@@ -47,7 +48,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 7
+    "quantity_in_stock": 7,
+    "price_eur": 24
   },
   {
     "manufacturer": "Logitech",
@@ -72,7 +74,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 32
+    "quantity_in_stock": 32,
+    "price_eur": 51
   },
   {
     "manufacturer": "Logitech",
@@ -97,7 +100,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 14
+    "quantity_in_stock": 14,
+    "price_eur": 153
   },
   {
     "manufacturer": "Logitech",
@@ -122,7 +126,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 5
+    "quantity_in_stock": 5,
+    "price_eur": 85
   },
   {
     "manufacturer": "Logitech",
@@ -147,7 +152,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 5
+    "quantity_in_stock": 5,
+    "price_eur": 111
   },
   {
     "manufacturer": "Apple",
@@ -172,7 +178,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 16
+    "quantity_in_stock": 16,
+    "price_eur": 153
   },
   {
     "manufacturer": "Apple",
@@ -197,7 +204,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 2
+    "quantity_in_stock": 2,
+    "price_eur": 128
   },
   {
     "manufacturer": "Apple",
@@ -222,7 +230,8 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 36
+    "quantity_in_stock": 36,
+    "price_eur": 77
   },
   {
     "manufacturer": "Apple",
@@ -247,6 +256,7 @@
     "best_for": "N/A",
     "ideal_for": "N/A",
     "warranty": "N/A",
-    "quantity_in_stock": 3
+    "quantity_in_stock": 3,
+    "price_eur": 106
   }
 ]

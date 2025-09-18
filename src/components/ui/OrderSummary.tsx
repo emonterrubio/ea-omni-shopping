@@ -4,13 +4,17 @@ import { useCurrency } from '../CurrencyContext';
 interface OrderSummaryProps {
   subtotal_usd: number;
   subtotal_cad?: number;
+  subtotal_eur?: number;
   tax_usd?: number;
   tax_cad?: number;
+  tax_eur?: number;
   shippingCost_usd: number;
   shippingCost_cad?: number;
+  shippingCost_eur?: number;
   costCenter?: string;
   total_usd: number;
   total_cad?: number;
+  total_eur?: number;
   onCheckout?: () => void;
   checkoutButtonText?: string;
   showCheckoutButton?: boolean;
@@ -25,13 +29,17 @@ interface OrderSummaryProps {
 export function OrderSummary({
   subtotal_usd,
   subtotal_cad,
+  subtotal_eur,
   tax_usd = 0,
   tax_cad,
+  tax_eur,
   shippingCost_usd,
   shippingCost_cad,
+  shippingCost_eur,
   costCenter,
   total_usd,
   total_cad,
+  total_eur,
   onCheckout,
   checkoutButtonText = "Proceed to checkout",
   showCheckoutButton = true,
@@ -42,7 +50,7 @@ export function OrderSummary({
   onContinueShopping,
   showTax = true
 }: OrderSummaryProps) {
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
   return (
     <div className={`lg:min-w-72 bg-white rounded-md border border-gray-200 p-6 h-fit ${className}`}>
       <div>
@@ -50,47 +58,88 @@ export function OrderSummary({
         <div className="flex justify-between font-regular text-gray-800 mb-2">
           <span>Subtotal {itemCount ? `(${itemCount} items)` : ''}</span>
           <div className="text-right">
-            {currency === 'USD' ? (
-              <div className="text-base font-regular text-gray-600">${Math.round(subtotal_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
-            ) : (
-              <div className="text-base font-regular text-gray-600">${Math.round(subtotal_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
-            )}
+            {(() => {
+              let amount: number;
+              switch (currency) {
+                case 'USD':
+                  amount = subtotal_usd;
+                  break;
+                case 'CAD':
+                  amount = subtotal_cad || Math.round(subtotal_usd * 1.35);
+                  break;
+                case 'EUR':
+                  amount = subtotal_eur || Math.round(subtotal_usd * 0.85);
+                  break;
+                default:
+                  amount = subtotal_usd;
+              }
+              return (
+                <div className="text-base font-regular text-gray-600">
+                  {getCurrencySymbol()}{Math.round(amount).toLocaleString()} 
+                  <span className="text-xs font-normal text-gray-600"> {currency}</span>
+                </div>
+              );
+            })()}
           </div>
         </div>
-        {showTax && ((currency === 'USD' && tax_usd > 0) || (currency === 'CAD' && (tax_cad || 0) > 0)) && (
+        {showTax && ((currency === 'USD' && tax_usd !== undefined) || (currency === 'CAD' && tax_cad !== undefined) || (currency === 'EUR' && tax_eur !== undefined)) && (
           <div className="flex justify-between font-regular text-gray-800 mb-2">
             <span>Tax</span>
             <div className="text-right">
-              {currency === 'USD' ? (
-                <div className="text-base font-regular text-gray-600">${Math.round(tax_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
-              ) : (
-                <div className="text-base font-regular text-gray-600">${Math.round(tax_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
-              )}
+              {(() => {
+                let amount: number;
+                switch (currency) {
+                  case 'USD':
+                    amount = tax_usd;
+                    break;
+                  case 'CAD':
+                    amount = tax_cad || Math.round(tax_usd * 1.35);
+                    break;
+                  case 'EUR':
+                    amount = tax_eur || Math.round(tax_usd * 0.85);
+                    break;
+                  default:
+                    amount = tax_usd;
+                }
+                return (
+                  <div className="text-base font-regular text-gray-600">
+                    {getCurrencySymbol()}{Math.round(amount).toLocaleString()} 
+                    <span className="text-xs font-normal text-gray-600"> {currency}</span>
+                  </div>
+                );
+              })()}
             </div>
           </div>
         )}
         <div className="flex justify-between font-regular text-gray-800 mb-2">
           <span>Shipping</span>
           <div className="text-right">
-            {currency === 'USD' ? (
-              <div className="text-base font-regular text-gray-600">
-                {shippingCost_usd === 0 ? 'Free' : (
-                  <>
-                    ${Math.round(shippingCost_usd).toLocaleString()}
-                    <span className="text-xs text-gray-600 font-normal"> USD</span>
-                  </>
-                )}
-              </div>
-            ) : (
-              <div className="text-base font-regular text-gray-600">
-                {(shippingCost_cad || 0) === 0 ? 'Free' : (
-                  <>
-                    ${Math.round(shippingCost_cad || 0).toLocaleString()}
-                    <span className="text-xs text-gray-600 font-normal"> CAD</span>
-                  </>
-                )}
-              </div>
-            )}
+            {(() => {
+              let amount: number;
+              switch (currency) {
+                case 'USD':
+                  amount = shippingCost_usd;
+                  break;
+                case 'CAD':
+                  amount = shippingCost_cad || Math.round(shippingCost_usd * 1.35);
+                  break;
+                case 'EUR':
+                  amount = shippingCost_eur || Math.round(shippingCost_usd * 0.85);
+                  break;
+                default:
+                  amount = shippingCost_usd;
+              }
+              return (
+                <div className="text-base font-regular text-gray-600">
+                  {amount === 0 ? 'Free' : (
+                    <>
+                      {getCurrencySymbol()}{Math.round(amount).toLocaleString()}
+                      <span className="text-xs text-gray-600 font-normal"> {currency}</span>
+                    </>
+                  )}
+                </div>
+              );
+            })()}
           </div>
         </div>
 
@@ -98,11 +147,28 @@ export function OrderSummary({
         <div className="flex justify-between font-bold text-xl mt-2">
           <span>Total</span>
           <div className="text-right">
-            {currency === 'USD' ? (
-              <div className="text-xl font-bold text-gray-600">${Math.round(total_usd).toLocaleString()} <span className="text-xs font-normal text-gray-600">USD</span></div>
-            ) : (
-              <div className="text-xl font-bold text-gray-600">${Math.round(total_cad || 0).toLocaleString()} <span className="text-xs font-normal text-gray-600">CAD</span></div>
-            )}
+            {(() => {
+              let amount: number;
+              switch (currency) {
+                case 'USD':
+                  amount = total_usd;
+                  break;
+                case 'CAD':
+                  amount = total_cad || Math.round(total_usd * 1.35);
+                  break;
+                case 'EUR':
+                  amount = total_eur || Math.round(total_usd * 0.85);
+                  break;
+                default:
+                  amount = total_usd;
+              }
+              return (
+                <div className="text-xl font-bold text-gray-600">
+                  {getCurrencySymbol()}{Math.round(amount).toLocaleString()} 
+                  <span className="text-xs font-normal text-gray-600"> {currency}</span>
+                </div>
+              );
+            })()}
           </div>
         </div>
         

@@ -13,10 +13,46 @@ import { useCurrency } from "@/components/CurrencyContext";
 
 export default function ComparePage() {
   const [selectedProducts, setSelectedProducts] = useState<EAProductType[]>([]);
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
   
   // Get all available products for selection
   const availableProducts = hardwareData;
+  
+  // Group products by category for better organization
+  const productsByCategory = availableProducts.reduce((acc, product) => {
+    const category = product.category;
+    if (!acc[category]) {
+      acc[category] = [];
+    }
+    acc[category].push(product);
+    return acc;
+  }, {} as Record<string, typeof availableProducts>);
+  
+  // Get category display names
+  const getCategoryDisplayName = (category: string): string => {
+    switch (category.toLowerCase()) {
+      case 'laptop':
+        return 'Laptops';
+      case 'monitor':
+        return 'Monitors';
+      case 'docking station':
+        return 'Docking Stations';
+      case 'headset':
+        return 'Headsets';
+      case 'mouse':
+        return 'Mice';
+      case 'keyboard':
+        return 'Keyboards';
+      case 'mouse & keyboard':
+        return 'Mice & Keyboards';
+      case 'trackpad':
+        return 'Mice';
+      case 'webcam':
+        return 'Webcams';
+      default:
+        return category;
+    }
+  };
   
   // Initialize with first 3 products if none selected
   React.useEffect(() => {
@@ -179,16 +215,31 @@ export default function ComparePage() {
                 >
                   <option value="">Select a product...</option>
                   <option value="none">None</option>
-                  {availableProducts.map((product, productIndex) => {
-                    const price = currency === 'USD' 
-                      ? (product.price_usd || (product as any).ea_estimated_price_usd || 0)
-                      : (product.price_cad || Math.round((product.price_usd || (product as any).ea_estimated_price_usd || 0) * 1.35));
-                    return (
-                      <option key={`${product.manufacturer}-${product.model}-${price}-${productIndex}`} value={product.model}>
-                        {product.manufacturer} {(product as any).display_name ? `${(product as any).display_name} (${product.model})` : product.model} - ${Math.round(price).toLocaleString()} {currency}
-                      </option>
-                    );
-                  })}
+                  {Object.entries(productsByCategory).map(([category, products]) => (
+                    <optgroup key={category} label={getCategoryDisplayName(category)}>
+                      {products.map((product, productIndex) => {
+                        let price: number;
+                        switch (currency) {
+                          case 'USD':
+                            price = product.price_usd || (product as any).ea_estimated_price_usd || 0;
+                            break;
+                          case 'CAD':
+                            price = product.price_cad || Math.round((product.price_usd || (product as any).ea_estimated_price_usd || 0) * 1.35);
+                            break;
+                          case 'EUR':
+                            price = (product as any).price_eur || Math.round((product.price_usd || (product as any).ea_estimated_price_usd || 0) * 0.85);
+                            break;
+                          default:
+                            price = product.price_usd || (product as any).ea_estimated_price_usd || 0;
+                        }
+                        return (
+                          <option key={`${product.manufacturer}-${product.model}-${price}-${productIndex}`} value={product.model}>
+                            {product.manufacturer} {(product as any).display_name ? `${(product as any).display_name} (${product.model})` : product.model} - {getCurrencySymbol()}{Math.round(price).toLocaleString()} {currency}
+                          </option>
+                        );
+                      })}
+                    </optgroup>
+                  ))}
                 </select>
                 <ChevronDownIcon
                   aria-hidden="true"

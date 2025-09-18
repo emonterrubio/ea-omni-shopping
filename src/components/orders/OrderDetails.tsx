@@ -22,7 +22,7 @@ export function OrderDetails({
   total,
   items
 }: OrderDetailsProps) {
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden mb-4 px-3 lg:px-0">
       {/* Order Details Header */}
@@ -49,7 +49,7 @@ export function OrderDetails({
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Total</span>
               <span className="text-base text-gray-900 font-regular">
-                ${total.toLocaleString()} 
+                {getCurrencySymbol()}{total.toLocaleString()} 
                 <span className="text-xs font-normal text-gray-600 ml-1">{currency}</span>
               </span>
             </div>
@@ -89,7 +89,7 @@ export function OrderDetails({
           <div className="flex flex-col">
               <span className="text-base font-regular text-gray-900">Order Total</span>
               <span className="text-base font-bold text-gray-900">
-                ${total.toLocaleString()} 
+                {getCurrencySymbol()}{total.toLocaleString()} 
                 <span className="text-xs font-normal text-gray-600 ml-1">{currency}</span>
               </span>
             </div>

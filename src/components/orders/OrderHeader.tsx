@@ -9,12 +9,19 @@ interface OrderHeaderProps {
 }
 
 export function OrderHeader({ order }: OrderHeaderProps) {
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
   
-  // Calculate CAD total if needed (assuming 1.35 conversion rate)
-  const displayTotal = currency === 'CAD' 
-    ? Math.round(order.total * 1.35) 
-    : Math.round(order.total);
+  // Calculate total based on currency
+  const displayTotal = (() => {
+    switch (currency) {
+      case 'CAD':
+        return Math.round(order.total * 1.35);
+      case 'EUR':
+        return Math.round(order.total * 0.85);
+      default:
+        return Math.round(order.total);
+    }
+  })();
 
   // Format date to abbreviated format (e.g., "Sep 11, 2025")
   const formatAbbreviatedDate = (dateString: string): string => {
@@ -67,7 +74,7 @@ export function OrderHeader({ order }: OrderHeaderProps) {
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Order Total</span>
-              <span className="text-base text-gray-900 font-bold">${displayTotal.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> {currency}</span></span>
+              <span className="text-base text-gray-900 font-bold">{getCurrencySymbol()}{displayTotal.toLocaleString()}<span className="text-sm text-gray-500 font-normal"> {currency}</span></span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Shipping to {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}</span>
@@ -118,7 +125,7 @@ export function OrderHeader({ order }: OrderHeaderProps) {
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Total</span>
-              <span className="text-base text-gray-900 font-bold">${displayTotal.toLocaleString()}<span className="text-xs text-gray-500 font-normal"> {currency}</span></span>
+              <span className="text-base text-gray-900 font-bold">{getCurrencySymbol()}{displayTotal.toLocaleString()}<span className="text-xs text-gray-500 font-normal"> {currency}</span></span>
             </div>
             <div className="flex flex-col">
               <span className="font-regular text-sm text-gray-700">Shipping to {order.shippingAddress?.type === 'residential' ? 'Residential' : 'Office'}</span>

@@ -2,12 +2,13 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Currency = 'USD' | 'CAD';
+type Currency = 'USD' | 'CAD' | 'EUR';
 
 interface CurrencyContextType {
   currency: Currency;
   toggleCurrency: () => void;
   setCurrency: (currency: Currency) => void;
+  getCurrencySymbol: () => string;
 }
 
 const CurrencyContext = createContext<CurrencyContextType | undefined>(undefined);
@@ -18,7 +19,7 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   // Load currency preference from localStorage on mount
   useEffect(() => {
     const savedCurrency = localStorage.getItem('preferred-currency') as Currency;
-    if (savedCurrency && (savedCurrency === 'USD' || savedCurrency === 'CAD')) {
+    if (savedCurrency && (savedCurrency === 'USD' || savedCurrency === 'CAD' || savedCurrency === 'EUR')) {
       setCurrencyState(savedCurrency);
     }
   }, []);
@@ -29,15 +30,34 @@ export function CurrencyProvider({ children }: { children: React.ReactNode }) {
   }, [currency]);
 
   const toggleCurrency = () => {
-    setCurrencyState(prev => prev === 'USD' ? 'CAD' : 'USD');
+    setCurrencyState(prev => {
+      switch (prev) {
+        case 'USD': return 'CAD';
+        case 'CAD': return 'EUR';
+        case 'EUR': return 'USD';
+        default: return 'USD';
+      }
+    });
   };
 
   const setCurrency = (newCurrency: Currency) => {
     setCurrencyState(newCurrency);
   };
 
+  const getCurrencySymbol = () => {
+    switch (currency) {
+      case 'USD':
+      case 'CAD':
+        return '$';
+      case 'EUR':
+        return '€';
+      default:
+        return '$';
+    }
+  };
+
   return (
-    <CurrencyContext.Provider value={{ currency, toggleCurrency, setCurrency }}>
+    <CurrencyContext.Provider value={{ currency, toggleCurrency, setCurrency, getCurrencySymbol }}>
       {children}
     </CurrencyContext.Provider>
   );

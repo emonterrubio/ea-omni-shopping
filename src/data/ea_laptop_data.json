@@ -7,6 +7,7 @@
     "screen_size": "14\"",
     "price_usd": 1345,
     "price_cad": 2018,
+    "price_eur": 1143,
     "weight_lbs": 2.52,
     "battery_life_hrs": 13.5,
     "battery_life_description": "Good (Full-Workday Battery)",
@@ -46,6 +47,7 @@
     "screen_size": "14\"",
     "price_usd": 1615,
     "price_cad": 2557,
+    "price_eur": 1373,
     "weight_lbs": 3.43,
     "battery_life_hrs": 18,
     "battery_life_description": "Good (Full-Workday Battery)",
@@ -114,7 +116,8 @@
     "not_suitable_for": "Extreme high-end rendering or scientific computing.",
     "intended_for": "Producers/Directors needing portable GPU power, runs EA titles.",
     "image": "/images/dell_pro_max_14_premium.png",
-    "quantity_in_stock": 6
+    "quantity_in_stock": 6,
+    "price_eur": 2502
   },
   {
     "manufacturer": "Dell",
@@ -153,7 +156,8 @@
     "not_suitable_for": "Users prioritizing portability or for basic office tasks.",
     "intended_for": "Desk-centric creative & technical roles (Engineering, Design); runs EA titles.",
     "image": "/images/dell_pro_max_16_premium.png",
-    "quantity_in_stock": 17
+    "quantity_in_stock": 17,
+    "price_eur": 2639
   },
   {
     "manufacturer": "Dell",
@@ -192,7 +196,8 @@
     "not_suitable_for": "Users prioritizing portability or for basic office tasks.",
     "intended_for": "Developers, designers, and artists building and running EA titles.",
     "image": "/images/dell_pro_max_16_premium.png",
-    "quantity_in_stock": 25
+    "quantity_in_stock": 25,
+    "price_eur": 3543
   },
   {
     "manufacturer": "Apple",
@@ -230,7 +235,8 @@
     "not_suitable_for": "Running EA game titles or Windows-specific software.",
     "intended_for": "Video editing, graphic/UI/UX design, and marketing content creation.",
     "image": "/images/apple_macbook_pro_14.png",
-    "quantity_in_stock": 25
+    "quantity_in_stock": 25,
+    "price_eur": 1806
   },
   {
     "manufacturer": "Apple",
@@ -268,6 +274,7 @@
     "not_suitable_for": "Running EA game titles or Windows-specific software.",
     "intended_for": "High-end video, motion graphics, music production, and development.",
     "image": "/images/apple_macbook_pro_16.png",
-    "quantity_in_stock": 27
+    "quantity_in_stock": 27,
+    "price_eur": 2975
   }
 ]

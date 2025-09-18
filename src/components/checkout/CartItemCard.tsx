@@ -13,6 +13,7 @@ interface CartItemCardProps {
     image: string;
     price_usd: number | string;
     price_cad?: number;
+    price_eur?: number;
     recommended?: boolean;
     quantity: number;
     category?: string;
@@ -25,7 +26,7 @@ interface CartItemCardProps {
 }
 
 export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: CartItemCardProps) {
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
   
   // Helper function to generate proper product title (same logic as ProductCard)
   const generateProductTitle = (display_name?: string, model?: string, category?: string): string => {
@@ -86,15 +87,27 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
             {/* Desktop Price - positioned to the right */}
             <div className="hidden sm:block absolute top-0 right-0">
               <div className="text-right">
-                {currency === 'USD' ? (
-                  <p className="text-base font-medium text-gray-900">
-                    {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
-                  </p>
-                ) : (
-                  <p className="text-base font-medium text-gray-900">
-                    {formatPrice(item.price_cad || 0)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
-                  </p>
-                )}
+                {(() => {
+                  let displayPrice: number;
+                  switch (currency) {
+                    case 'USD':
+                      displayPrice = typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd;
+                      break;
+                    case 'CAD':
+                      displayPrice = item.price_cad || Math.round((typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd) * 1.35);
+                      break;
+                    case 'EUR':
+                      displayPrice = item.price_eur || Math.round((typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd) * 0.85);
+                      break;
+                    default:
+                      displayPrice = typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd;
+                  }
+                  return (
+                    <p className="text-base font-medium text-gray-900">
+                      {getCurrencySymbol()}{Math.round(displayPrice).toLocaleString()}<span className="text-sm text-gray-500 font-normal"> {currency}</span>
+                    </p>
+                  );
+                })()}
               </div>
             </div>
             <h3 className="text-lg font-medium text-gray-900 sm:w-4/5">
@@ -110,15 +123,27 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
             )}
             {/* Price - Mobile: below description, Desktop: to the right */}
             <div className="block sm:hidden mb-1">
-              {currency === 'USD' ? (
-                <p className="text-xl font-medium text-gray-900">
-                  {formatPrice(item.price_usd)}<span className="text-sm text-gray-500 font-normal"> USD</span>
-                </p>
-              ) : (
-                <p className="text-xl font-medium text-gray-900">
-                  {formatPrice(item.price_cad || 0)}<span className="text-sm text-gray-500 font-normal"> CAD</span>
-                </p>
-              )}
+              {(() => {
+                let displayPrice: number;
+                switch (currency) {
+                  case 'USD':
+                    displayPrice = typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd;
+                    break;
+                  case 'CAD':
+                    displayPrice = item.price_cad || Math.round((typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd) * 1.35);
+                    break;
+                  case 'EUR':
+                    displayPrice = item.price_eur || Math.round((typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd) * 0.85);
+                    break;
+                  default:
+                    displayPrice = typeof item.price_usd === 'string' ? parseFloat(item.price_usd.replace(/,/g, '')) : item.price_usd;
+                }
+                return (
+                  <p className="text-xl font-medium text-gray-900">
+                    {getCurrencySymbol()}{Math.round(displayPrice).toLocaleString()}<span className="text-sm text-gray-500 font-normal"> {currency}</span>
+                  </p>
+                );
+              })()}
             </div>
             {/* Quantity Controls and Action Links */}
             <div className="flex flex-row gap-4 py-2">

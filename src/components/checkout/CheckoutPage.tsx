@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { createOrderFromCheckout, saveOrder } from '@/services/orders';
 import { CartContext } from '../CartContext';
 import { calculateTax } from '@/services/taxCalculation';
+import { useCurrency } from '../CurrencyContext';
 
 interface Item {
   model: string;
@@ -28,6 +29,7 @@ interface CheckoutPageProps {
 export function CheckoutPage({ items, shippingCost, costCenter, onBack }: CheckoutPageProps) {
   const router = useRouter();
   const { clearCart } = useContext(CartContext);
+  const { currency } = useCurrency();
   
   // Generate random data for pre-population
   const generateRandomData = () => {
@@ -191,12 +193,23 @@ export function CheckoutPage({ items, shippingCost, costCenter, onBack }: Checko
     return sum;
   }, 0);
   
+  const subtotal_eur = items.reduce((sum, item) => {
+    const price_eur = (item as any).price_eur;
+    if (price_eur && typeof price_eur === 'number') {
+      return sum + price_eur * item.quantity;
+    }
+    return sum;
+  }, 0);
+  
   // Calculate tax based on shipping location
   const tax = calculateTax(subtotal, shippingType, shipping.officeLocation || shipping.zip || '');
   const tax_cad = subtotal_cad > 0 ? calculateTax(subtotal_cad, shippingType, shipping.officeLocation || shipping.zip || '') : 0;
+  const tax_eur = subtotal_eur > 0 ? calculateTax(subtotal_eur, shippingType, shipping.officeLocation || shipping.zip || '') : 0;
   const shippingCost_cad = shippingCost > 0 ? 19 : 0; // Approximate CAD conversion
+  const shippingCost_eur = shippingCost > 0 ? 14 : 0; // Approximate EUR conversion
   const total = Math.round((subtotal + tax + shippingCost) * 100) / 100; // Total rounded to 2 decimal places
   const total_cad = subtotal_cad > 0 ? Math.round((subtotal_cad + tax_cad + shippingCost_cad) * 100) / 100 : 0;
+  const total_eur = subtotal_eur > 0 ? Math.round((subtotal_eur + tax_eur + shippingCost_eur) * 100) / 100 : 0;
 
   const handlePlaceOrder = () => {
     // Debug: Log items being passed to createOrderFromCheckout
@@ -276,13 +289,17 @@ export function CheckoutPage({ items, shippingCost, costCenter, onBack }: Checko
           <OrderSummary
             subtotal_usd={subtotal}
             subtotal_cad={subtotal_cad > 0 ? subtotal_cad : undefined}
+            subtotal_eur={subtotal_eur > 0 ? subtotal_eur : undefined}
             tax_usd={tax}
             tax_cad={tax_cad > 0 ? tax_cad : undefined}
+            tax_eur={tax_eur}
             shippingCost_usd={shippingCost}
             shippingCost_cad={shippingCost_cad > 0 ? shippingCost_cad : undefined}
+            shippingCost_eur={shippingCost_eur > 0 ? shippingCost_eur : undefined}
             costCenter={costCenterValue}
             total_usd={total}
             total_cad={total_cad > 0 ? total_cad : undefined}
+            total_eur={total_eur > 0 ? total_eur : undefined}
             onCheckout={handlePlaceOrder}
             checkoutButtonText="Submit"
             showCheckoutButton={true}

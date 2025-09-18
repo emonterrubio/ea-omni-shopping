@@ -32,7 +32,8 @@
     "best_for": "Everyday productivity, web browsing, and standard office applications.",
     "intended_for": "General business professionals in corporate roles.",
     "warranty": "3 yrs.",
-    "quantity_in_stock": 10
+    "quantity_in_stock": 10,
+    "price_eur": 132
   },
   {
     "manufacturer": "Dell",
@@ -69,7 +70,8 @@
     "best_for": "Color-critical work, high-resolution content creation, and design reviews.",
     "intended_for": "Creative professionals (Art, Graphic Design, Video Editing).",
     "warranty": "3 yrs.",
-    "quantity_in_stock": 78
+    "quantity_in_stock": 78,
+    "price_eur": 463
   },
   {
     "manufacturer": "Dell",
@@ -105,6 +107,7 @@
     "best_for": "Managing large spreadsheets, coding, and viewing multiple data streams.",
     "intended_for": "Developers, data scientists, and users preferring a single-screen setup.",
     "warranty": "3 yrs.",
-    "quantity_in_stock": 2
+    "quantity_in_stock": 2,
+    "price_eur": 574
   }
 ]

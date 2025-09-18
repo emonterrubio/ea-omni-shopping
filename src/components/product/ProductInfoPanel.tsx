@@ -10,6 +10,7 @@ interface ProductInfoPanelProps {
   sku: string;
   price: number;
   price_cad?: number;
+  price_eur?: number;
   available: boolean;
   deliveryTime: string;
   description: string;
@@ -31,6 +32,7 @@ export function ProductInfoPanel({
   sku,
   price,
   price_cad,
+  price_eur,
   available,
   deliveryTime,
   description,
@@ -45,7 +47,7 @@ export function ProductInfoPanel({
   onAddToCart,
   onCompare,
 }: ProductInfoPanelProps) {
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
   return (
     <div className="flex flex-col gap-3">
       <div>
@@ -58,11 +60,27 @@ export function ProductInfoPanel({
       </div>
       {/* price */}
       <div className="space-y-1">
-        {currency === 'USD' ? (
-          <div className="text-2xl lg:text-3xl font-regular">${price ? Math.round(price).toLocaleString() : '0'}<span className="text-sm lg:text-base font-normal text-gray-500"> USD</span></div>
-        ) : (
-          <div className="text-2xl lg:text-3xl font-regular">${price_cad ? Math.round(price_cad).toLocaleString() : '0'}<span className="text-sm lg:text-base font-normal text-gray-500"> CAD</span></div>
-        )}
+        {(() => {
+          let displayPrice: number;
+          switch (currency) {
+            case 'USD':
+              displayPrice = price;
+              break;
+            case 'CAD':
+              displayPrice = price_cad || Math.round(price * 1.35);
+              break;
+            case 'EUR':
+              displayPrice = price_eur || Math.round(price * 0.85);
+              break;
+            default:
+              displayPrice = price;
+          }
+          return (
+            <div className="text-2xl lg:text-3xl font-regular">
+              {getCurrencySymbol()}{displayPrice ? Math.round(displayPrice).toLocaleString() : '0'}<span className="text-sm lg:text-base font-normal text-gray-500"> {currency}</span>
+            </div>
+          );
+        })()}
       </div>
       {/* Description */}
       <div className="text-base text-gray-800 leading-snug">

@@ -151,12 +151,23 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
     return sum;
   }, 0);
 
+  const subtotal_eur = cart.reduce((sum, item) => {
+    const price_eur = (item as any).price_eur;
+    if (price_eur && typeof price_eur === 'number') {
+      return sum + price_eur * (item.quantity || 1);
+    }
+    return sum;
+  }, 0);
+
   const tax = Math.round((subtotal * 0.047) * 100) / 100; // 4.7% tax rate, rounded to 2 decimal places
   const tax_cad = subtotal_cad > 0 ? Math.round((subtotal_cad * 0.047) * 100) / 100 : 0;
+  const tax_eur = subtotal_eur > 0 ? Math.round((subtotal_eur * 0.047) * 100) / 100 : 0;
   const shippingCost = shippingMethod === 'express' ? 14 : 0;
   const shippingCost_cad = shippingMethod === 'express' ? 19 : 0; // Approximate CAD conversion
+  const shippingCost_eur = shippingMethod === 'express' ? 12 : 0; // Approximate EUR conversion
   const total = Math.round((subtotal + tax + shippingCost) * 100) / 100; // Total rounded to 2 decimal places
   const total_cad = subtotal_cad > 0 ? Math.round((subtotal_cad + tax_cad + shippingCost_cad) * 100) / 100 : 0;
+  const total_eur = subtotal_eur > 0 ? Math.round((subtotal_eur + tax_eur + shippingCost_eur) * 100) / 100 : 0;
 
   return (
     <div>
@@ -224,18 +235,22 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
           <OrderSummary
             subtotal_usd={subtotal}
             subtotal_cad={subtotal_cad > 0 ? subtotal_cad : undefined}
+            subtotal_eur={subtotal_eur > 0 ? subtotal_eur : undefined}
             tax_usd={tax}
             tax_cad={tax_cad > 0 ? tax_cad : undefined}
+            tax_eur={tax_eur}
             shippingCost_usd={shippingCost}
             shippingCost_cad={shippingCost_cad > 0 ? shippingCost_cad : undefined}
+            shippingCost_eur={shippingCost_eur > 0 ? shippingCost_eur : undefined}
             costCenter={costCenter}
             total_usd={total}
             total_cad={total_cad > 0 ? total_cad : undefined}
+            total_eur={total_eur > 0 ? total_eur : undefined}
             itemCount={cartItems.length}
             onCheckout={() => onCheckout(costCenter, shippingMethod)}
             showContinueShopping={true}
             onContinueShopping={() => router.push('/catalog')}
-            showTax={false}
+            showTax={true}
           />
         </div>
       </div>

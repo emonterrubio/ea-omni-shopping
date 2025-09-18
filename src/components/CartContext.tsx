@@ -10,6 +10,7 @@ export interface CartItem {
   image: string;
   price_usd: number | string;
   price_cad?: number;
+  price_eur?: number;
   quantity: number;
   recommended?: boolean;
   description?: string;

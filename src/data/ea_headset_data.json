@@ -20,7 +20,8 @@
     "battery_life": "N/A",
     "intended_for": "Infrequent conferencing workloads.",
     "warranty": "N/A",
-    "quantity_in_stock": 13
+    "quantity_in_stock": 13,
+    "price_eur": 20
   },
   {
     "manufacturer": "Jabra",
@@ -43,7 +44,8 @@
     "battery_life": "N/A",
     "intended_for": "Standard conferencing workloads.",
     "warranty": "N/A",
-    "quantity_in_stock": 50
+    "quantity_in_stock": 50,
+    "price_eur": 74
   },
   {
     "manufacturer": "Jabra",
@@ -66,7 +68,8 @@
     "battery_life": "20 hours",
     "intended_for": "High conferencing workloads, in loud environments and frequent commute/travel with the headset.",
     "warranty": "N/A",
-    "quantity_in_stock": 24
+    "quantity_in_stock": 24,
+    "price_eur": 221
   },
   {
     "manufacturer": "Jabra",
@@ -89,7 +92,8 @@
     "battery_life": "26 hours",
     "intended_for": "High meeting workloads in loud environments, requiring all-day comfort.",
     "warranty": "N/A",
-    "quantity_in_stock": 20
+    "quantity_in_stock": 20,
+    "price_eur": 332
   },
   {
     "manufacturer": "Apple",
@@ -112,6 +116,7 @@
     "battery_life": "5 hours",
     "intended_for": "Maximum portability for frequent commute/travel and conferencing.",
     "warranty": "N/A",
-    "quantity_in_stock": 21
+    "quantity_in_stock": 21,
+    "price_eur": 213
   }
 ]

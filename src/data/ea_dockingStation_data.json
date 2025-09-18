@@ -28,7 +28,8 @@
       "1x 2.5GbE Ethernet"
     ],
     "warranty": "3 yrs.",
-    "quantity_in_stock": 9
+    "quantity_in_stock": 9,
+    "price_eur": 157
   },
   {
     "manufacturer": "Dell",
@@ -59,7 +60,8 @@
       "1x 1GbE Ethernet"
     ],
     "warranty": "3 yrs.",
-    "quantity_in_stock": 7
+    "quantity_in_stock": 7,
+    "price_eur": 191
   },
   {
     "manufacturer": "Belkin",
@@ -89,6 +91,7 @@
       "1x 1GbE Ethernet"
     ],
     "warranty": "3 yrs.",
-    "quantity_in_stock": 6
+    "quantity_in_stock": 6,
+    "price_eur": 255
   }
 ]

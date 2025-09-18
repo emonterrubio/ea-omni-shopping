@@ -31,12 +31,13 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
   // For EA products, we'll consider them all eligible
   const isEligible = true;
   const { addToCart } = useContext(CartContext);
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
 
   // Use manufacturer as brand for EA products
   const brand = product.manufacturer || product.brand || 'Unknown';
   const price = product.price_usd || product.price || 0;
   const priceCad = product.price_cad || 0;
+  const priceEur = (product as any).price_eur || 0;
   const image = product.image || PLACEHOLDER_IMAGE;
 
   console.log("ProductCard brand:", brand);
@@ -50,6 +51,7 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
       image: image,
       price_usd: price,
       price_cad: priceCad > 0 ? priceCad : undefined,
+      price_eur: priceEur > 0 ? priceEur : undefined,
       quantity: 1,
       recommended: product.recommended || true,
       description: product.description,
@@ -106,15 +108,27 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
         <div className="space-y-2 pb-4 flex-1">
           {(product.card_description || product.description) && <div className="text-gray-700 text-base leading-tight">{product.card_description || product.description}</div>}
           <div>
-            {currency === 'USD' ? (
-              <div className="text-xl font-semibold text-gray-900">
-                ${Math.round(price).toLocaleString()}<span className="text-sm font-normal text-gray-500"> USD</span>
-              </div>
-            ) : (
-              <div className="text-xl font-semibold text-gray-900">
-                ${Math.round(priceCad).toLocaleString()}<span className="text-sm font-normal text-gray-500"> CAD</span>
-              </div>
-            )}
+            {(() => {
+              let displayPrice: number;
+              switch (currency) {
+                case 'USD':
+                  displayPrice = price;
+                  break;
+                case 'CAD':
+                  displayPrice = priceCad || Math.round(price * 1.35);
+                  break;
+                case 'EUR':
+                  displayPrice = priceEur || Math.round(price * 0.85);
+                  break;
+                default:
+                  displayPrice = price;
+              }
+              return (
+                <div className="text-xl font-semibold text-gray-900">
+                  {getCurrencySymbol()}{Math.round(displayPrice).toLocaleString()}<span className="text-sm font-normal text-gray-500"> {currency}</span>
+                </div>
+              );
+            })()}
           </div>
         </div>
         {/* <div className="flex items-center justify-between mb-4">

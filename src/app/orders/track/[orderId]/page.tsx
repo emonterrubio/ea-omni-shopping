@@ -11,6 +11,7 @@ import { OrderStatus } from "@/components/orders/OrderStatus";
 import { OrderProductList } from "@/components/orders/OrderProductList";
 import { useCurrency } from "@/components/CurrencyContext";
 import { Breadcrumb } from "@/components/ui/Breadcrumb";
+import { calculateTax } from "@/services/taxCalculation";
 
 interface TrackingStep {
   id: string;
@@ -26,7 +27,7 @@ export default function TrackOrderPage() {
   const params = useParams();
   const router = useRouter();
   const orderId = params.orderId as string;
-  const { currency } = useCurrency();
+  const { currency, getCurrencySymbol } = useCurrency();
   
   const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
@@ -358,13 +359,32 @@ export default function TrackOrderPage() {
               <div className="space-y-1">
                 {(() => {
                   // Calculate subtotal based on currency
-                  const subtotal = currency === 'USD' 
-                    ? order.items.reduce((sum, item) => sum + (item.price_usd * item.quantity), 0)
-                    : order.items.reduce((sum, item) => sum + ((item.price_cad || item.price_usd) * item.quantity), 0);
+                  let subtotal: number;
+                  switch (currency) {
+                    case 'USD':
+                      subtotal = order.items.reduce((sum, item) => sum + (item.price_usd * item.quantity), 0);
+                      break;
+                    case 'CAD':
+                      subtotal = order.items.reduce((sum, item) => sum + ((item.price_cad || item.price_usd) * item.quantity), 0);
+                      break;
+                    case 'EUR':
+                      subtotal = order.items.reduce((sum, item) => {
+                        const price_eur = (item as any).price_eur;
+                        if (price_eur && typeof price_eur === 'number') {
+                          return sum + (price_eur * item.quantity);
+                        }
+                        return sum + (item.price_usd * 0.85 * item.quantity);
+                      }, 0);
+                      break;
+                    default:
+                      subtotal = order.items.reduce((sum, item) => sum + (item.price_usd * item.quantity), 0);
+                  }
                   
-                  // Calculate tax (assuming 10% for USD, 15% for CAD)
-                  const taxRate = currency === 'USD' ? 0.10 : 0.15;
-                  const tax = subtotal * taxRate;
+                  // Calculate tax based on shipping location using the tax calculation service
+                  const shippingType = order.shippingAddress?.type === 'residential' ? 'residential' : 'office';
+                  const shippingLocation = order.shippingAddress?.address || '';
+                  
+                  const tax = calculateTax(subtotal, shippingType, shippingLocation);
                   
                   // Shipping is typically free for orders
                   const shipping = 0;
@@ -378,7 +398,7 @@ export default function TrackOrderPage() {
                         <span className="text-gray-700">Subtotal ({order.items.length} items)</span>
                         <div className="text-right">
                           <div className="text-base font-medium text-gray-900">
-                            ${Math.round(subtotal).toLocaleString()} 
+                            {getCurrencySymbol()}{Math.round(subtotal).toLocaleString()} 
                             <span className="text-xs font-normal text-gray-600 ml-1">{currency}</span>
                           </div>
                         </div>
@@ -388,7 +408,7 @@ export default function TrackOrderPage() {
                         <span className="text-gray-700">Tax</span>
                         <div className="text-right">
                           <div className="text-base font-medium text-gray-900">
-                            ${Math.round(tax).toLocaleString()} 
+                            {getCurrencySymbol()}{Math.round(tax).toLocaleString()} 
                             <span className="text-xs font-normal text-gray-600 ml-1">{currency}</span>
                           </div>
                         </div>
@@ -408,7 +428,7 @@ export default function TrackOrderPage() {
                           <span className="text-lg font-bold text-gray-900">Total</span>
                           <div className="text-right">
                             <div className="text-lg font-bold text-gray-900">
-                              ${Math.round(total).toLocaleString()} 
+                              {getCurrencySymbol()}{Math.round(total).toLocaleString()} 
                               <span className="text-sm font-normal text-gray-600 ml-1">{currency}</span>
                             </div>
                           </div>

@@ -198,6 +198,25 @@ export function ShippingDetailsForm({ value, onChange, shippingType, setShipping
                   <option>Vancouver - Great Northern Way</option>
                   <option>Victoria</option>
                 </optgroup>
+                <optgroup label="European Locations">
+                  <option>Birmingham</option>
+                  <option>Brno (Tracab)</option>
+                  <option>Bucharest</option>
+                  <option>Cologne</option>
+                  <option>Cologne (Tracab)</option>
+                  <option>Galway</option>
+                  <option>Geneva</option>
+                  <option>Gothenburg</option>
+                  <option>Guildford</option>
+                  <option>Helsinki</option>
+                  <option>Lyon</option>
+                  <option>Madrid</option>
+                  <option>Manchester</option>
+                  <option>Southam</option>
+                  <option>Stockholm</option>
+                  <option>Stockholm (Tracab)</option>
+                  <option>Warsaw</option>
+                </optgroup>
               </select>
               <ChevronDownIcon
                   aria-hidden="true"
