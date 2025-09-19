@@ -11,6 +11,8 @@ import { OrderDetails } from "@/components/orders/OrderDetails";
 import { OrderProductList } from "@/components/orders/OrderProductList";
 import { OrderActions } from "@/components/orders/OrderActions";
 import { calculateTax } from "@/services/taxCalculation";
+import { ShippingInfo } from "@/components/orders/types";
+import { calculateOrderTotals } from "@/services/orderCalculations";
 
 function generateOrderNumber() {
   return `112-${Math.floor(1000000 + Math.random() * 9000000)}`;
@@ -21,6 +23,7 @@ export default function OrderDetailsPage() {
   const [order, setOrder] = useState<any>(null);
   const [orderNumber, setOrderNumber] = useState<string>("");
   const [orderDate, setOrderDate] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const { clearCart } = useContext(CartContext);
 
   useEffect(() => {
@@ -28,8 +31,22 @@ export default function OrderDetailsPage() {
   }, [order]);
 
   useEffect(() => {
+    // Reset loading state when component mounts
+    setIsLoading(true);
+    
+    // Add minimum loading duration to make it feel intentional
+    const startTime = Date.now();
+    const minLoadingDuration = 1500; // 1.5 seconds minimum
+    
     const searchParams = new URLSearchParams(window.location.search);
     const orderId = searchParams.get('orderId');
+    
+    // Helper function to ensure minimum loading duration
+    const finishLoading = () => {
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(0, minLoadingDuration - elapsed);
+      setTimeout(() => setIsLoading(false), remaining);
+    };
     
     if (orderId) {
       // Viewing an existing order (either from URL or from checkout)
@@ -92,10 +109,12 @@ export default function OrderDetailsPage() {
           total: existingOrder.total
         };
         console.log('Converted order:', convertedOrder);
-        setOrder(convertedOrder);
+        setOrder(existingOrder); // Use the original order object instead of converted
+        finishLoading();
       } else {
         console.log('Order not found by ID:', orderId);
         console.log('Available orders:', savedOrders);
+        finishLoading();
       }
     } else {
       // New order from checkout
@@ -165,6 +184,7 @@ export default function OrderDetailsPage() {
           };
           console.log('Converted order:', convertedOrder);
           setOrder(convertedOrder);
+          finishLoading();
         } else {
           // Fallback to checkout form data if no processed order found
           setOrder(parsed);
@@ -178,15 +198,30 @@ export default function OrderDetailsPage() {
             minute: "2-digit", 
             hour12: true 
           }) + " PST");
+          finishLoading();
         }
         
         // Clear order data and cart/selection
         localStorage.removeItem("devSetupOrder");
         localStorage.removeItem("devSetupCart");
         clearCart(); // Hide cart bubble after order is confirmed
+      } else {
+        finishLoading();
       }
     }
   }, [clearCart]);
+
+  if (isLoading) {
+    return (
+      <PageLayout>
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-center px-4 py-20">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+          <h1 className="text-xl font-semibold mb-2">Loading Order Details...</h1>
+          <p className="text-gray-600">Please wait while we fetch your order information.</p>
+        </div>
+      </PageLayout>
+    );
+  }
 
   if (!order) {
     return (
@@ -205,9 +240,11 @@ export default function OrderDetailsPage() {
     );
   }
 
-  const { billing, shipping, shippingType, items, subtotal, shippingCost, total } = order;
-  // Calculate tax based on shipping location
-  const tax = calculateTax(subtotal, shippingType, shipping.officeLocation || shipping.zip || '');
+  // Use centralized calculation service
+  const allTotals = calculateOrderTotals(order);
+  const usdTotals = allTotals.usd;
+  const cadTotals = allTotals.cad;
+  const eurTotals = allTotals.eur;
 
   return (
     <PageLayout>
@@ -224,32 +261,24 @@ export default function OrderDetailsPage() {
       <OrderDetailsHeader orderNumber={orderNumber} orderDate={orderDate} />
 
       {/* Combined Order Details and Product List */}
-      <OrderDetails
-        orderNumber={orderNumber}
-        orderDate={orderDate}
-        billing={billing}
-        shipping={shipping}
-        shippingType={shippingType}
-        total={total}
-        items={items}
-      />
+      <OrderDetails order={order} />
       <div className="flex justify-end">
         {/* Order Summary */}
         <div className="w-full max-w-md lg:w-2/3">
           <OrderSummary
-              subtotal_usd={subtotal}
-              subtotal_cad={Math.round(subtotal * 1.35)}
-              subtotal_eur={Math.round(subtotal * 0.85)}
-              tax_usd={tax}
-              tax_cad={Math.round(tax * 1.35)}
-              tax_eur={Math.round(tax * 0.85)}
-              shippingCost_usd={shippingCost}
-              shippingCost_cad={Math.round(shippingCost * 1.35)}
-              shippingCost_eur={Math.round(shippingCost * 0.85)}
-              total_usd={subtotal + tax + shippingCost}
-              total_cad={Math.round((subtotal + tax + shippingCost) * 1.35)}
-              total_eur={Math.round((subtotal + tax + shippingCost) * 0.85)}
-              itemCount={items.length}
+              subtotal_usd={usdTotals.subtotal}
+              subtotal_cad={cadTotals.subtotal}
+              subtotal_eur={eurTotals.subtotal}
+              tax_usd={usdTotals.tax}
+              tax_cad={cadTotals.tax}
+              tax_eur={eurTotals.tax}
+              shippingCost_usd={usdTotals.shippingCost}
+              shippingCost_cad={cadTotals.shippingCost}
+              shippingCost_eur={eurTotals.shippingCost}
+              total_usd={usdTotals.total}
+              total_cad={cadTotals.total}
+              total_eur={eurTotals.total}
+              itemCount={order.items.length}
               showCheckoutButton={false}
               showContinueShopping={false}
             />

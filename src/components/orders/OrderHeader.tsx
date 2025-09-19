@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { Order } from '@/types/orders';
 import { OrderStatus } from './OrderStatus';
 import { useCurrency } from '../CurrencyContext';
+import { getTotalsForCurrency } from '@/services/orderCalculations';
 
 interface OrderHeaderProps {
   order: Order;
@@ -11,17 +12,9 @@ interface OrderHeaderProps {
 export function OrderHeader({ order }: OrderHeaderProps) {
   const { currency, getCurrencySymbol } = useCurrency();
   
-  // Calculate total based on currency
-  const displayTotal = (() => {
-    switch (currency) {
-      case 'CAD':
-        return Math.round(order.total * 1.35);
-      case 'EUR':
-        return Math.round(order.total * 0.85);
-      default:
-        return Math.round(order.total);
-    }
-  })();
+  // Use centralized calculation service
+  const totals = getTotalsForCurrency(order, currency);
+  const displayTotal = Math.round(totals.total);
 
   // Format date to abbreviated format (e.g., "Sep 11, 2025")
   const formatAbbreviatedDate = (dateString: string): string => {

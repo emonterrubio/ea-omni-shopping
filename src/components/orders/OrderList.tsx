@@ -1,16 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { OrderCard } from './OrderCard';
-import { getOrders } from '@/services/orders';
 import { Order } from '@/types/orders';
 
-export function OrderList() {
-  const [orders, setOrders] = useState<Order[]>([]);
+interface OrderListProps {
+  orders: Order[];
+}
 
-  useEffect(() => {
-    const userOrders = getOrders();
-    setOrders(userOrders);
-  }, []);
-
+export function OrderList({ orders }: OrderListProps) {
   if (orders.length === 0) {
     return (
       <div className="text-center py-12">
