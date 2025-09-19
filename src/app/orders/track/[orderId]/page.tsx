@@ -7,6 +7,7 @@ import { MapPin, Package, Truck, CheckCircle, Clock, AlertCircle } from "lucide-
 import { getOrderById, updateAllOrdersStatus } from "@/services/orders";
 import { Order } from "@/types/orders";
 import { MapPlaceholder } from "@/components/ui/MapPlaceholder";
+import { InteractiveMap } from "@/components/ui/InteractiveMap";
 import { OrderStatus } from "@/components/orders/OrderStatus";
 import { OrderProductList } from "@/components/orders/OrderProductList";
 import { useCurrency } from "@/components/CurrencyContext";
@@ -33,6 +34,52 @@ export default function TrackOrderPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [trackingSteps, setTrackingSteps] = useState<TrackingStep[]>([]);
+
+  // Function to get coordinates for office locations
+  const getOfficeCoordinates = (address: string): [number, number] => {
+    // Sample coordinates for different office locations
+    const officeCoordinates: Record<string, [number, number]> = {
+      'Orlando': [28.5383, -81.3792],
+      'Austin': [30.2672, -97.7431],
+      'Redwood Shores': [37.5314, -122.2481],
+      'Los Angeles': [34.0522, -118.2437],
+      'Chicago': [41.8781, -87.6298],
+      'New York': [40.7128, -74.0060],
+      'Toronto': [43.6532, -79.3832],
+      'Vancouver': [49.2827, -123.1207],
+      'Montreal': [45.5017, -73.5673],
+      'Birmingham': [52.4862, -1.8904],
+      'Brno': [49.1951, 16.6068],
+      'Bucharest': [44.4268, 26.1025],
+      'Cologne': [50.9375, 6.9603],
+      'Galway': [53.2707, -9.0568],
+      'Geneva': [46.2044, 6.1432],
+      'Gothenburg': [57.7089, 11.9746],
+      'Guildford': [51.2362, -0.5704],
+      'Helsinki': [60.1699, 24.9384],
+      'Lyon': [45.7640, 4.8357],
+      'Madrid': [40.4168, -3.7038],
+      'Manchester': [53.4808, -2.2426],
+      'Southam': [52.2527, -1.3940],
+      'Stockholm': [59.3293, 18.0686],
+      'Warsaw': [52.2297, 21.0122],
+    };
+
+    // Try to find a match in the address (case insensitive)
+    const lowerAddress = address.toLowerCase();
+    for (const [city, coords] of Object.entries(officeCoordinates)) {
+      if (lowerAddress.includes(city.toLowerCase())) {
+        console.log(`Found location match: ${city} for address: ${address}`);
+        return coords;
+      }
+    }
+
+    // Log when no match is found for debugging
+    console.log(`No location match found for address: ${address}, defaulting to Orlando`);
+    
+    // Default to Orlando if no match found
+    return [28.5383, -81.3792];
+  };
 
   // Function to get approver name based on order details
   const getApproverName = (order: Order): string => {
@@ -321,14 +368,23 @@ export default function TrackOrderPage() {
 
           {/* Right Side - Map and Address Information */}
           <div className="lg:col-span-4 space-y-4">
-            {/* Map Placeholder */}
+            {/* Interactive Map */}
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
               <h3 className="text-xl font-bold text-gray-900 mb-6">Delivery Location</h3>
               
-              {/* Map Placeholder */}
-              <MapPlaceholder 
-                address={order.shippingAddress.address}
+              {/* Interactive Map */}
+              <InteractiveMap
+                center={getOfficeCoordinates(order.shippingAddress.address)}
+                zoom={13}
+                markers={[
+                  {
+                    position: getOfficeCoordinates(order.shippingAddress.address),
+                    title: order.shippingAddress.type === 'residential' ? 'Delivery Address' : 'Office Location',
+                    description: `${order.orderedFor} - ${order.shippingAddress.address}`
+                  }
+                ]}
                 className="h-64 mb-4"
+                height="256px"
               />
               
               {/* Address Information */}
