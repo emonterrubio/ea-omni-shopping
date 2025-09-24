@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useContext, useState, useRef, useEffect } from "react";
+import React, { useContext, useState, useRef, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
 import { hardwareData } from "../../../data/eaProductData";
@@ -207,60 +207,73 @@ export default function ProductDetailPage() {
   const product = findProductByModel(model);
   const specs = product ? getProductSpecs(product) : [];
 
-  // --- Comparison logic with price-based selection ---
+  // --- Comparison logic with brand/manufacturer-based selection ---
   const [selectedComparisonProducts, setSelectedComparisonProducts] = useState<any[]>([]);
   
   // Use only the hardware data for comparison
-  const others = hardwareData.filter(p => p.model !== product?.model);
+  const others = useMemo(() => hardwareData.filter(p => p.model !== product?.model), [product?.model]);
   
   // Available products for dropdown (same category as current product)
-  const availableProducts = others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase());
+  const availableProducts = useMemo(() => 
+    others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase()), 
+    [others, product?.category]
+  );
   
-  // Price-based comparison products: current item in middle, closest lower price on left, closest higher price on right
-  const defaultComparisonProducts = (() => {
+  // Brand/manufacturer-based comparison products: current item in middle, same brand products preferred
+  const defaultComparisonProducts = useMemo(() => {
     if (!product) return [];
     
-    const currentPrice = (product as any).price_usd || (product as any).ea_estimated_price_usd || 0;
+    const currentBrand = product?.manufacturer?.toLowerCase();
     const sameCategoryProducts = others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase());
     
-    // Sort products by price
-    const sortedByPrice = sameCategoryProducts.sort((a, b) => {
-      const priceA = (a as any).price_usd || (a as any).ea_estimated_price_usd || 0;
-      const priceB = (b as any).price_usd || (b as any).ea_estimated_price_usd || 0;
-      return priceA - priceB;
-    });
+    // Group products by brand/manufacturer
+    const productsByBrand = sameCategoryProducts.reduce((acc, product) => {
+      const brand = product?.manufacturer?.toLowerCase() || 'unknown';
+      if (!acc[brand]) acc[brand] = [];
+      acc[brand].push(product);
+      return acc;
+    }, {} as Record<string, any[]>);
     
-    // Find closest lower price product
-    const lowerPriceProduct = sortedByPrice
-      .filter(p => {
-        const price = (p as any).price_usd || (p as any).ea_estimated_price_usd || 0;
-        return price < currentPrice;
-      })
-      .pop(); // Get the highest price that's still lower than current
+    // Select products from the same brand first, then different brands if needed
+    const selectedProducts = [];
     
-    // Find closest higher price product
-    const higherPriceProduct = sortedByPrice
-      .filter(p => {
-        const price = (p as any).price_usd || (p as any).ea_estimated_price_usd || 0;
-        return price > currentPrice;
-      })
-      .shift(); // Get the lowest price that's still higher than current
+    // First priority: products from the same brand (excluding current product)
+    const sameBrandProducts = productsByBrand[currentBrand] || [];
+    const otherSameBrandProducts = sameBrandProducts.filter(p => p.model !== product?.model);
     
-    // Return in order: [lower price, current, higher price]
+    // Add same brand products first
+    for (let i = 0; i < Math.min(2, otherSameBrandProducts.length); i++) {
+      selectedProducts.push(otherSameBrandProducts[i]);
+    }
+    
+    // If we need more products and don't have enough from same brand, add from different brands
+    if (selectedProducts.length < 2) {
+      const otherBrands = Object.keys(productsByBrand).filter(brand => brand !== currentBrand);
+      
+      for (const brand of otherBrands) {
+        if (selectedProducts.length >= 2) break;
+        const brandProducts = productsByBrand[brand];
+        if (brandProducts.length > 0) {
+          selectedProducts.push(brandProducts[0]);
+        }
+      }
+    }
+    
+    // Return in order: [same brand product 1, current, same brand product 2 or different brand]
     const comparisonProducts = [];
-    if (lowerPriceProduct) comparisonProducts.push(lowerPriceProduct);
+    if (selectedProducts[0]) comparisonProducts.push(selectedProducts[0]);
     comparisonProducts.push(product); // Current product in middle
-    if (higherPriceProduct) comparisonProducts.push(higherPriceProduct);
+    if (selectedProducts[1]) comparisonProducts.push(selectedProducts[1]);
     
     return comparisonProducts;
-  })();
+  }, [product, others]);
 
   // Initialize selected products with default ones
   useEffect(() => {
-    if (defaultComparisonProducts.length > 0 && selectedComparisonProducts.length === 0) {
+    if (defaultComparisonProducts.length > 0) {
       setSelectedComparisonProducts(defaultComparisonProducts);
     }
-  }, [defaultComparisonProducts, selectedComparisonProducts.length]);
+  }, [defaultComparisonProducts]);
 
   const handleComparisonProductChange = (index: number, modelValue: string) => {
     if (modelValue === "") {
@@ -288,9 +301,17 @@ export default function ProductDetailPage() {
 
   // Use selected products for comparison, fallback to default
   const comparisonProducts = selectedComparisonProducts.length > 0 ? selectedComparisonProducts : defaultComparisonProducts;
+  
+  // Create the display order: [current product, left dropdown product, right dropdown product]
+  const displayProducts = [
+    comparisonProducts[1], // Current product (leftmost)
+    comparisonProducts[0], // Left dropdown product (middle)
+    comparisonProducts[2]  // Right dropdown product (right)
+  ].filter(Boolean); // Remove any undefined values
+  
 
   // Transform available products for dropdown
-  const dropdownOptions = availableProducts.map((product) => {
+  const dropdownOptions = useMemo(() => availableProducts.map((product) => {
     const displayPrice = currency === 'USD' 
       ? (product.price_usd || (product as any).ea_estimated_price_usd || 0)
       : (product.price_cad || (product.price_usd || (product as any).ea_estimated_price_usd || 0) * 1.35);
@@ -303,7 +324,7 @@ export default function ProductDetailPage() {
           !(product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes(product.model.toLowerCase().replace(/[^a-z0-9]/g, '')) && 
           !product.model.toLowerCase().replace(/[^a-z0-9]/g, '').includes((product as any).display_name.toLowerCase().replace(/[^a-z0-9]/g, '')) ? `${(product as any).display_name} (${product.model})` : (product as any).display_name || product.model} - $${Math.round(displayPrice).toLocaleString()} ${currency}`,
     };
-  });
+  }), [availableProducts, currency]);
 
   const handleBackClick = () => {
     // Use browser back navigation if there's history, otherwise fallback to home
@@ -412,19 +433,14 @@ export default function ProductDetailPage() {
             {/* Product Selection Dropdowns */}
             {availableProducts.length > 0 && (
               <div className="mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {/* Left dropdown - Lower price competitor */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Lower Price Competitor</label>
-                    <Dropdown
-                      value={selectedComparisonProducts[0]?.model || ""}
-                      onChange={(value) => handleComparisonProductChange(0, value)}
-                      options={dropdownOptions}
-                      placeholder="Select a product..."
-                    />
-                  </div>
-                  
-                  {/* Middle - Current product (disabled) */}
+                <div className={`grid grid-cols-1 gap-4 items-end ${
+                  availableProducts.length >= 2 
+                    ? 'md:grid-cols-3' 
+                    : availableProducts.length === 1 
+                      ? 'md:grid-cols-2' 
+                      : 'md:grid-cols-1'
+                }`}>
+                  {/* Left - Current product (disabled) */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Current Product</label>
                     <div className="w-full appearance-none rounded-md bg-gray-100 py-2 pr-8 pl-3 text-base text-gray-900 border border-gray-300 sm:text-sm/6 cursor-not-allowed">
@@ -432,22 +448,37 @@ export default function ProductDetailPage() {
                     </div>
                   </div>
                   
-                  {/* Right dropdown - Higher price competitor */}
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Higher Price Competitor</label>
-                    <Dropdown
-                      value={selectedComparisonProducts[2]?.model || ""}
-                      onChange={(value) => handleComparisonProductChange(2, value)}
-                      options={dropdownOptions}
-                      placeholder="Select a product..."
-                    />
-                  </div>
+                  {/* Middle dropdown - First comparison product (only show if 2+ products available) */}
+                  {availableProducts.length >= 2 && displayProducts[1] && (
+                    <div>
+                      <div className="h-6 mb-2"></div>
+                      <Dropdown
+                        value={displayProducts[1]?.model || ""}
+                        onChange={(value) => handleComparisonProductChange(0, value)}
+                        options={dropdownOptions}
+                        placeholder="Select a product..."
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Right dropdown - Second comparison product (only show if 3+ products available) */}
+                  {availableProducts.length >= 3 && displayProducts[2] && (
+                    <div>
+                      <div className="h-6 mb-2"></div>
+                      <Dropdown
+                        value={displayProducts[2]?.model || ""}
+                        onChange={(value) => handleComparisonProductChange(2, value)}
+                        options={dropdownOptions}
+                        placeholder="Select a product..."
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             )}
             
-            {comparisonProducts.length > 0 && (
-              <ProductComparisonList products={comparisonProducts.map(p => ({
+            {displayProducts.length > 0 && (
+              <ProductComparisonList products={displayProducts.map(p => ({
                 ...p, // Spread all product properties
                 brand: p.manufacturer,
                 model: p.model,

@@ -163,10 +163,10 @@ export function ProductInfoPanel({
       {/* add to cart and compare buttons */}
       <div className="flex gap-2 mt-2">
         <button className="flex-1 bg-blue-600 text-white px-4 py-2 hover:bg-blue-700 transition-colors rounded-md font-medium" onClick={onAddToCart}>Add to Cart</button>
-        <button className="flex-1 bg-blue-50 text-blue-600 rounded-md py-2 font-medium hover:bg-blue-100 transition text-center" onClick={onCompare}>Compare</button>
+        <button className="flex-1 bg-blue-50 text-blue-600 rounded-md py-2 font-medium hover:bg-blue-100 transition text-center" onClick={onCompare}>Compare to similar items</button>
       </div>
       {/* disclaimers */}
-      <div className="bg-white border border-gray-200 rounded-lg p-4 mt-4">
+      <div className="bg-white border border-gray-200 rounded-lg p-6 mt-4">
         <h4 className="text-base font-semibold text-gray-800 mb-3 flex items-center">
           <Info className="w-4 h-4 text-blue-600 mr-2" />
           Important Information
