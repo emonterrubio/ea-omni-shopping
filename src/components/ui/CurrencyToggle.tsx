@@ -9,7 +9,7 @@ export function CurrencyToggle() {
   const currencies = [
     { code: 'USD', symbol: '$' },
     { code: 'CAD', symbol: '$' },
-    { code: 'EUR', symbol: '€' }
+    // { code: 'EUR', symbol: '€' } // Hidden but functionality preserved
   ];
 
   return (

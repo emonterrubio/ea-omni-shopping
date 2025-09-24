@@ -6,6 +6,7 @@ import { CurrencyProvider } from "../components/CurrencyContext";
 import { ToastContainer } from "../components/ui/ToastContainer";
 import { PasswordProtection } from "../components/auth/PasswordProtection";
 import { AUTH_CONFIG } from "../config/auth";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: "Omni Shopping - IT Equipment Store",
@@ -35,6 +36,7 @@ export default function RootLayout({
             </CurrencyProvider>
           </ToastProvider>
         </PasswordProtection>
+        <Analytics />
       </body>
     </html>
   );
