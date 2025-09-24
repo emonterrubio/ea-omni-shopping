@@ -82,7 +82,8 @@ export function OrderSummary({
             })()}
           </div>
         </div>
-        {showTax && ((currency === 'USD' && tax_usd !== undefined) || (currency === 'CAD' && tax_cad !== undefined) || (currency === 'EUR' && tax_eur !== undefined)) && (
+        {/* Tax section - Hidden but functionality preserved */}
+        {/* {showTax && ((currency === 'USD' && tax_usd !== undefined) || (currency === 'CAD' && tax_cad !== undefined) || (currency === 'EUR' && tax_eur !== undefined)) && (
           <div className="flex justify-between font-regular text-gray-800 mb-2">
             <span>Tax</span>
             <div className="text-right">
@@ -110,8 +111,9 @@ export function OrderSummary({
               })()}
             </div>
           </div>
-        )}
-        <div className="flex justify-between font-regular text-gray-800 mb-2">
+        )} */}
+        {/* Shipping section - Hidden but functionality preserved */}
+        {/* <div className="flex justify-between font-regular text-gray-800 mb-2">
           <span>Shipping</span>
           <div className="text-right">
             {(() => {
@@ -141,7 +143,7 @@ export function OrderSummary({
               );
             })()}
           </div>
-        </div>
+        </div> */}
 
         <div className="border-t border-gray-200 my-4"></div>
         <div className="flex justify-between font-bold text-xl mt-2">

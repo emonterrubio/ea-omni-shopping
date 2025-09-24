@@ -198,8 +198,8 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
             ))}
           </div>
 
-          {/* Shipping Method */}
-          <div className="mt-4">
+          {/* Shipping Method - Hidden but functionality preserved */}
+          {/* <div className="mt-4">
             <h3 className="text-2xl font-medium tracking-normal mb-4">Shipping Method</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <label className={`flex items-center p-4 border rounded-lg cursor-pointer transition-all ${shippingMethod === 'free' ? 'border-blue-600 bg-blue-50 ring-2 ring-blue-500' : 'border-gray-300'}`}>
@@ -221,7 +221,7 @@ export function ShoppingCart({ selectedItems, onEdit, onCheckout, onRemove }: Sh
                 </p>
               </label>
             </div>
-          </div>
+          </div> */}
 
         </div>
 
