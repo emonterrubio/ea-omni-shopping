@@ -211,20 +211,67 @@ export default function ProductDetailPage() {
   const [selectedComparisonProducts, setSelectedComparisonProducts] = useState<any[]>([]);
   
   // Use only the hardware data for comparison
-  const others = useMemo(() => hardwareData.filter(p => p.model !== product?.model), [product?.model]);
+  const others = useMemo(() => {
+    const filtered = hardwareData.filter(p => p.model !== product?.model);
+    // Debug: Check if Magic Trackpad is in the data
+    if (product?.model === 'Magic Mouse') {
+      console.log('Magic Trackpad in hardwareData:', hardwareData.find(p => p.model === 'Magic Trackpad'));
+      console.log('Others after filtering:', filtered.map(p => p.model));
+    }
+    return filtered;
+  }, [product?.model]);
   
-  // Available products for dropdown (same category as current product)
-  const availableProducts = useMemo(() => 
-    others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase()), 
-    [others, product?.category]
-  );
+  // Available products for dropdown (same category as current product, with related categories for input devices)
+  const availableProducts = useMemo(() => {
+    const currentCategory = product?.category?.toLowerCase();
+    
+    // For input devices, include related categories
+    const relatedCategories = (currentCategory: string) => {
+      switch (currentCategory) {
+        case 'mouse':
+          return ['mouse', 'trackpad'];
+        case 'trackpad':
+          return ['trackpad', 'mouse'];
+        case 'keyboard':
+          return ['keyboard', 'mouse & keyboard'];
+        case 'mouse & keyboard':
+          return ['mouse & keyboard', 'keyboard', 'mouse'];
+        default:
+          return [currentCategory];
+      }
+    };
+    
+    const allowedCategories = relatedCategories(currentCategory);
+    const filteredProducts = others.filter(p => allowedCategories.includes(p.category.toLowerCase()));
+    
+    // Debug: Check what's happening with Magic Trackpad specifically
+    if (product?.model === 'Magic Mouse') {
+      console.log('Current category:', currentCategory);
+      console.log('Allowed categories:', allowedCategories);
+      console.log('Magic Trackpad category:', others.find(p => p.model === 'Magic Trackpad')?.category);
+      console.log('Magic Trackpad category lowercase:', others.find(p => p.model === 'Magic Trackpad')?.category?.toLowerCase());
+      console.log('Is Magic Trackpad included?', allowedCategories.includes(others.find(p => p.model === 'Magic Trackpad')?.category?.toLowerCase() || ''));
+      console.log('Filtered products:', filteredProducts.map(p => `${p.model} (${p.category})`));
+    }
+    
+    return filteredProducts;
+  }, [others, product?.category]);
   
   // Brand/manufacturer-based comparison products: current item in middle, same brand products preferred
   const defaultComparisonProducts = useMemo(() => {
     if (!product) return [];
     
     const currentBrand = product?.manufacturer?.toLowerCase();
-    const sameCategoryProducts = others.filter(p => p.category.toLowerCase() === product?.category?.toLowerCase());
+    // Use availableProducts instead of filtering by exact category - this includes related categories
+    const sameCategoryProducts = availableProducts;
+    
+    // Debug: Check what's happening in defaultComparisonProducts
+    if (product?.model === 'Magic Mouse') {
+      console.log('=== defaultComparisonProducts Debug ===');
+      console.log('Current brand:', currentBrand);
+      console.log('Same category products (Mouse only):', sameCategoryProducts.map(p => `${p.model} (${p.manufacturer})`));
+      console.log('Available products (Mouse + TrackPad):', availableProducts.map(p => `${p.model} (${p.manufacturer})`));
+    }
     
     // Group products by brand/manufacturer
     const productsByBrand = sameCategoryProducts.reduce((acc, product) => {
@@ -265,8 +312,14 @@ export default function ProductDetailPage() {
     comparisonProducts.push(product); // Current product in middle
     if (selectedProducts[1]) comparisonProducts.push(selectedProducts[1]);
     
+    if (product?.model === 'Magic Mouse') {
+      console.log('Selected products:', selectedProducts.map(p => `${p.model} (${p.brand})`));
+      console.log('Final comparisonProducts:', comparisonProducts.map(p => `${p.model} (${p.brand})`));
+      console.log('=== End defaultComparisonProducts Debug ===');
+    }
+    
     return comparisonProducts;
-  }, [product, others]);
+  }, [product, others, availableProducts]);
 
   // Initialize selected products with default ones
   useEffect(() => {
@@ -275,7 +328,7 @@ export default function ProductDetailPage() {
     }
   }, [defaultComparisonProducts]);
 
-  const handleComparisonProductChange = (index: number, modelValue: string) => {
+  const handleComparisonProductChange = (dropdownIndex: number, modelValue: string) => {
     if (modelValue === "") {
       // Reset to default comparison products
       setSelectedComparisonProducts(defaultComparisonProducts);
@@ -284,17 +337,14 @@ export default function ProductDetailPage() {
       if (selectedProduct) {
         const newSelected = [...selectedComparisonProducts];
         
-        // Keep current product in middle (index 1), only allow changing left (index 0) and right (index 2)
-        if (index === 0) {
-          // Left position: replace with selected product
-          newSelected[0] = selectedProduct;
-        } else if (index === 2) {
-          // Right position: replace with selected product
-          newSelected[2] = selectedProduct;
-        }
-        // Index 1 (middle) should not be changeable as it's the current product
+        // dropdownIndex 0 = first comparison product (index 0)
+        // dropdownIndex 1 = second comparison product (index 2) 
+        const targetIndex = dropdownIndex === 0 ? 0 : 2;
         
-        setSelectedComparisonProducts(newSelected);
+        if (targetIndex < newSelected.length) {
+          newSelected[targetIndex] = selectedProduct;
+          setSelectedComparisonProducts(newSelected);
+        }
       }
     }
   };
@@ -302,11 +352,10 @@ export default function ProductDetailPage() {
   // Use selected products for comparison, fallback to default
   const comparisonProducts = selectedComparisonProducts.length > 0 ? selectedComparisonProducts : defaultComparisonProducts;
   
-  // Create the display order: [current product, left dropdown product, right dropdown product]
+  // Create the display order: [current product, comparison products]
   const displayProducts = [
     comparisonProducts[1], // Current product (leftmost)
-    comparisonProducts[0], // Left dropdown product (middle)
-    comparisonProducts[2]  // Right dropdown product (right)
+    ...comparisonProducts.filter((_, index) => index !== 1) // All other products (excluding current at index 1)
   ].filter(Boolean); // Remove any undefined values
   
 
@@ -433,13 +482,7 @@ export default function ProductDetailPage() {
             {/* Product Selection Dropdowns */}
             {availableProducts.length > 0 && (
               <div className="mb-6">
-                <div className={`grid grid-cols-1 gap-4 items-end ${
-                  availableProducts.length >= 2 
-                    ? 'md:grid-cols-3' 
-                    : availableProducts.length === 1 
-                      ? 'md:grid-cols-2' 
-                      : 'md:grid-cols-1'
-                }`}>
+                <div className={`grid grid-cols-1 gap-4 items-end md:grid-cols-${displayProducts.length}`}>
                   {/* Left - Current product (disabled) */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Current Product</label>
@@ -448,31 +491,18 @@ export default function ProductDetailPage() {
                     </div>
                   </div>
                   
-                  {/* Middle dropdown - First comparison product (only show if 2+ products available) */}
-                  {availableProducts.length >= 2 && displayProducts[1] && (
-                    <div>
+                  {/* Dropdowns for comparison products */}
+                  {displayProducts.slice(1).map((_, index) => (
+                    <div key={index}>
                       <div className="h-6 mb-2"></div>
                       <Dropdown
-                        value={displayProducts[1]?.model || ""}
-                        onChange={(value) => handleComparisonProductChange(0, value)}
+                        value={displayProducts[index + 1]?.model || ""}
+                        onChange={(value) => handleComparisonProductChange(index, value)}
                         options={dropdownOptions}
                         placeholder="Select a product..."
                       />
                     </div>
-                  )}
-                  
-                  {/* Right dropdown - Second comparison product (only show if 3+ products available) */}
-                  {availableProducts.length >= 3 && displayProducts[2] && (
-                    <div>
-                      <div className="h-6 mb-2"></div>
-                      <Dropdown
-                        value={displayProducts[2]?.model || ""}
-                        onChange={(value) => handleComparisonProductChange(2, value)}
-                        options={dropdownOptions}
-                        placeholder="Select a product..."
-                      />
-                    </div>
-                  )}
+                  ))}
                 </div>
               </div>
             )}

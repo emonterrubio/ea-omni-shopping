@@ -95,8 +95,8 @@ export function ComparisonProductCard({
         <div className="flex items-center mb-2">
           <span className="bg-gray-200 text-gray-900 text-xs px-2 py-1 rounded-md font-medium">{chip}</span>
         </div>
-        {/* Description */}
-        <div className="text-sm leading-snug font-medium text-gray-900 text-center mt-2">{card_description || description}</div>
+        {/* Description - Fixed height for alignment */}
+        <div className="text-sm leading-snug font-medium text-gray-900 text-center mt-2 h-20 flex items-center justify-center">{card_description || description}</div>
         {/* Divider */}
         <div className="w-full h-px bg-gray-200 my-6"></div>
         {/* Full Specs */}
