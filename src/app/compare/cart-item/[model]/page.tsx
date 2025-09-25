@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { hardwareData } from "@/data/eaProductData";
-import { ComparisonProductCard } from "@/components/product/ProductComparisonCard";
+import { ProductComparisonList } from "@/components/product/ProductComparisonList";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SupportBanner } from "@/components/product/SupportBanner";
-import { ArrowLeft } from "lucide-react";
+import { Breadcrumb } from "@/components/ui/Breadcrumb";
 import Link from "next/link";
 
 function findProductByModel(model: string): any {
@@ -42,99 +42,142 @@ function findProductByModel(model: string): any {
 }
 
 function getProductSpecs(product: any) {
-  switch (product.category) {
-    case "Hardware":
-      return [
-        { label: "Processor", value: product.cpu },
-        { label: "Memory", value: product.memory },
-        { label: "Storage", value: product.storage },
-        { label: "Display", value: product.display },
-        { label: "Graphics", value: product.graphics },
-        { label: "Operating System", value: product.operating_system },
-        { label: "Ports", value: product.ports },
-        { label: "Battery", value: product.battery },
-        { label: "Other", value: product.other },
-      ];
-    case "Monitors":
-      return [
-        { label: "Model", value: product.model },
-        { label: "Resolution", value: product.display_resolution },
-        { label: "Aspect Ratio", value: product.aspect_ratio },
-        { label: "Display Type", value: product.display_type },
-        { label: "Touchscreen", value: product.touchscreen },
-        { label: "Curvature", value: product.curvature },
-        { label: "Pixel Density", value: product.pixel_density },
-        { label: "Refresh Rate", value: product.refresh_rate },
-      ];
-    case "Headphones":
-      return [
-        { label: "Brand", value: product.brand },
-        { label: "Model", value: product.model },
-        { label: "Connectivity", value: product.connectivity },
-        { label: "Controls", value: product.controls },
-        { label: "Battery", value: product.battery },
-        { label: "Headphone Jack", value: product.headphone_jack },
-        { label: "Charging", value: product.charging },
-        { label: "Features", value: product.features },
-      ];
-    case "Mice":
-      return [
-        { label: "Model", value: product.model },
-        { label: "DPI", value: product.dpi },
-        { label: "Connection", value: product.connection },
-        { label: "Battery", value: product.battery },
-        { label: "Features", value: product.features },
-        { label: "Connectivity", value: product.connectivity },
-        { label: "Button Quantity", value: product.button_quantity },
-        { label: "Compatibility", value: product.compatibility },
-      ];
-    case "Keyboards":
-      return [
-        { label: "Brand", value: product.brand },
-        { label: "Model", value: product.model },
-        { label: "Connectivity", value: product.connectivity },
-        { label: "Compatibility", value: product.compatibility },
-        { label: "Number of Keys", value: product.number_keys },
-        { label: "Battery", value: product.battery },
-        { label: "Features", value: product.features },
-      ];
-    case "Webcams":
-      return [
-        { label: "Brand", value: product.brand },
-        { label: "Model", value: product.model },
-        { label: "Video Resolution", value: product.video_resolution },
-        { label: "Display Resolution", value: product.display_resolution },
-        { label: "Image Aspect Ratio", value: product.image_aspect_ratio },
-        { label: "Image Capture Rate", value: product.image_capture_rate },
-        { label: "Supported Image Format", value: product.supported_image_format },
-        { label: "Supported Audio Format", value: product.supported_audio_format },
-        { label: "Supported Video Format", value: product.supported_video_format },
-      ];
-    case "Docking Stations":
-      return [
-        { label: "Brand", value: product.brand },
-        { label: "Model", value: product.model },
-        { label: "Ports", value: product.ports },
-        { label: "Power", value: product.power },
-        { label: "Dimensions", value: product.dimensions },
-        { label: "Weight", value: product.weight },
-      ];
-    case "Backpacks":
-      return [
-        { label: "Brand", value: product.brand },
-        { label: "Model", value: product.model },
-        { label: "Size", value: product.size },
-        { label: "Capacity", value: product.capacity },
-        { label: "Features", value: product.features },
-      ];
-    default:
-      return [];
+  const specs = [];
+  
+  // Common specs for all products
+  specs.push({ label: "Manufacturer", value: product.manufacturer });
+  specs.push({ label: "Model", value: product.model });
+  specs.push({ label: "Category", value: product.category });
+  
+  // Add category-specific specs
+  switch (product.category.toLowerCase()) {
+    case "laptop":
+      // Operating System
+      if ((product as any).os) specs.push({ label: "Operating System", value: (product as any).os });
+      
+      // Screen Size
+      if ((product as any).screen_size) specs.push({ label: "Screen Size", value: (product as any).screen_size });
+      
+      // Portability Rating
+      if ((product as any).portability_rating) specs.push({ label: "Portability Rating", value: (product as any).portability_rating });
+      
+      // Typical Battery Life
+      if ((product as any).battery_life_description) specs.push({ label: "Typical Battery Life", value: (product as any).battery_life_description });
+      
+      // Performance Rating
+      if ((product as any).performance_rating) specs.push({ label: "Performance Rating", value: (product as any).performance_rating });
+      
+      // Weight
+      if ((product as any).weight_lbs) specs.push({ label: "Weight", value: `${(product as any).weight_lbs} lbs` });
+      
+      // CPU
+      if ((product as any).cpu) specs.push({ label: "CPU", value: (product as any).cpu });
+      
+      // GPU
+      if ((product as any).gpu) specs.push({ label: "GPU", value: (product as any).gpu });
+      
+      // Memory
+      if ((product as any).memory) specs.push({ label: "Memory", value: (product as any).memory });
+      
+      // Storage
+      if ((product as any).storage) specs.push({ label: "Storage", value: (product as any).storage });
+      
+      // Display specifications
+      if ((product as any).display) {
+        const display = (product as any).display;
+        if (display.panel) specs.push({ label: "Display Panel", value: display.panel });
+        if (display.resolution) specs.push({ label: "Display Resolution", value: display.resolution });
+        if (display.refresh_rate) specs.push({ label: "Display Refresh Rate", value: display.refresh_rate });
+        if (display.brightness_nits) specs.push({ label: "Display Peak Brightness", value: `${display.brightness_nits} nits` });
+        if (display.hdr) specs.push({ label: "Display HDR", value: display.hdr });
+        if (display.touch) specs.push({ label: "Display Touch", value: display.touch });
+      }
+      
+      // Ports
+      if ((product as any).ports && Array.isArray((product as any).ports)) {
+        specs.push({ label: "Ports", value: (product as any).ports.join(", ") });
+      }
+      
+      // Power
+      if ((product as any).power_watt) specs.push({ label: "Power", value: `${(product as any).power_watt}W` });
+      
+      // Warranty (placeholder - not in current data)
+      specs.push({ label: "Warranty", value: "1 Year Limited" });
+      
+      // Compatible Docking Station
+      if ((product as any).dock) specs.push({ label: "Compatible Docking Station", value: (product as any).dock });
+      
+      break;
+      
+    case "monitor":
+      if ((product as any).screen_size) specs.push({ label: "Screen Size", value: (product as any).screen_size });
+      if ((product as any).resolution) specs.push({ label: "Resolution", value: (product as any).resolution });
+      if ((product as any).aspect_ratio) specs.push({ label: "Aspect Ratio", value: (product as any).aspect_ratio });
+      if ((product as any).panel) specs.push({ label: "Panel Type", value: (product as any).panel });
+      if ((product as any).refresh_rate) specs.push({ label: "Refresh Rate", value: (product as any).refresh_rate });
+      if ((product as any).response_time) specs.push({ label: "Response Time", value: (product as any).response_time });
+      if ((product as any).hdr) specs.push({ label: "HDR Support", value: (product as any).hdr });
+      if ((product as any).color_depth) specs.push({ label: "Color Depth", value: (product as any).color_depth });
+      if ((product as any).features) specs.push({ label: "Features", value: (product as any).features });
+      
+      // Ports
+      if ((product as any).ports && Array.isArray((product as any).ports)) {
+        specs.push({ label: "Ports", value: (product as any).ports.join(", ") });
+      }
+      
+      // Use cases
+      if ((product as any).best_for) specs.push({ label: "Best For", value: (product as any).best_for });
+      if ((product as any).intended_for) specs.push({ label: "Intended For", value: (product as any).intended_for });
+      break;
+      
+    case "docking station":
+      if ((product as any).compatibility) specs.push({ label: "Compatibility", value: (product as any).compatibility });
+      if ((product as any).power_delivery_watt) specs.push({ label: "Power Delivery", value: `${(product as any).power_delivery_watt}W` });
+      if ((product as any).max_monitors) specs.push({ label: "Max Monitors", value: (product as any).max_monitors });
+      
+      // Ports
+      if ((product as any).ports && Array.isArray((product as any).ports)) {
+        specs.push({ label: "Ports", value: (product as any).ports.join(", ") });
+      }
+      
+      if ((product as any).intended_for) specs.push({ label: "Intended For", value: (product as any).intended_for });
+      break;
+      
+    case "headset":
+      if ((product as any).form_factor) specs.push({ label: "Form Factor", value: (product as any).form_factor });
+      if ((product as any).connectivity) specs.push({ label: "Connectivity", value: (product as any).connectivity });
+      if ((product as any).microphone) specs.push({ label: "Microphone", value: (product as any).microphone });
+      if ((product as any).noise_cancellation) specs.push({ label: "Noise Cancellation", value: (product as any).noise_cancellation });
+      if ((product as any).weight_g) specs.push({ label: "Weight", value: `${(product as any).weight_g}g` });
+      if ((product as any).battery_life) specs.push({ label: "Battery Life", value: (product as any).battery_life });
+      if ((product as any).intended_for) specs.push({ label: "Intended For", value: (product as any).intended_for });
+      break;
+      
+    case "webcam":
+      if ((product as any).resolution) specs.push({ label: "Resolution", value: (product as any).resolution });
+      if ((product as any).windows) specs.push({ label: "Windows", value: (product as any).windows });
+      if ((product as any).microphone) specs.push({ label: "Microphone", value: (product as any).microphone });
+      if ((product as any).connectivity) specs.push({ label: "Connectivity", value: (product as any).connectivity });
+      break;
+      
+    case "mouse":
+    case "keyboard":
+    case "mouse & keyboard":
+    case "trackpad":
+      if ((product as any).connectivity) specs.push({ label: "Connectivity", value: (product as any).connectivity });
+      if ((product as any).keyboard_size_layout) specs.push({ label: "Keyboard Layout", value: (product as any).keyboard_size_layout });
+      if ((product as any).mouse_buttons) specs.push({ label: "Mouse Buttons", value: (product as any).mouse_buttons });
+      if ((product as any).power) specs.push({ label: "Power", value: (product as any).power });
+      if ((product as any).intended_for) specs.push({ label: "Intended For", value: (product as any).intended_for });
+      if ((product as any).not_suitable_for) specs.push({ label: "Not Suitable For", value: (product as any).not_suitable_for });
+      break;
   }
+  
+  return specs;
 }
 
 export default function CartItemComparePage() {
   const params = useParams();
-  const router = useRouter();
   
   const modelParam = params.model;
   const model = Array.isArray(modelParam)
@@ -178,13 +221,6 @@ export default function CartItemComparePage() {
     return comparisonProducts;
   }, [selectedProduct]);
 
-  const handleBackClick = () => {
-    if (typeof window !== 'undefined' && window.history.length > 1) {
-      router.back();
-    } else {
-      router.push('/cart');
-    }
-  };
 
   if (!selectedProduct) {
     return (
@@ -199,38 +235,42 @@ export default function CartItemComparePage() {
 
   return (
     <PageLayout>
-        <button
-          onClick={handleBackClick}
-          className="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium transition-colors mb-4"
-          aria-label="Go back"
-        >
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          Back
-        </button>
+        {/* Breadcrumb Navigation */}
+        <Breadcrumb
+          items={[
+            { label: "Shopping Cart", href: "/cart" },
+            { label: `Compare ${selectedProduct.model}`, isActive: true }
+          ]}
+          className="mb-8"
+        />
         
         <div className="text-left">
           <h1 className="text-5xl font-medium text-gray-900 mt-6 mb-4">Compare with similar items</h1>
           <h4 className="font-base text-gray-600 mb-8">Compare {selectedProduct.brand} {selectedProduct.model} with similar products to make the best choice.</h4>
         </div>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {allProducts.map((product) => (
-            <div key={product.model} className="flex flex-col items-center">
-              <ComparisonProductCard
-                image={product.image}
-                brand={product.brand}
-                model={product.model}
-                description={product.description || product.card_description || ""}
-                card_description={product.card_description}
-                features={product.features || ""}
-                subFeatures={product.features ? product.features.split(',').map((f: string) => f.trim()) : []}
-                price_usd={product.price}
-                chip={product.cpu || product.category || ""}
-                specs={getProductSpecs(product)}
-              />
-            </div>
-          ))}
-        </div>
+        <ProductComparisonList 
+          products={allProducts.map(p => ({
+            ...p, // Spread all product properties
+            brand: p.manufacturer,
+            model: p.model,
+            display_name: (p as any).display_name,
+            category: p.category,
+            cpu: (p as any).cpu,
+            description: (p as any).description || `${p.manufacturer} ${p.model}`,
+            card_description: (p as any).intended_for ? 
+              `${(p as any).description || `${p.manufacturer} ${p.model}`} Intended for ${(p as any).intended_for}` : 
+              (p as any).description || `${p.manufacturer} ${p.model}`,
+            price_usd: (p as any).price_usd || (p as any).ea_estimated_price_usd,
+            price_cad: (p as any).price_cad,
+            price_eur: (p as any).price_eur,
+            image: p.image || `/images/${p.manufacturer.toLowerCase()}_${p.model.toLowerCase().replace(/\s+/g, "_")}.png`,
+            features: (p as any).description || `${p.manufacturer} ${p.model}`,
+            recommended: true
+          }))} 
+          getProductSpecs={(product: any) => getProductSpecs(product)} 
+          noBackground={true} 
+        />
         <SupportBanner />
     </PageLayout>
   );

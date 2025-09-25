@@ -55,7 +55,7 @@ export default function CompareClient() {
         </Link>
         <div className="text-left">
           <h1 className="text-5xl font-medium text-gray-900 mt-6 mb-4">Compare with similar items</h1>
-          <h4 className="font-base text-gray-600 mb-8">Compare processor speed, battery life, and portability to find your ideal laptop.</h4>
+          <h4 className="text-base text-gray-600 mb-6">Compare processor speed, battery life, and portability to find your ideal laptop.</h4>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
