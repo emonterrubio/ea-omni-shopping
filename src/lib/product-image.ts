@@ -6,12 +6,9 @@ function isUsableImageSrc(src: string | undefined | null): src is string {
   if (!src || typeof src !== "string") return false;
   const trimmed = src.trim();
   if (!trimmed || trimmed === "undefined" || trimmed === "null") return false;
-  return (
-    trimmed.startsWith("/") ||
-    trimmed.startsWith("http://") ||
-    trimmed.startsWith("https://") ||
-    trimmed.startsWith("data:")
-  );
+  // Keep http(s) out: next/image throws in dev without images.remotePatterns,
+  // and cart/order UIs should prefer catalog/local placeholders instead.
+  return trimmed.startsWith("/") || trimmed.startsWith("data:");
 }
 
 function lookupCatalogImage(model?: string): string | null {

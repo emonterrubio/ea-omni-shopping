@@ -2,6 +2,8 @@
 
 import React, { createContext, useState, useEffect } from "react";
 import { useToast } from "./ToastContext";
+import { findProductByModel } from "@/data/products";
+import { resolveProductImage } from "@/lib/product-image";
 
 export interface CartItem {
   model: string;
@@ -13,6 +15,31 @@ export interface CartItem {
   description?: string;
   card_description?: string;
   category?: string;
+}
+
+function normalizeCartItem(item: CartItem): CartItem {
+  const catalog = findProductByModel(item.model);
+  const rawPrice = item.price ?? catalog?.price;
+  let price: number | string = 0;
+  if (typeof rawPrice === "number" && Number.isFinite(rawPrice)) {
+    price = rawPrice;
+  } else if (typeof rawPrice === "string" && rawPrice.trim()) {
+    const parsed = Number(rawPrice.replace(/,/g, ""));
+    price = Number.isFinite(parsed) ? parsed : catalog?.price ?? 0;
+  } else if (catalog?.price != null) {
+    price = catalog.price;
+  }
+
+  return {
+    ...item,
+    brand: item.brand || catalog?.brand || "",
+    image: resolveProductImage(item.model, item.image || catalog?.image),
+    price,
+    quantity: item.quantity > 0 ? item.quantity : 1,
+    description: item.description ?? catalog?.description,
+    card_description: item.card_description ?? catalog?.card_description,
+    category: item.category ?? catalog?.category,
+  };
 }
 
 interface CartContextType {
@@ -44,7 +71,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       try {
         const parsedCart = JSON.parse(savedCart);
         if (Array.isArray(parsedCart)) {
-          setCartItems(parsedCart);
+          setCartItems(parsedCart.map((item: CartItem) => normalizeCartItem(item)));
         }
       } catch (error) {
         console.error("Error loading cart from localStorage:", error);
@@ -59,25 +86,26 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [cartItems, hydrated]);
 
   const addToCart = (item: CartItem) => {
-    const existing = cartItems.find((ci) => ci.model === item.model);
+    const normalized = normalizeCartItem(item);
+    const existing = cartItems.find((ci) => ci.model === normalized.model);
     const isNewItem = !existing;
 
     setCartItems((prev) => {
-      const current = prev.find((ci) => ci.model === item.model);
+      const current = prev.find((ci) => ci.model === normalized.model);
       if (current) {
         return prev.map((ci) =>
-          ci.model === item.model
-            ? { ...ci, quantity: ci.quantity + (item.quantity || 1) }
+          ci.model === normalized.model
+            ? { ...ci, quantity: ci.quantity + (normalized.quantity || 1) }
             : ci,
         );
       }
-      return [...prev, { ...item, quantity: item.quantity || 1 }];
+      return [...prev, normalized];
     });
 
     if (isNewItem) {
-      addToast(`${item.model} added to cart`, "success");
+      addToast(`${normalized.model} added to cart`, "success");
     } else {
-      addToast(`${item.model} quantity updated in cart`, "success");
+      addToast(`${normalized.model} quantity updated in cart`, "success");
     }
   };
 

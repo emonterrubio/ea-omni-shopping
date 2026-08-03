@@ -53,11 +53,16 @@ export function SummaryProductCard({ item, onQuantityChange, onRemove }: Summary
           </button>
           {/* Price */}
           <div className="font-semibold text-xl text-gray-900 mt-2 sm:mt-0 sm:ml-auto w-full sm:w-auto text-right">
-            {
-              typeof item.price === 'string'
-                ? `$${Number((item.price as string).replace(/,/g, '')).toLocaleString()}`
-                : `$${item.price.toLocaleString()}`
-            }
+            {(() => {
+              if (typeof item.price === 'string') {
+                const parsed = Number(item.price.replace(/,/g, ''));
+                return `$${(Number.isFinite(parsed) ? parsed : 0).toLocaleString()}`;
+              }
+              if (typeof item.price === 'number' && Number.isFinite(item.price)) {
+                return `$${item.price.toLocaleString()}`;
+              }
+              return '$0';
+            })()}
           </div>
         </div>
       </div>

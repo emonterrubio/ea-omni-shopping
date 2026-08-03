@@ -47,11 +47,18 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
     onQuantityChange(item.model, newQuantity);
   };
 
-  const formatPrice = (price: number | string) => {
-    if (typeof price === 'string') {
-      return `$${Number(price.replace(/,/g, '')).toLocaleString()}`;
+  const formatPrice = (price: number | string | null | undefined) => {
+    if (price == null || price === '') {
+      return '$0';
     }
-    return `$${price.toLocaleString()}`;
+    if (typeof price === 'string') {
+      const parsed = Number(price.replace(/,/g, ''));
+      return `$${(Number.isFinite(parsed) ? parsed : 0).toLocaleString()}`;
+    }
+    if (typeof price === 'number' && Number.isFinite(price)) {
+      return `$${price.toLocaleString()}`;
+    }
+    return '$0';
   };
 
 

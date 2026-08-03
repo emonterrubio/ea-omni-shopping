@@ -10,11 +10,16 @@ interface OrderProductRowProps {
 }
 
 export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
-  const formatPrice = (price: number | string) => {
+  const formatPrice = (price: number | string | null | undefined) => {
+    if (price == null || price === '') return '$0';
     if (typeof price === 'string') {
-      return `$${Number(price.replace(/,/g, "")).toLocaleString()}`;
+      const parsed = Number(price.replace(/,/g, ''));
+      return `$${(Number.isFinite(parsed) ? parsed : 0).toLocaleString()}`;
     }
-    return `$${price.toLocaleString()}`;
+    if (typeof price === 'number' && Number.isFinite(price)) {
+      return `$${price.toLocaleString()}`;
+    }
+    return '$0';
   };
 
   return (

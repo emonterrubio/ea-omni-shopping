@@ -13,7 +13,13 @@ interface CheckoutCartItemProps {
 }
 
 export function CheckoutCartItem({ item }: CheckoutCartItemProps) {
-  const price = typeof item.price === 'string' ? Number(item.price.replace(/,/g, '')) : item.price;
+  let price = 0;
+  if (typeof item.price === 'string') {
+    const parsed = Number(item.price.replace(/,/g, ''));
+    price = Number.isFinite(parsed) ? parsed : 0;
+  } else if (typeof item.price === 'number' && Number.isFinite(item.price)) {
+    price = item.price;
+  }
 
   return (
     <div className="flex items-start gap-2 py-3 border-b border-gray-200">
