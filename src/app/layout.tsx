@@ -3,6 +3,7 @@ import "./styles/globals.css";
 import { CartProvider } from "../components/CartContext";
 import { ToastProvider } from "../components/ToastContext";
 import { ToastContainer } from "../components/ui/ToastContainer";
+import { NowAssistWidget } from "../components/nowassist/NowAssistWidget";
 
 export const metadata: Metadata = {
   title: "Omni Shopping - IT Equipment Store",
@@ -29,6 +30,7 @@ export default function RootLayout({
           <CartProvider>
             {children}
             <ToastContainer />
+            <NowAssistWidget />
           </CartProvider>
         </ToastProvider>
       </body>

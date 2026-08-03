@@ -21,6 +21,7 @@ Fill in `.env.local`:
 | Variable | Purpose |
 |----------|---------|
 | `OPENAI_API_KEY` | Powers `/api/search-intent` |
+| `ANTHROPIC_API_KEY` | Powers NowAssist chat (`/api/nowassist`) |
 | `SITE_ACCESS_PASSWORD` | Password required to access the app |
 | `AUTH_SECRET` | Signs the HttpOnly session cookie (use a long random string) |
 
@@ -45,6 +46,7 @@ Open [http://localhost:3000](http://localhost:3000). Unauthenticated visits redi
 - **Auth:** Middleware + signed HttpOnly cookie (`SITE_ACCESS_PASSWORD` / `AUTH_SECRET`). Password is never shipped to the client bundle.
 - **Catalog:** Static data under `src/data/`; shared helpers in `src/data/products.ts`.
 - **Search:** Local scoring via `/api/ai-product-search`; OpenAI intent parsing via `/api/search-intent` (rate-limited, Zod-validated).
+- **NowAssist:** Floating chat (bottom-right) powered by Claude. Try: “I need a laptop for video editing”.
 - **UI:** Custom Tailwind components (not ShadCN).
 
 ## Deployment (Vercel)

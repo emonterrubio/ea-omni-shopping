@@ -28,6 +28,7 @@ In the Vercel project → Settings → Environment Variables, set:
 | `SITE_ACCESS_PASSWORD` | Shared access password |
 | `AUTH_SECRET` | Long random secret for signing session cookies |
 | `OPENAI_API_KEY` | Required for AI search intent |
+| `ANTHROPIC_API_KEY` | Required for NowAssist chat |
 
 Never commit real secrets. Do not put the password in source or docs.
 
