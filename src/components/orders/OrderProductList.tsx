@@ -1,8 +1,8 @@
 import React from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { OrderProductRow } from './OrderProductRow';
 import { OrderItem } from './types';
+import { SafeProductImage } from '@/components/ui/SafeProductImage';
 
 interface OrderProductListProps {
   items: OrderItem[];
@@ -61,7 +61,13 @@ export function OrderProductList({ items }: OrderProductListProps) {
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-4">
                     <div className="w-16 h-12 relative flex-shrink-0">
-                      <Image src={item.image} alt={item.model} fill className="object-contain rounded" />
+                      <SafeProductImage
+                        src={item.image}
+                        model={item.model}
+                        alt={item.model}
+                        fill
+                        className="object-contain rounded"
+                      />
                     </div>
                     <div>
                       <Link 

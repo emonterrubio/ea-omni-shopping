@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { CheckCircle, Clock, Truck, PackageSearch } from "lucide-react";
 import { getOrders } from "@/services/orders";
 import { Order } from "@/types/orders";
+import { SafeProductImage } from "@/components/ui/SafeProductImage";
 
 interface RecentOrdersProps {
   maxOrders?: number;
@@ -148,8 +148,9 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                 <div className="flex items-center space-x-3">
                   {/* Product Image */}
                   <div className="flex-shrink-0">
-                    <Image
+                    <SafeProductImage
                       src={firstItem.image}
+                      model={firstItem.model}
                       alt={firstItem.model}
                       width={60}
                       height={40}

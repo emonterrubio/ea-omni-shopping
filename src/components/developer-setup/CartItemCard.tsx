@@ -1,7 +1,7 @@
 import React from 'react';
-import Image from 'next/image';
 import { Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { SafeProductImage } from '@/components/ui/SafeProductImage';
 
 interface CartItemCardProps {
   item: {
@@ -60,10 +60,11 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
     <div className="flex flex-col sm:flex-row items-center sm:gap-4 py-6 px-2 border-b border-gray-200 last:border-b-0">
       {/* Product Image */}
       <div className="w-36 h-36 sm:w-24 sm:h-24 mb-2 sm:mb-0 flex-shrink-0 relative mx-auto sm:mx-0">
-        <Image 
-          src={item.image} 
-          alt={item.model} 
-          fill 
+        <SafeProductImage
+          src={item.image}
+          model={item.model}
+          alt={item.model}
+          fill
           className="object-contain rounded-lg"
         />
       </div>

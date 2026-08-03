@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { ProductCardProps } from "@/types/ProductCardProps";
 import { CartContext, CartItem } from "@/components/CartContext";
 import Link from "next/link";
-
-const PLACEHOLDER_IMAGE = "https://placehold.co/128x128?text=No+Image";
+import {
+  PRODUCT_IMAGE_PLACEHOLDER,
+  resolveProductImage,
+} from "@/lib/product-image";
 
 function inferCategory(model: string, category: string): string {
   if (category) return category;
@@ -25,12 +27,19 @@ function inferCategory(model: string, category: string): string {
 export function ProductCard({ product, fromCatalog = false }: { product: ProductCardProps, fromCatalog?: boolean }) {
   const category = inferCategory(product.model, product.category);
   const { addToCart } = useContext(CartContext);
+  const [imageSrc, setImageSrc] = useState(() =>
+    resolveProductImage(product.model, product.image),
+  );
+
+  useEffect(() => {
+    setImageSrc(resolveProductImage(product.model, product.image));
+  }, [product.model, product.image]);
 
   const handleAddToCart = () => {
     const cartItem: CartItem = {
       model: product.model,
       brand: product.brand,
-      image: product.image,
+      image: resolveProductImage(product.model, product.image),
       price: product.price,
       quantity: 1,
       recommended: product.recommended,
@@ -43,12 +52,16 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
 
   return (
     <div className="flex flex-col max-w-md w-full mx-auto h-full bg-white rounded-lg shadow-sm hover:shadow-lg transition-shadow">
-      {/* Image */}
       <div className="w-full bg-gray-200 relative mb-3 rounded-t-lg">
         <img
-          src={product.image || PLACEHOLDER_IMAGE}
+          src={imageSrc}
           alt={product.model}
           className="w-full h-36 object-contain mt-8 -mb-3"
+          onError={() => {
+            if (imageSrc !== PRODUCT_IMAGE_PLACEHOLDER) {
+              setImageSrc(PRODUCT_IMAGE_PLACEHOLDER);
+            }
+          }}
         />
       </div>
       <div className="p-5 flex flex-col flex-1 w-full h-full">

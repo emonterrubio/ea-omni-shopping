@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import { SafeProductImage } from '@/components/ui/SafeProductImage';
 
 interface SummaryProductCardProps {
   item: {
@@ -18,9 +18,14 @@ interface SummaryProductCardProps {
 export function SummaryProductCard({ item, onQuantityChange, onRemove }: SummaryProductCardProps) {
   return (
     <div className="flex flex-col sm:flex-row items-center bg-white rounded-xl border border-gray-200 px-4 py-4 sm:px-6 sm:py-6 gap-4 sm:gap-6">
-      {/* Image */}
       <div className="w-36 h-24 flex-shrink-0 relative flex items-center justify-center">
-        <Image src={item.image} alt={item.model} fill className="object-contain" />
+        <SafeProductImage
+          src={item.image}
+          model={item.model}
+          alt={item.model}
+          fill
+          className="object-contain"
+        />
       </div>
       {/* Info and actions */}
       <div className="flex-1 w-full">

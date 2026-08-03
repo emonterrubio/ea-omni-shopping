@@ -1,5 +1,5 @@
 import React from 'react';
-import Image from 'next/image';
+import { SafeProductImage } from '@/components/ui/SafeProductImage';
 
 interface CheckoutCartItemProps {
   item: {
@@ -17,9 +17,14 @@ export function CheckoutCartItem({ item }: CheckoutCartItemProps) {
 
   return (
     <div className="flex items-start gap-2 py-3 border-b border-gray-200">
-      {/* Image */}
       <div className="w-16 h-12 flex-shrink-0 relative">
-        <Image src={item.image} alt={item.model} fill className="object-contain" />
+        <SafeProductImage
+          src={item.image}
+          model={item.model}
+          alt={item.model}
+          fill
+          className="object-contain"
+        />
       </div>
       {/* Product Details */}
       <div className="flex-1">
