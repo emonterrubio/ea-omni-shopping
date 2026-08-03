@@ -44,11 +44,13 @@ export function ProductInfoPanel({
       <div className="text-base text-gray-800 leading-snug">{description}</div>
       <div>
         {/* Availability */}
-        <div className={available ? "font-base text-green-600 font-medium " : "text-red-600 font-medium"}>
-          {available ? 'Available Now' : 'Out of Stock'}
+        <div className={available ? "font-base text-green-600 font-medium" : "text-red-600 font-medium"}>
+          {available ? "Available Now" : "Out of Stock"}
         </div>
         {/* Delivery time */}
-        <div className="text-gray-600 text-base">Delivery time: <span className="font-semibold">Within 5 days</span></div>
+        <div className="text-gray-600 text-base">
+          Delivery time: <span className="font-semibold">{deliveryTime || "Within 5 days"}</span>
+        </div>
       </div>
       {/* Quantity */}
       <div className="flex flex-col gap-1">
@@ -77,7 +79,7 @@ export function ProductInfoPanel({
       </div>
       {/* disclaimer */}
       <div className="text-gray-600 text-xs mt-2">
-        <p>*Laptops and Desktops are limited to 1 per order. Specifications, pricing, and availability are subject to change without notice. Product images are for illustrative purposes only and may differ from the actual item. All warranties, if offered, are provided solely by the manufacturer; please refer to the manufacturer’s documentation for full warranty terms. We make no guarantees regarding compatibility with third-party hardware or software. Taxes, shipping, handling, and other fees (if applicable) are calculated at checkout and are not included in the displayed price. By completing your purchase, you acknowledge that you have read and agree to these terms.</p>
+        <p>When ordering for multiple team members, please submit a separate order for each workstation. Please note that stock levels may change without notice, and product images are for illustration purposes only—actual items may vary in appearance. Warranty coverage varies by product, so be sure to review the specific warranty terms listed below. The price shown does not include shipping or applicable fees, which will be calculated during checkout.</p>
       </div>
     </div>
   );

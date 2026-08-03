@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useContext } from "react";
-import { CheckCircle, AlertCircle } from "lucide-react";
 import { ProductCardProps } from "@/types/ProductCardProps";
 import { CartContext, CartItem } from "@/components/CartContext";
 import Link from "next/link";
@@ -9,10 +8,8 @@ import Link from "next/link";
 const PLACEHOLDER_IMAGE = "https://placehold.co/128x128?text=No+Image";
 
 function inferCategory(model: string, category: string): string {
-  // First try to use the provided category
   if (category) return category;
-  
-  // Fallback to model-based inference
+
   const name = model.toLowerCase();
   if (name.includes("macbook") || name.includes("latitude") || name.includes("xps") || name.includes("surface")) return "Laptops";
   if (name.includes("tower") || name.includes("precision")) return "Desktops";
@@ -27,15 +24,9 @@ function inferCategory(model: string, category: string): string {
 
 export function ProductCard({ product, fromCatalog = false }: { product: ProductCardProps, fromCatalog?: boolean }) {
   const category = inferCategory(product.model, product.category);
-  // Eligibility is now based on the recommended property
-  const isEligible = product.recommended === true;
   const { addToCart } = useContext(CartContext);
 
-  console.log("ProductCard brand:", product.brand);
-  console.log("SERVER/CLIENT", typeof window === "undefined" ? "server" : "client", product.model);
-
   const handleAddToCart = () => {
-    console.log("[Cart Debug] Adding to cart:", product.model, "Price:", product.price);
     const cartItem: CartItem = {
       model: product.model,
       brand: product.brand,
@@ -99,7 +90,7 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
         </div> */}
         {/* Action buttons */}
         <div className="flex gap-2">
-        <Link
+          <Link
             href={fromCatalog ? `/product/${encodeURIComponent(product.model)}?from=catalog` : `/product/${encodeURIComponent(product.model)}`}
             className="flex-1 bg-blue-50 text-blue-600 px-2 py-2 hover:bg-blue-100 transition-colors rounded-md font-medium text-center"
           >

@@ -1,9 +1,8 @@
 "use client";
 
-import React, { createContext, useState, useContext, useEffect, useRef } from "react";
+import React, { createContext, useState, useEffect } from "react";
 import { useToast } from "./ToastContext";
 
-// Define a type for cart items
 export interface CartItem {
   model: string;
   brand: string;
@@ -14,7 +13,6 @@ export interface CartItem {
   description?: string;
   card_description?: string;
   category?: string;
-  // Add other fields as needed
 }
 
 interface CartContextType {
@@ -35,54 +33,47 @@ export const CartContext = createContext<CartContextType>({
   clearCart: () => {},
 });
 
-// Custom hook to safely access toast context
-const useSafeToast = () => {
-  try {
-    return useToast();
-  } catch (error) {
-    return { addToast: () => {} };
-  }
-};
-
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const { addToast } = useSafeToast();
+  const [hydrated, setHydrated] = useState(false);
+  const { addToast } = useToast();
 
-  // Load cart from localStorage on mount
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
+    const savedCart = localStorage.getItem("cart");
     if (savedCart) {
       try {
         const parsedCart = JSON.parse(savedCart);
-        setCartItems(parsedCart);
+        if (Array.isArray(parsedCart)) {
+          setCartItems(parsedCart);
+        }
       } catch (error) {
-        console.error('Error loading cart from localStorage:', error);
+        console.error("Error loading cart from localStorage:", error);
       }
     }
+    setHydrated(true);
   }, []);
 
-  // Save cart to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('cart', JSON.stringify(cartItems));
-  }, [cartItems]);
+    if (!hydrated) return;
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+  }, [cartItems, hydrated]);
 
   const addToCart = (item: CartItem) => {
-    // Check if item already exists before updating state
-    const existing = cartItems.find(ci => ci.model === item.model);
+    const existing = cartItems.find((ci) => ci.model === item.model);
     const isNewItem = !existing;
-    
-    setCartItems(prev => {
-      if (existing) {
-        // Item already exists, update quantity
-        return prev.map(ci =>
-          ci.model === item.model ? { ...ci, quantity: ci.quantity + (item.quantity || 1) } : ci
+
+    setCartItems((prev) => {
+      const current = prev.find((ci) => ci.model === item.model);
+      if (current) {
+        return prev.map((ci) =>
+          ci.model === item.model
+            ? { ...ci, quantity: ci.quantity + (item.quantity || 1) }
+            : ci,
         );
       }
-      // New item added
       return [...prev, { ...item, quantity: item.quantity || 1 }];
     });
 
-    // Show toast after state update
     if (isNewItem) {
       addToast(`${item.model} added to cart`, "success");
     } else {
@@ -91,29 +82,31 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const removeFromCart = (model: string) => {
-    setCartItems(prev => prev.filter(ci => ci.model !== model));
+    setCartItems((prev) => prev.filter((ci) => ci.model !== model));
     addToast(`${model} removed from cart`, "info");
   };
 
   const updateQuantity = (model: string, quantity: number) => {
-    setCartItems(prev => prev.map(ci =>
-      ci.model === model ? { ...ci, quantity } : ci
-    ));
+    setCartItems((prev) =>
+      prev.map((ci) => (ci.model === model ? { ...ci, quantity } : ci)),
+    );
     addToast(`${model} quantity updated`, "success");
   };
 
   const clearCart = () => {
     setCartItems([]);
-    localStorage.removeItem('cart');
+    localStorage.removeItem("cart");
   };
 
   const cartCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, removeFromCart, updateQuantity, cartCount, clearCart }}>
+    <CartContext.Provider
+      value={{ cartItems, addToCart, removeFromCart, updateQuantity, cartCount, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );
 };
 
-export type { CartContextType }; 
+export type { CartContextType };

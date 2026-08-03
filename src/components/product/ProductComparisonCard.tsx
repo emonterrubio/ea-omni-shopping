@@ -34,7 +34,6 @@ export function ComparisonProductCard({
   const { addToCart } = useContext(CartContext);
 
   const handleAddToCart = () => {
-    console.log("[Comparison Debug] Adding to cart:", model, "Price:", price, "Type:", typeof price);
     const cartItem: CartItem = {
       model,
       brand,

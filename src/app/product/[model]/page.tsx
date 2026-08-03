@@ -3,14 +3,7 @@
 import React, { useContext, useState, useRef } from "react";
 import Link from "next/link";
 import { useParams, useSearchParams, useRouter } from "next/navigation";
-import { hardwareData } from "@/data/hardwareData";
-import { monitorData } from "@/data/monitorData";
-import { headphoneData } from "@/data/headphoneData";
-import { mouseData } from "@/data/mouseData";
-import { keyboardData } from "@/data/keyboardData";
-import { webcamData } from "@/data/webcamData";
-import { dockStationData } from "@/data/dockStationData";
-import { backpackData } from "@/data/backpackData";
+import { findProductByModel, getAllProducts, type CatalogProduct } from "@/data/products";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { CheckCircle, AlertCircle, ArrowLeft, Box, Undo2 } from "lucide-react";
 import { SearchBar } from "@/components/search/SearchBar";
@@ -25,148 +18,7 @@ import { SupportBanner } from '@/components/product/SupportBanner';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-function findProductByModel(model: string): any {
-  let product = hardwareData.find(p => p.model === model);
-  if (product) return { ...product, category: product.category };
-
-  const monitor = monitorData.find(p => p.model === model);
-  if (monitor) {
-    return {
-      ...monitor,
-      category: "Monitors",
-      card_description: monitor.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: monitor.display_resolution,
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: "",
-      other: `Curvature: ${monitor.curvature}, Touchscreen: ${monitor.touchscreen}, Pixel Density: ${monitor.pixel_density}, Refresh Rate: ${monitor.refresh_rate}`,
-      features: `${monitor.display_resolution}, ${monitor.aspect_ratio}, ${monitor.display_type}`,
-    };
-  }
-
-  const headphone = headphoneData.find(p => p.model === model);
-  if (headphone) {
-    return {
-      ...headphone,
-      category: "Headphones",
-      card_description: headphone.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: headphone.headphone_jack,
-      battery: headphone.battery,
-      other: headphone.connectivity,
-      features: headphone.features,
-    };
-  }
-
-  const mouse = mouseData.find(p => p.model === model);
-  if (mouse) {
-    return {
-      ...mouse,
-      category: "Mice",
-      card_description: mouse.description, // Use description as card_description for now
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: "",
-      other: "",
-      features: "",
-    };
-  }
-
-  const keyboard = keyboardData.find(p => p.model === model);
-  if (keyboard) {
-    return {
-      ...keyboard,
-      category: "Keyboards",
-      card_description: keyboard.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: keyboard.battery,
-      other: keyboard.compatibility,
-      features: `${keyboard.connectivity}, ${keyboard.number_keys} keys`,
-    };
-  }
-
-  const webcam = webcamData.find(p => p.model === model);
-  if (webcam) {
-    return {
-      ...webcam,
-      category: "Webcams",
-      card_description: webcam.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: webcam.display_resolution,
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: "",
-      other: `Video Resolution: ${webcam.video_resolution}, Image Aspect Ratio: ${webcam.image_aspect_ratio}, Image Capture Rate: ${webcam.image_capture_rate}`,
-      features: `${webcam.video_resolution}, ${webcam.display_resolution}, ${webcam.image_capture_rate}`,
-    };
-  }
-
-  const dockStation = dockStationData.find(p => p.model === model);
-  if (dockStation) {
-    return {
-      ...dockStation,
-      category: "Docking Stations",
-      card_description: dockStation.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: dockStation.ports,
-      battery: "",
-      other: `Dimensions: ${dockStation.dimensions}, Weight: ${dockStation.weight}`,
-      features: `${dockStation.ports}, ${dockStation.power}`,
-    };
-  }
-
-  const backpack = backpackData.find(p => p.model === model);
-  if (backpack) {
-    return {
-      ...backpack,
-      category: "Backpacks",
-      card_description: backpack.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: "",
-      other: `Size: ${backpack.size}, Capacity: ${backpack.capacity}`,
-      features: backpack.features,
-    };
-  }
-
-  // Add similar logic for other categories...
-  return null;
-}
-
-function getProductSpecs(product: any) {
+function getProductSpecs(product: CatalogProduct) {
   switch (product.category) {
     case "Laptops":
     case "Desktops":
@@ -274,32 +126,22 @@ export default function ProductDetailPage() {
   const specs = product ? getProductSpecs(product) : [];
 
   // --- Comparison logic ---
-  // Aggregate all products
-  const allProducts = [
-    ...hardwareData,
-    ...monitorData.map(p => ({ ...p, category: "Monitors" })),
-    ...headphoneData.map(p => ({ ...p, category: "Headphones" })),
-    ...mouseData.map(p => ({ ...p, category: "Mice" })),
-    ...keyboardData.map(p => ({ ...p, category: "Keyboards" })),
-    ...webcamData.map(p => ({ ...p, category: "Webcams" })),
-    ...dockStationData.map(p => ({ ...p, category: "Docking Stations" })),
-    ...backpackData.map(p => ({ ...p, category: "Backpacks" })),
-  ];
+  const allProducts = getAllProducts();
   // Exclude current product
   const others = allProducts.filter(p => p.model !== product?.model);
   
   // --- Dropdown comparison state ---
-  const [selectedComparisonProducts, setSelectedComparisonProducts] = useState<any[]>([]);
+  const [selectedComparisonProducts, setSelectedComparisonProducts] = useState<CatalogProduct[]>([]);
   
   // Initialize with default comparison products
   React.useEffect(() => {
     if (product && selectedComparisonProducts.length === 0) {
       // 1. Find all same-brand, same-category products (excluding current)
-      let sameBrand = others.filter(p => p.category === product.category && p.brand === product.brand);
+      const sameBrand = others.filter(p => p.category === product.category && p.brand === product.brand);
       // 2. Find all same-category, other-brand products
-      let otherBrand = others.filter(p => p.category === product.category && p.brand !== product.brand);
+      const otherBrand = others.filter(p => p.category === product.category && p.brand !== product.brand);
       // Compose final comparisonProducts
-      let defaultComparisonProducts = [...sameBrand, ...otherBrand].slice(0, 3);
+      const defaultComparisonProducts = [...sameBrand, ...otherBrand].slice(0, 3);
       setSelectedComparisonProducts(defaultComparisonProducts);
     }
   }, [product, others, selectedComparisonProducts.length]);
@@ -369,7 +211,7 @@ export default function ProductDetailPage() {
         />
         <div className="flex flex-col md:flex-row space-x-0 gap-8">
           <div className="flex-1">
-            <ProductImageGallery mainImage={product.image} thumbnails={[]} />
+            <ProductImageGallery mainImage={product.image} thumbnails={[]} alt={product.model} />
           </div>
           <div className="flex-1">
             <ProductInfoPanel

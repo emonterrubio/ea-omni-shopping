@@ -127,7 +127,7 @@ export function HeroBanner({ products }: HeroBannerProps) {
         description: "Explore our wide range of IT equipment and accessories.",
         buttonText: "Browse Catalog",
         buttonLink: "/catalog",
-        imageSrc: "/images/placeholder.png",
+        imageSrc: "/images/macbook_pro_16.png",
         imageAlt: "Featured Products"
       };
 

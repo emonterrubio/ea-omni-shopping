@@ -14,10 +14,6 @@ interface FilterState {
 }
 
 export default function FindHardwarePage() {
-  // Debug: Check if hardwareData is available
-  console.log('Hardware data available:', hardwareData?.length || 0);
-  console.log('Sample product:', hardwareData?.[0]);
-
   const [filters, setFilters] = useState<FilterState>({
     usage: 'Business & Productivity',
     keyFeatures: [],
@@ -129,11 +125,8 @@ export default function FindHardwarePage() {
 
   const filterProducts = () => {
     if (!hardwareData || hardwareData.length === 0) {
-      console.log('No hardware data available');
       return [];
     }
-
-    console.log('Filtering products with:', filters);
     
     const filtered = hardwareData.filter(product => {
       let score = 0;
@@ -246,8 +239,6 @@ export default function FindHardwarePage() {
           matchDetails.push(`Price mismatch: ${filters.priceRange}`);
         }
       }
-      
-      console.log(`Product ${product.model}: Score=${score}, Details:`, matchDetails);
       
       return score > 30; // Only return products with decent match scores
     });

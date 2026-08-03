@@ -2,91 +2,94 @@
 
 This project is deployed on Vercel with automatic deployments from GitHub.
 
-## 🚀 How It Works
+## How It Works
 
-### **Automatic Deployment**
+### Automatic Deployment
+
 - Every push to the `main` branch automatically deploys to Vercel
 - Pull requests create preview deployments
 - No manual deployment needed
 
-### **Current URLs**
-- **Production**: https://omni-shop-*.vercel.app (auto-generated)
-- **Preview**: https://omni-shop-*.vercel.app (for PRs)
+### Current URLs
 
-## 🔐 Password Protection
+- **Production**: Check the Vercel project dashboard for the live URL
+- **Preview**: Auto-generated per pull request
 
-The application is protected with a password system:
+## Access Protection
 
-### **Current Password**: `omni-shop-2024`
+The app is gated by a **server-side password** (middleware + HttpOnly cookie).
 
-### **To Change Password**:
-1. Edit `src/config/auth.ts`
-2. Change the `ACCESS_PASSWORD` value
-3. Push to GitHub
-4. Vercel will automatically deploy the changes
+### Configure on Vercel
 
-## 🛠️ Local Development
+In the Vercel project → Settings → Environment Variables, set:
+
+| Variable | Notes |
+|----------|-------|
+| `SITE_ACCESS_PASSWORD` | Shared access password |
+| `AUTH_SECRET` | Long random secret for signing session cookies |
+| `OPENAI_API_KEY` | Required for AI search intent |
+
+Never commit real secrets. Do not put the password in source or docs.
+
+### To change the password
+
+1. Update `SITE_ACCESS_PASSWORD` in Vercel (and locally in `.env.local`)
+2. Redeploy (or wait for the next push to `main`)
+
+## Local Development
 
 ```bash
-# Install dependencies
 npm install
-
-# Run development server
+cp .env.example .env.local   # then fill in values
 npm run dev
-
-# Build for production
 npm run build
-
-# Start production server
 npm start
 ```
 
-## 📁 Project Structure
+## Project Structure
 
-- `src/` - Source code
-- `src/components/` - React components
-- `src/app/` - Next.js app router pages
-- `src/config/auth.ts` - Password configuration
-- `public/` - Static assets
+- `src/` — Source code
+- `src/components/` — React components
+- `src/app/` — Next.js App Router pages and API routes
+- `src/middleware.ts` — Auth gate
+- `public/` — Static assets
 
-## 🔧 Configuration Files
+## Configuration Files
 
-- `next.config.ts` - Next.js configuration
-- `tailwind.config.js` - Tailwind CSS configuration
-- `package.json` - Dependencies and scripts
-- `.vercel/` - Vercel deployment configuration
+- `next.config.ts` — Next.js configuration
+- `tailwind.config.js` — Tailwind CSS configuration
+- `package.json` — Dependencies and scripts
 
-## 🌐 Deployment
+## Deployment
 
-### **Automatic (Recommended)**
-- Push to `main` branch → Auto-deploy to production
-- Create PR → Auto-deploy to preview
+### Automatic (recommended)
 
-### **Manual (if needed)**
+- Push to `main` → production deploy
+- Open a PR → preview deploy
+
+### Manual
+
 ```bash
-# Install Vercel CLI
 npm i -g vercel
-
-# Deploy
 vercel --prod
 ```
 
-## 🔒 Security Features
+## Security Features
 
-- **Password Protection**: Front-end authentication
-- **Session Management**: Local storage persistence
-- **Logout Functionality**: Secure session termination
+- Server-side password check (`POST /api/auth/login`)
+- Signed HttpOnly session cookie
+- Middleware protection for pages and `/api/*` (except login)
+- Zod validation + basic rate limiting on search APIs
 
-## 📱 Features
+## Features
 
-- **Product Catalog**: Browse IT equipment
-- **Shopping Cart**: Add/remove items
-- **Product Comparison**: Compare specifications
-- **Responsive Design**: Mobile and desktop optimized
-- **Modern UI**: Built with Tailwind CSS and ShadCN
+- Product catalog and comparison
+- Demo shopping cart / checkout / orders (`localStorage`)
+- AI-assisted search
+- Responsive Tailwind UI
 
-## 🆘 Support
+## Support
 
-- **Vercel Dashboard**: https://vercel.com/dashboard
-- **GitHub Repository**: https://github.com/emonterrubio/omni-shop
-- **Local Development**: Run `npm run dev` for development server
+- Vercel Dashboard: https://vercel.com/dashboard
+- GitHub Repository: https://github.com/emonterrubio/omni-shop
+- Local Development: `npm run dev`

@@ -2,161 +2,14 @@
 
 import React, { useMemo } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { hardwareData } from "@/data/hardwareData";
-import { monitorData } from "@/data/monitorData";
-import { headphoneData } from "@/data/headphoneData";
-import { mouseData } from "@/data/mouseData";
-import { keyboardData } from "@/data/keyboardData";
-import { webcamData } from "@/data/webcamData";
-import { dockStationData } from "@/data/dockStationData";
-import { backpackData } from "@/data/backpackData";
+import { findProductByModel, getAllProducts, type CatalogProduct } from "@/data/products";
 import { ComparisonProductCard } from "@/components/product/ProductComparisonCard";
 import { PageLayout } from "@/components/layout/PageLayout";
 import { SupportBanner } from "@/components/product/SupportBanner";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
-function findProductByModel(model: string): any {
-  let product = hardwareData.find(p => p.model === model);
-  if (product) return { ...product, category: "Hardware" };
-
-  const monitor = monitorData.find(p => p.model === model);
-  if (monitor) {
-    return {
-      ...monitor,
-      category: "Monitors",
-      card_description: monitor.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: monitor.display_resolution,
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: "",
-      other: `Curvature: ${monitor.curvature}, Touchscreen: ${monitor.touchscreen}, Pixel Density: ${monitor.pixel_density}, Refresh Rate: ${monitor.refresh_rate}`,
-      features: `${monitor.display_resolution}, ${monitor.aspect_ratio}, ${monitor.display_type}`,
-    };
-  }
-
-  const headphone = headphoneData.find(p => p.model === model);
-  if (headphone) {
-    return {
-      ...headphone,
-      category: "Headphones",
-      card_description: headphone.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: headphone.headphone_jack,
-      battery: headphone.battery,
-      other: headphone.connectivity,
-      features: headphone.features,
-    };
-  }
-
-  const mouse = mouseData.find(p => p.model === model);
-  if (mouse) {
-    return {
-      ...mouse,
-      category: "Mice",
-      card_description: mouse.description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: "",
-      other: "",
-      features: "",
-    };
-  }
-
-  const keyboard = keyboardData.find(p => p.model === model);
-  if (keyboard) {
-    return {
-      ...keyboard,
-      category: "Keyboards",
-      card_description: keyboard.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: keyboard.battery,
-      other: keyboard.compatibility,
-      features: `${keyboard.connectivity}, ${keyboard.number_keys} keys`,
-    };
-  }
-
-  const webcam = webcamData.find(p => p.model === model);
-  if (webcam) {
-    return {
-      ...webcam,
-      category: "Webcams",
-      card_description: webcam.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: webcam.display_resolution,
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: "",
-      other: `Video Resolution: ${webcam.video_resolution}, Image Aspect Ratio: ${webcam.image_aspect_ratio}, Image Capture Rate: ${webcam.image_capture_rate}`,
-      features: `${webcam.video_resolution}, ${webcam.display_resolution}, ${webcam.image_capture_rate}`,
-    };
-  }
-
-  const dockStation = dockStationData.find(p => p.model === model);
-  if (dockStation) {
-    return {
-      ...dockStation,
-      category: "Docking Stations",
-      card_description: dockStation.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: dockStation.ports,
-      battery: "",
-      other: `Dimensions: ${dockStation.dimensions}, Weight: ${dockStation.weight}`,
-      features: `${dockStation.ports}, ${dockStation.power}`,
-    };
-  }
-
-  const backpack = backpackData.find(p => p.model === model);
-  if (backpack) {
-    return {
-      ...backpack,
-      category: "Backpacks",
-      card_description: backpack.card_description,
-      processor: "",
-      memory: "",
-      storage: "",
-      display: "",
-      graphics: "",
-      operating_system: "",
-      ports: "",
-      battery: "",
-      other: `Size: ${backpack.size}, Capacity: ${backpack.capacity}`,
-      features: backpack.features,
-    };
-  }
-
-  return null;
-}
-
-function getProductSpecs(product: any) {
+function getProductSpecs(product: CatalogProduct) {
   switch (product.category) {
     case "Hardware":
       return [
@@ -265,16 +118,7 @@ export default function CartItemComparePage() {
     let comparisonModels: string[] = [];
     
     // Find similar products (same category, different brand)
-    const allModels = [
-      ...hardwareData.map(p => p.model),
-      ...monitorData.map(p => p.model),
-      ...headphoneData.map(p => p.model),
-      ...mouseData.map(p => p.model),
-      ...keyboardData.map(p => p.model),
-      ...webcamData.map(p => p.model),
-      ...dockStationData.map(p => p.model),
-      ...backpackData.map(p => p.model),
-    ];
+    const allModels = getAllProducts().map((p) => p.model);
     
     // Exclude current product
     const otherModels = allModels.filter(m => m !== selectedProduct.model);

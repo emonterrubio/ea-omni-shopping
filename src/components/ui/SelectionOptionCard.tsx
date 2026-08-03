@@ -27,8 +27,15 @@ export function SelectionOptionCard({
         selected ? 'border-blue-600 bg-blue-50 ring-2 ring-blue-400' : 'border-gray-200 bg-white'
       }`}
       onClick={onSelect}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onSelect();
+        }
+      }}
       role="button"
       tabIndex={0}
+      aria-pressed={selected}
     >
       {/* Image section */}
       {image && (
