@@ -241,12 +241,12 @@ ${JSON.stringify(ordersSummary)}`;
     }
 
     let addToCartNames = claudeParsed.data.addToCart;
-    // If the user clearly asked to add prior suggestions but Claude omitted addToCart, use suggestedModels.
+    // “Add those/them/all” should use the cards we already showed, not a partial Claude list.
     const wantsCart =
       /\b(add|put|move)\b[\s\S]{0,40}\b(cart|basket)\b|\badd (them|those|all|it)\b/i.test(
         message,
       );
-    if (addToCartNames.length === 0 && wantsCart && suggestedModels.length > 0) {
+    if (wantsCart && suggestedModels.length > 0) {
       addToCartNames = suggestedModels;
     }
 

@@ -63,7 +63,7 @@ function TypingIndicator() {
 export function NowAssistWidget() {
   const pathname = usePathname();
   const { addToast } = useToast();
-  const { addToCart } = useContext(CartContext);
+  const { addItemsToCart } = useContext(CartContext);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -94,27 +94,18 @@ export function NowAssistWidget() {
 
   const applyCartAdds = (items: NowAssistProduct[]) => {
     if (!items.length) return;
-    items.forEach((product) => {
-      addToCart(
-        {
-          model: product.model,
-          brand: product.brand,
-          image: product.image,
-          price: product.price,
-          quantity: 1,
-          recommended: product.recommended,
-          description: product.description,
-          card_description: product.description,
-          category: product.category,
-        },
-        { silent: true },
-      );
-    });
-    addToast(
-      items.length === 1
-        ? `${items[0].model} added to cart`
-        : `${items.length} items added to cart`,
-      "success",
+    addItemsToCart(
+      items.map((product) => ({
+        model: product.model,
+        brand: product.brand,
+        image: product.image,
+        price: product.price,
+        quantity: 1,
+        recommended: product.recommended,
+        description: product.description,
+        card_description: product.description,
+        category: product.category,
+      })),
     );
   };
 
@@ -165,7 +156,8 @@ export function NowAssistWidget() {
         /\b(add|put|move)\b[\s\S]{0,40}\b(cart|basket)\b|\badd (them|those|all|it)\b/i.test(
           trimmed,
         );
-      if (addToCartItems.length === 0 && wantsCart && suggestedProducts.length > 0) {
+      // Prefer the cards we showed — Claude often returns a partial addToCart list.
+      if (wantsCart && suggestedProducts.length > 0) {
         addToCartItems = suggestedProducts;
       }
 

@@ -45,6 +45,7 @@ function normalizeCartItem(item: CartItem): CartItem {
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: CartItem, options?: { silent?: boolean }) => void;
+  addItemsToCart: (items: CartItem[]) => void;
   removeFromCart: (model: string) => void;
   updateQuantity: (model: string, quantity: number) => void;
   cartCount: number;
@@ -54,6 +55,7 @@ interface CartContextType {
 export const CartContext = createContext<CartContextType>({
   cartItems: [],
   addToCart: () => {},
+  addItemsToCart: () => {},
   removeFromCart: () => {},
   updateQuantity: () => {},
   cartCount: 0,
@@ -111,6 +113,35 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const addItemsToCart = (items: CartItem[]) => {
+    if (!items.length) return;
+
+    setCartItems((prev) => {
+      let next = prev;
+      for (const item of items) {
+        const normalized = normalizeCartItem(item);
+        const index = next.findIndex((ci) => ci.model === normalized.model);
+        if (index >= 0) {
+          next = next.map((ci, i) =>
+            i === index
+              ? { ...ci, quantity: ci.quantity + (normalized.quantity || 1) }
+              : ci,
+          );
+        } else {
+          next = [...next, normalized];
+        }
+      }
+      return next;
+    });
+
+    addToast(
+      items.length === 1
+        ? `${normalizeCartItem(items[0]).model} added to cart`
+        : `${items.length} items added to cart`,
+      "success",
+    );
+  };
+
   const removeFromCart = (model: string) => {
     setCartItems((prev) => prev.filter((ci) => ci.model !== model));
     addToast(`${model} removed from cart`, "info");
@@ -132,7 +163,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return (
     <CartContext.Provider
-      value={{ cartItems, addToCart, removeFromCart, updateQuantity, cartCount, clearCart }}
+      value={{ cartItems, addToCart, addItemsToCart, removeFromCart, updateQuantity, cartCount, clearCart }}
     >
       {children}
     </CartContext.Provider>
