@@ -1,16 +1,14 @@
 "use client";
 import React, { useContext, useEffect } from "react";
-import { ShoppingCart, Search as SearchIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { ShoppingCart } from "lucide-react";
 import Link from "next/link";
 import { CartContext } from "../CartContext";
 import type { CartContextType } from "../CartContext";
 import { useSpring, animated } from "@react-spring/web";
 import { LogoutButton } from "../auth/LogoutButton";
+import { HeaderSearch } from "../search/HeaderSearch";
 
 export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
-  const pathname = usePathname();
-  const isHome = pathname === "/";
   const { cartCount } = useContext(CartContext) as CartContextType;
   const cartItems = cartItemsProp !== undefined ? cartItemsProp : cartCount;
   const [styles, api] = useSpring(() => ({ scale: 1 }));
@@ -53,8 +51,8 @@ export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
         </svg>
       </div>
       <div className="relative z-10">
-        <div className="flex items-center justify-between ml-1 px-4 sm:px-6 md:px-8 py-6">
-          <div className="flex items-center">
+        <div className="flex items-center gap-2 sm:gap-4 ml-1 px-4 sm:px-6 md:px-8 py-4 md:py-5">
+          <div className="flex items-center flex-shrink-0">
             <Link href="/">
               <img
                 src="/logo/ea_logo_white.svg"
@@ -63,19 +61,12 @@ export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
               />
             </Link>
           </div>
-          <div className="flex-1 flex justify-end items-center relative space-x-1 sm:space-x-4">
-            {!isHome && (
-              <Link
-                href="/search"
-                className="p-2 text-white hover:text-gray-100"
-                aria-label="Search"
-              >
-                <SearchIcon className="w-6 h-6" />
-              </Link>
-            )}
+
+          <div className="flex flex-1 min-w-0 justify-end items-center gap-1 sm:gap-2">
+            <HeaderSearch className="w-full max-w-[14rem] md:max-w-[16rem] min-w-0" />
             <Link
               href="/cart"
-              className="relative p-2 text-white hover:text-gray-100"
+              className="relative p-2 text-white hover:text-gray-100 flex-shrink-0"
               aria-label="Cart"
             >
               <ShoppingCart className="w-6 h-6" />
@@ -89,7 +80,7 @@ export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
               )}
             </Link>
             <LogoutButton />
-            <button type="button" className="p-2 text-white hover:text-gray-100" aria-label="Account">
+            <button type="button" className="p-2 text-white hover:text-gray-100 flex-shrink-0" aria-label="Account">
               <img
                 src="/images/ed-avatar.png"
                 alt="User Avatar"
