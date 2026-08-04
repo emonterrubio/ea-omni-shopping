@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { Sparkles, X, Send, Bot } from "lucide-react";
 import { useToast } from "@/components/ToastContext";
+import { CartContext } from "@/components/CartContext";
 import { getOrders } from "@/services/orders";
 import {
   NowAssistProductCard,
@@ -62,15 +63,19 @@ function TypingIndicator() {
 export function NowAssistWidget() {
   const pathname = usePathname();
   const { addToast } = useToast();
+  const { addToCart } = useContext(CartContext);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [suggestedProducts, setSuggestedProducts] = useState<NowAssistProduct[]>(
+    [],
+  );
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
       id: "welcome",
       role: "assistant",
       content:
-        "Hi! I’m NowAssist. Tell me what you’re trying to do — like “I need a laptop for video editing” — and I’ll recommend gear from the catalog.",
+        "Hi! I’m NowAssist. Tell me what you’re trying to do — like “I need a laptop for video editing” — and I’ll recommend gear from the catalog. You can also say “add those to my cart.”",
     },
   ]);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -86,6 +91,32 @@ export function NowAssistWidget() {
   if (pathname === "/login") {
     return null;
   }
+
+  const applyCartAdds = (items: NowAssistProduct[]) => {
+    if (!items.length) return;
+    items.forEach((product) => {
+      addToCart(
+        {
+          model: product.model,
+          brand: product.brand,
+          image: product.image,
+          price: product.price,
+          quantity: 1,
+          recommended: product.recommended,
+          description: product.description,
+          card_description: product.description,
+          category: product.category,
+        },
+        { silent: true },
+      );
+    });
+    addToast(
+      items.length === 1
+        ? `${items[0].model} added to cart`
+        : `${items.length} items added to cart`,
+      "success",
+    );
+  };
 
   const sendMessage = async () => {
     const trimmed = input.trim();
@@ -114,6 +145,7 @@ export function NowAssistWidget() {
           message: trimmed,
           history,
           ordersSummary: buildOrdersSummary(),
+          suggestedModels: suggestedProducts.map((p) => p.model),
         }),
       });
 
@@ -122,11 +154,38 @@ export function NowAssistWidget() {
         throw new Error(data.error || "NowAssist request failed");
       }
 
+      const products: NowAssistProduct[] = Array.isArray(data.products)
+        ? data.products
+        : [];
+      let addToCartItems: NowAssistProduct[] = Array.isArray(data.addToCart)
+        ? data.addToCart
+        : [];
+
+      const wantsCart =
+        /\b(add|put|move)\b[\s\S]{0,40}\b(cart|basket)\b|\badd (them|those|all|it)\b/i.test(
+          trimmed,
+        );
+      if (addToCartItems.length === 0 && wantsCart && suggestedProducts.length > 0) {
+        addToCartItems = suggestedProducts;
+      }
+
+      if (products.length > 0) {
+        setSuggestedProducts(products);
+      }
+
+      if (addToCartItems.length > 0) {
+        applyCartAdds(addToCartItems);
+      }
+
       const assistantMessage: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
-        content: data.reply || "Here are some options from the catalog.",
-        products: Array.isArray(data.products) ? data.products : [],
+        content:
+          data.reply ||
+          (addToCartItems.length
+            ? `Added ${addToCartItems.length} item${addToCartItems.length === 1 ? "" : "s"} to your cart.`
+            : "Here are some options from the catalog."),
+        products,
       };
       setMessages((prev) => [...prev, assistantMessage]);
     } catch (error) {

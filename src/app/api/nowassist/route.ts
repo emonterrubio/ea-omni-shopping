@@ -148,20 +148,24 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { message, history = [], ordersSummary = [] } = parsed.data;
+  const { message, history = [], ordersSummary = [], suggestedModels = [] } = parsed.data;
   const catalog = buildCompactCatalog(message);
 
   const systemPrompt = `You are NowAssist, the IT Hardware Assistant for an internal employee hardware storefront.
 
 Return JSON only (no markdown, no code fences) with this exact shape:
-{"reply":"1-2 short friendly sentences","products":["Exact Model Name From Catalog"]}
+{"reply":"1-2 short friendly sentences","products":["Exact Model Name From Catalog"],"addToCart":["Exact Model Name From Catalog"]}
 
 Rules:
 1. Infer the user's need (e.g. video editing → stronger GPU/RAM/storage) and summarize briefly in "reply".
-2. Put recommended items ONLY in "products" (max 3). Use exact catalog "model" strings.
+2. For recommendations, put items ONLY in "products" (max 3). Use exact catalog "model" strings. Leave "addToCart": [].
 3. NEVER list product names, prices, or bullet specs inside "reply". The UI renders product cards from "products".
-4. For order-status questions, use ordersSummary only, invent nothing, and return "products": [].
-5. If nothing fits, say so briefly and return "products": [].
+4. When the user asks to add suggested/recommended items to their cart (e.g. "add those", "add them to my cart", "put all in cart"):
+   - Put the models to add in "addToCart" (max 5). Prefer "suggestedModels" from the request when the user means prior recommendations.
+   - Use exact catalog model names. Set "products": [] unless you are also showing new recommendations.
+   - Only claim items were added if "addToCart" is non-empty.
+5. For order-status questions, use ordersSummary only, invent nothing, and return "products": [] and "addToCart": [].
+6. If nothing fits, say so briefly and return empty arrays.
 
 Guidance:
 - Video editing / creative / heavy graphics → prefer stronger GPU, more RAM, larger storage.
@@ -170,6 +174,9 @@ Guidance:
 
 Catalog (JSON):
 ${JSON.stringify(catalog)}
+
+Recently suggested models (JSON, may be empty):
+${JSON.stringify(suggestedModels)}
 
 Orders summary (JSON, may be empty):
 ${JSON.stringify(ordersSummary)}`;
@@ -233,10 +240,26 @@ ${JSON.stringify(ordersSummary)}`;
       modelNames = recoverModelsFromText(claudeParsed.data.reply, catalog);
     }
 
+    let addToCartNames = claudeParsed.data.addToCart;
+    // If the user clearly asked to add prior suggestions but Claude omitted addToCart, use suggestedModels.
+    const wantsCart =
+      /\b(add|put|move)\b[\s\S]{0,40}\b(cart|basket)\b|\badd (them|those|all|it)\b/i.test(
+        message,
+      );
+    if (addToCartNames.length === 0 && wantsCart && suggestedModels.length > 0) {
+      addToCartNames = suggestedModels;
+    }
+
     const products = modelNames
       .map((modelName) => resolveCatalogProduct(modelName))
       .filter((p): p is CatalogProduct => Boolean(p))
       .slice(0, 3)
+      .map((p) => toCardProduct(p));
+
+    const addToCart = addToCartNames
+      .map((modelName) => resolveCatalogProduct(modelName))
+      .filter((p): p is CatalogProduct => Boolean(p))
+      .slice(0, 5)
       .map((p) => toCardProduct(p));
 
     // Keep reply short for card UI — strip accidental markdown lists
@@ -248,13 +271,26 @@ ${JSON.stringify(ordersSummary)}`;
       .replace(/\s+/g, " ")
       .trim();
 
-    return NextResponse.json({
-      reply:
+    let finalReply = reply;
+    if (addToCart.length > 0) {
+      finalReply =
         reply ||
-        (products.length
-          ? "Here are a few options that fit what you described."
-          : "I couldn't find a strong match in the catalog."),
+        `Added ${addToCart.length} item${addToCart.length === 1 ? "" : "s"} to your cart.`;
+    } else if (!finalReply) {
+      finalReply = products.length
+        ? "Here are a few options that fit what you described."
+        : "I couldn't find a strong match in the catalog.";
+    }
+
+    if (wantsCart && addToCart.length === 0) {
+      finalReply =
+        "I don't have prior recommendations to add. Ask me for gear first, then say “add those to my cart.”";
+    }
+
+    return NextResponse.json({
+      reply: finalReply,
       products,
+      addToCart,
     });
   } catch (error) {
     console.error("NowAssist error:", error);

@@ -44,7 +44,7 @@ function normalizeCartItem(item: CartItem): CartItem {
 
 interface CartContextType {
   cartItems: CartItem[];
-  addToCart: (item: CartItem) => void;
+  addToCart: (item: CartItem, options?: { silent?: boolean }) => void;
   removeFromCart: (model: string) => void;
   updateQuantity: (model: string, quantity: number) => void;
   cartCount: number;
@@ -85,7 +85,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem("cart", JSON.stringify(cartItems));
   }, [cartItems, hydrated]);
 
-  const addToCart = (item: CartItem) => {
+  const addToCart = (item: CartItem, options?: { silent?: boolean }) => {
     const normalized = normalizeCartItem(item);
     const existing = cartItems.find((ci) => ci.model === normalized.model);
     const isNewItem = !existing;
@@ -102,10 +102,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       return [...prev, normalized];
     });
 
-    if (isNewItem) {
-      addToast(`${normalized.model} added to cart`, "success");
-    } else {
-      addToast(`${normalized.model} quantity updated in cart`, "success");
+    if (!options?.silent) {
+      if (isNewItem) {
+        addToast(`${normalized.model} added to cart`, "success");
+      } else {
+        addToast(`${normalized.model} quantity updated in cart`, "success");
+      }
     }
   };
 
