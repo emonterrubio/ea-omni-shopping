@@ -16,7 +16,7 @@ export function OrderItemRow({ item }: OrderItemRowProps) {
     addToCart({
       model: item.model,
       brand: item.brand,
-      image: resolveProductImage(item.model, item.image),
+      image: resolveProductImage(item.model, item.image, item.brand),
       price: item.price,
       quantity: item.quantity,
       recommended: false,
@@ -32,6 +32,7 @@ export function OrderItemRow({ item }: OrderItemRowProps) {
           <SafeProductImage
             src={item.image}
             model={item.model}
+            brand={item.brand}
             alt={item.model}
             fill
             className="object-contain rounded"
@@ -70,6 +71,7 @@ export function OrderItemRow({ item }: OrderItemRowProps) {
           <SafeProductImage
             src={item.image}
             model={item.model}
+            brand={item.brand}
             alt={item.model}
             fill
             className="object-contain rounded"

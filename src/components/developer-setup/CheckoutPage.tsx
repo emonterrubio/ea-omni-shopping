@@ -4,7 +4,7 @@ import { ShippingDetailsForm } from './ShippingDetailsForm';
 import { OrderSummary } from '../ui/OrderSummary';
 import { CostCenter } from '../ui/CostCenter';
 import { useRouter } from "next/navigation";
-import { createOrderFromCheckout, saveOrder } from '@/services/orders';
+import { createOrderFromCheckout, saveOrder, getOrders } from '@/services/orders';
 import { CartContext } from '../CartContext';
 
 interface Item {
@@ -223,8 +223,7 @@ export function CheckoutPage({ items, shippingCost, costCenter, onBack }: Checko
     saveOrder(order);
     
     // Verify the order was saved
-    const savedOrders = JSON.parse(localStorage.getItem('userOrders') || '[]');
-    console.log('Saved orders after creation:', savedOrders);
+    console.log('Saved orders after creation:', getOrders());
 
     // Also save for confirmation page (existing functionality)
     const orderData = {

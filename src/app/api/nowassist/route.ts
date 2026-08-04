@@ -78,7 +78,7 @@ function toCardProduct(product: CatalogProduct, matchLabel?: string) {
     model: product.model,
     category: product.category,
     description: product.card_description || product.description || "",
-    image: resolveProductImage(product.model, product.image),
+    image: resolveProductImage(product.model, product.image, product.brand),
     price: product.price,
     recommended: Boolean(product.recommended),
     matchLabel,

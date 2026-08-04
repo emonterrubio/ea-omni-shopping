@@ -1,7 +1,16 @@
 import { Order, OrderItem } from '@/types/orders';
 import { resolveProductImage } from '@/lib/product-image';
 
-const ORDERS_STORAGE_KEY = 'userOrders';
+/** Bump this to invalidate stale demo orders in localStorage. */
+const ORDERS_STORAGE_KEY = 'userOrders_v2';
+const LEGACY_ORDERS_STORAGE_KEYS = ['userOrders'];
+
+function discardLegacyOrders(): void {
+  if (typeof window === 'undefined') return;
+  for (const key of LEGACY_ORDERS_STORAGE_KEYS) {
+    localStorage.removeItem(key);
+  }
+}
 
 export function generateOrderNumber(): string {
   return `112-${Math.floor(1000000 + Math.random() * 9000000)}`;
@@ -10,7 +19,7 @@ export function generateOrderNumber(): string {
 function normalizeOrderItem(item: OrderItem): OrderItem {
   return {
     ...item,
-    image: resolveProductImage(item.model, item.image),
+    image: resolveProductImage(item.model, item.image, item.brand),
   };
 }
 
@@ -40,7 +49,7 @@ export function createOrderFromCheckout(
   const orderItems: OrderItem[] = items.map((item) => ({
     model: item.model,
     brand: item.brand,
-    image: resolveProductImage(item.model, item.image),
+    image: resolveProductImage(item.model, item.image, item.brand),
     description: item.card_description || item.description || '',
     price:
       typeof item.price === 'string'
@@ -86,6 +95,7 @@ export function saveOrder(order: Order): void {
 
 export function getOrders(): Order[] {
   try {
+    discardLegacyOrders();
     const ordersData = localStorage.getItem(ORDERS_STORAGE_KEY);
     if (!ordersData) return [];
     const parsed = JSON.parse(ordersData);
@@ -97,11 +107,12 @@ export function getOrders(): Order[] {
 }
 
 export function clearOrders(): void {
+  discardLegacyOrders();
   localStorage.removeItem(ORDERS_STORAGE_KEY);
 }
 
 export function clearOrdersForTesting(): void {
-  localStorage.removeItem(ORDERS_STORAGE_KEY);
+  clearOrders();
 }
 
 export function updateOrderStatus(

@@ -151,6 +151,7 @@ export function RecentOrders({ maxOrders = 2 }: RecentOrdersProps) {
                     <SafeProductImage
                       src={firstItem.image}
                       model={firstItem.model}
+                      brand={firstItem.brand}
                       alt={firstItem.model}
                       width={60}
                       height={40}

@@ -11,22 +11,24 @@ type SafeProductImageProps = Omit<ImageProps, "src" | "alt"> & {
   src?: string | null;
   alt: string;
   model?: string;
+  brand?: string;
 };
 
 export function SafeProductImage({
   src,
   alt,
   model,
+  brand,
   className,
   onError,
   ...rest
 }: SafeProductImageProps) {
-  const resolved = resolveProductImage(model || alt, src);
+  const resolved = resolveProductImage(model || alt, src, brand);
   const [currentSrc, setCurrentSrc] = useState(resolved);
 
   useEffect(() => {
-    setCurrentSrc(resolveProductImage(model || alt, src));
-  }, [model, alt, src]);
+    setCurrentSrc(resolveProductImage(model || alt, src, brand));
+  }, [model, alt, src, brand]);
 
   return (
     <Image

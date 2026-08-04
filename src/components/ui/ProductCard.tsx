@@ -28,18 +28,18 @@ export function ProductCard({ product, fromCatalog = false }: { product: Product
   const category = inferCategory(product.model, product.category);
   const { addToCart } = useContext(CartContext);
   const [imageSrc, setImageSrc] = useState(() =>
-    resolveProductImage(product.model, product.image),
+    resolveProductImage(product.model, product.image, product.brand),
   );
 
   useEffect(() => {
-    setImageSrc(resolveProductImage(product.model, product.image));
-  }, [product.model, product.image]);
+    setImageSrc(resolveProductImage(product.model, product.image, product.brand));
+  }, [product.model, product.image, product.brand]);
 
   const handleAddToCart = () => {
     const cartItem: CartItem = {
       model: product.model,
       brand: product.brand,
-      image: resolveProductImage(product.model, product.image),
+      image: resolveProductImage(product.model, product.image, product.brand),
       price: product.price,
       quantity: 1,
       recommended: product.recommended,

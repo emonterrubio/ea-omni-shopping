@@ -70,6 +70,7 @@ export function CartItemCard({ item, onQuantityChange, onRemove, onCompare }: Ca
         <SafeProductImage
           src={item.image}
           model={item.model}
+          brand={item.brand}
           alt={item.model}
           fill
           className="object-contain rounded-lg"

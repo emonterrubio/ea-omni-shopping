@@ -22,6 +22,7 @@ export function SummaryProductCard({ item, onQuantityChange, onRemove }: Summary
         <SafeProductImage
           src={item.image}
           model={item.model}
+          brand={item.brand}
           alt={item.model}
           fill
           className="object-contain"

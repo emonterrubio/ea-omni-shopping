@@ -25,6 +25,7 @@ export function NowAssistProductCard({ product }: NowAssistProductCardProps) {
         <SafeProductImage
           src={product.image}
           model={product.model}
+          brand={product.brand}
           alt={product.model}
           fill
           className="object-contain p-3"

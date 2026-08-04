@@ -69,6 +69,7 @@ export function OrderProductList({ items }: OrderProductListProps) {
                       <SafeProductImage
                         src={item.image}
                         model={item.model}
+                        brand={item.brand}
                         alt={item.model}
                         fill
                         className="object-contain rounded"

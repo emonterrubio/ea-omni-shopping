@@ -29,6 +29,7 @@ export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
           <SafeProductImage
             src={item.image}
             model={item.model}
+            brand={item.brand}
             alt={item.model}
             fill
             className="object-contain rounded"
@@ -56,6 +57,7 @@ export function OrderProductRow({ item, isLast }: OrderProductRowProps) {
           <SafeProductImage
             src={item.image}
             model={item.model}
+            brand={item.brand}
             alt={item.model}
             fill
             className="object-contain rounded"

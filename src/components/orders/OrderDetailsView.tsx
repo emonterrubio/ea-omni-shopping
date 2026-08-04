@@ -10,6 +10,7 @@ import { OrderDetailsHeader } from "@/components/orders/OrderDetailsHeader";
 import { OrderSummaryCard } from "@/components/orders/OrderSummaryCard";
 import { OrderActions } from "@/components/orders/OrderActions";
 import type { BillingInfo, OrderItem, ShippingInfo } from "@/components/orders/types";
+import { getOrders } from "@/services/orders";
 
 interface OrderViewModel {
   billing: BillingInfo;
@@ -85,10 +86,7 @@ function parseSavedOrder(existingOrder: SavedOrder): OrderViewModel {
 
 function readSavedOrders(): SavedOrder[] {
   try {
-    const raw = localStorage.getItem("userOrders");
-    if (!raw) return [];
-    const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : [];
+    return getOrders() as SavedOrder[];
   } catch {
     return [];
   }

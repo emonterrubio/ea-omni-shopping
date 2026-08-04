@@ -33,7 +33,7 @@ function normalizeCartItem(item: CartItem): CartItem {
   return {
     ...item,
     brand: item.brand || catalog?.brand || "",
-    image: resolveProductImage(item.model, item.image || catalog?.image),
+    image: resolveProductImage(item.model, item.image || catalog?.image, item.brand || catalog?.brand),
     price,
     quantity: item.quantity > 0 ? item.quantity : 1,
     description: item.description ?? catalog?.description,

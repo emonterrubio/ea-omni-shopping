@@ -27,6 +27,7 @@ export function CheckoutCartItem({ item }: CheckoutCartItemProps) {
         <SafeProductImage
           src={item.image}
           model={item.model}
+          brand={item.brand}
           alt={item.model}
           fill
           className="object-contain"
