@@ -45,15 +45,18 @@ export function OrderHeader({ order }: OrderHeaderProps) {
           {/* Action Links Section */}
           <div className="flex items-center">
             <Link 
-              href={`/developer-setup/details?orderId=${order.id}`} 
+              href={`/orders/details?orderId=${order.id}`} 
               className="text-base font-regular text-blue-600 hover:text-blue-800"
             >
               View order details
             </Link>
             <div className="mx-4 h-4 w-px bg-gray-400"></div>
-            <button className="text-base font-regular text-blue-600 hover:text-blue-800">
+            <Link
+              href={`/orders/track?orderId=${order.id}`}
+              className="text-base font-regular text-blue-600 hover:text-blue-800"
+            >
               Track package
-            </button>
+            </Link>
           </div>
         </div>
       </div>
@@ -84,9 +87,9 @@ export function OrderHeader({ order }: OrderHeaderProps) {
             </div>
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 lg:gap-4 ml-4 lg:ml-12 xl:ml-28">
-            <Link href={`/developer-setup/details?orderId=${order.id}`} className="text-sm xl:text-base font-regular text-blue-600 hover:text-blue-800">View Order Details</Link>
+            <Link href={`/orders/details?orderId=${order.id}`} className="text-sm xl:text-base font-regular text-blue-600 hover:text-blue-800">View Order Details</Link>
             <div className="mr-2 ml-2 hidden h-6 w-px bg-gray-400 sm:block"></div>
-            <button className="text-left text-sm xl:text-base font-regular text-blue-600 hover:text-blue-800">Track Order</button>
+            <Link href={`/orders/track?orderId=${order.id}`} className="text-left text-sm xl:text-base font-regular text-blue-600 hover:text-blue-800">Track Order</Link>
           </div>
         </div>
       </div>

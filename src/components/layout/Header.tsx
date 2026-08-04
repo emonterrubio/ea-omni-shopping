@@ -62,7 +62,7 @@ export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
           </div>
 
           <div className="flex flex-1 min-w-0 justify-end items-center gap-1 sm:gap-2">
-            <HeaderSearch className="w-full max-w-[14rem] md:max-w-[16rem] min-w-0" />
+            <HeaderSearch className="w-full max-w-[16rem] md:max-w-[24rem] min-w-0" />
             <Link
               href="/cart"
               className="relative p-2 text-white hover:text-gray-100 flex-shrink-0"

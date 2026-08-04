@@ -156,8 +156,17 @@ export function HeaderSearch({ className = "" }: HeaderSearchProps) {
       <ul
         id={menuId}
         role="listbox"
-        className="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-[70] max-h-80 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-xl"
+        className="absolute left-0 right-0 top-[calc(100%+0.35rem)] z-[70] max-h-[28rem] overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-xl"
       >
+        <li className="sticky top-0 z-10 border-b border-gray-100 bg-white">
+          <button
+            type="button"
+            className="w-full px-3 py-2.5 text-left text-sm font-medium text-blue-600 hover:bg-blue-50"
+            onClick={() => goToResults(query)}
+          >
+            See all results for “{query.trim()}”
+          </button>
+        </li>
         {suggestions.map((product, index) => {
           const image = resolveProductImage(
             product.model,
@@ -198,15 +207,6 @@ export function HeaderSearch({ className = "" }: HeaderSearchProps) {
             </li>
           );
         })}
-        <li className="border-t border-gray-100">
-          <button
-            type="button"
-            className="w-full px-3 py-2.5 text-left text-sm font-medium text-blue-600 hover:bg-blue-50"
-            onClick={() => goToResults(query)}
-          >
-            See all results for “{query.trim()}”
-          </button>
-        </li>
       </ul>
     ) : null;
 
