@@ -5,7 +5,6 @@ import Link from "next/link";
 import { CartContext } from "../CartContext";
 import type { CartContextType } from "../CartContext";
 import { useSpring, animated } from "@react-spring/web";
-import { LogoutButton } from "../auth/LogoutButton";
 import { HeaderSearch } from "../search/HeaderSearch";
 
 export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
@@ -79,7 +78,6 @@ export function Header({ cartItems: cartItemsProp }: { cartItems?: number }) {
                 </animated.span>
               )}
             </Link>
-            <LogoutButton />
             <button type="button" className="p-2 text-white hover:text-gray-100 flex-shrink-0" aria-label="Account">
               <img
                 src="/images/ed-avatar.png"

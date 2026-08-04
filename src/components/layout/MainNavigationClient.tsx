@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { LogoutButton } from "../auth/LogoutButton";
 
 export const MainNavigationClient = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,7 @@ export const MainNavigationClient = () => {
   return (
     <nav className="bg-gray-200">
       <div className="max-w-7xl mx-auto flex-1 overflow-y-auto px-6 md:px-10">
-        <div className="flex justify-between h-auto">
+        <div className="flex justify-between h-auto items-center">
           <div className="hidden md:flex items-center space-x-10">
             <Link href="/" className={`font-medium text-gray-900 border-b-4 py-3 border-transparent hover:border-b-4 hover:border-heritageBlue ${pathname === "/" ? "border-b-4 border-heritageBlue !border-heritageBlue" : ""}`}>
               Home
@@ -34,7 +35,10 @@ export const MainNavigationClient = () => {
               Support
             </Link>
           </div>
-          <div className="md:hidden flex items-center justify-end">
+          <div className="hidden md:flex items-center">
+            <LogoutButton className="font-medium text-gray-900 py-3 hover:text-heritageBlue underline-offset-2 hover:underline disabled:opacity-60" />
+          </div>
+          <div className="md:hidden flex items-center justify-end w-full">
             <button
               onClick={toggleMenu}
               className="text-gray-600 hover:text-gray-900 focus:outline-none py-3"
@@ -90,9 +94,12 @@ export const MainNavigationClient = () => {
             >
               Support
             </Link>
+            <div className="px-4 py-2">
+              <LogoutButton className="text-3xl font-regular text-gray-900 hover:text-heritageBlue disabled:opacity-60" />
+            </div>
           </div>
         </div>
       )}
     </nav>
   );
-}; 
+};

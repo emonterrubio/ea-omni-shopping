@@ -3,7 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-export function LogoutButton() {
+interface LogoutButtonProps {
+  className?: string;
+}
+
+export function LogoutButton({ className }: LogoutButtonProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -23,7 +27,10 @@ export function LogoutButton() {
       type="button"
       onClick={handleLogout}
       disabled={loading}
-      className="text-sm text-white/90 hover:text-white underline-offset-2 hover:underline disabled:opacity-60"
+      className={
+        className ||
+        "text-sm text-white/90 hover:text-white underline-offset-2 hover:underline disabled:opacity-60"
+      }
     >
       {loading ? "…" : "Logout"}
     </button>

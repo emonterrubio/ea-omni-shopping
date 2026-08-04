@@ -180,7 +180,7 @@ export function HeroBanner({ products }: HeroBannerProps) {
             <p className="text-base leading-2 font-regular text-gray-800 mb-4 sm:mb-6">
               {currentContent.description}
             </p>
-            <Link href={currentContent.buttonLink}>
+            <Link href={currentContent.buttonLink} className="inline-block mb-2 sm:mb-0">
               <button className="w-full sm:w-auto bg-blue-600 text-white px-6 py-2 rounded-md font-medium hover:bg-blue-700 transition-colors text-base">
                 {currentContent.buttonText}
               </button>
@@ -191,7 +191,7 @@ export function HeroBanner({ products }: HeroBannerProps) {
 
       {/* Product indicators */}
       {rotatingProducts.length > 1 && (
-        <div className="flex justify-center space-x-2">
+        <div className="flex justify-center space-x-2 mt-5 sm:mt-6">
           {rotatingProducts.map((_, index) => (
             <button
               key={index}
